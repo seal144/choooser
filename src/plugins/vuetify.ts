@@ -11,16 +11,36 @@ import "vuetify/styles";
 // Composables
 import { createVuetify } from "vuetify";
 
+const LightPalette = {
+  primary: "#284B63",
+  secondary: "#3C6E71",
+  background: "#EEE",
+  surface: "#DDD",
+};
+
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 export default createVuetify({
   theme: {
     themes: {
       light: {
         colors: {
-          primary: "#1867C0",
-          secondary: "#5CBBF6",
+          primary: LightPalette.primary,
+          "on-primary": LightPalette.background,
+          secondary: LightPalette.secondary,
+          background: LightPalette.background,
+          "on-background": LightPalette.primary,
+          surface: LightPalette.surface,
+          "on-surface": LightPalette.primary,
         },
       },
+    },
+  },
+  defaults: {
+    VBtn: {
+      rounded: "0",
+      class: ["v-btn--primary"],
+      color: "rgb(var(--v-theme-primary))",
+      style: "color: rgb(var(--v-theme-on-primary))",
     },
   },
 });

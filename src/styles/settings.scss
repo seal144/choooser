@@ -8,3 +8,32 @@
 // @use 'vuetify/settings' with (
 //   $color-pack: false
 // );
+
+@font-face {
+  font-family: "Roboto Mono", monospace;
+  font-style: normal;
+  font-weight: 300;
+  src: local("Roboto Mono"),
+    url(/public/fonts/RobotoMono-Light.ttf) format("ttf");
+}
+@font-face {
+  font-family: "Roboto Mono", monospace;
+  font-style: normal;
+  font-weight: 400;
+  src: local("Roboto Mono"),
+    url(/puclic/fonts/RobotoMono-Regular.ttf) format("ttf");
+}
+@font-face {
+  font-family: "Roboto Mono", monospace;
+  font-style: normal;
+  font-weight: 700;
+  src: local("Roboto Mono"),
+    url(/public/fonts/RobotoMono-Bold.ttf) format("ttf");
+}
+
+$border-style: 2px solid rgb(var(--v-theme-primary));
+
+* {
+  font-family: "Roboto Mono", monospace;
+  box-sizing: border-box;
+}
