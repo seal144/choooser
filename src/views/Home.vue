@@ -2,7 +2,7 @@
   <v-responsive class="text-center fill-height home-view">
     <v-card>Hello {{ mockedUser }}</v-card>
     <v-btn>
-      <v-icon icon="mdi-door" size="large" start />
+      <v-icon icon="mdi-login" size="large" start />
       Join room
     </v-btn>
     <v-btn>

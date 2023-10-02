@@ -20,8 +20,35 @@ const LightPalette = {
 
 const borderStyle = "border: 2px solid rgb(var(--v-theme-primary));";
 
+enum Breakpoints {
+  xs = 0,
+  sm = 480,
+  md = 810,
+  lg = 1280,
+  xl = 1920,
+}
+
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
-export default createVuetify({
+const vuetify = createVuetify({
+  display: {
+    thresholds: { ...Breakpoints },
+  },
+  defaults: {
+    VBtn: {
+      rounded: "0",
+      class: ["v-btn--primary"],
+      color: "rgb(var(--v-theme-primary))",
+      style:
+        "color: rgb(var(--v-theme-on-primary)); text-transform: none; background-color: rgb(var(--v-theme-primary));",
+    },
+    VCard: {
+      rounded: "0",
+      style: `${borderStyle} padding: .25rem 1rem;`,
+    },
+    VToolbar: {
+      style: `${borderStyle}`,
+    },
+  },
   theme: {
     themes: {
       light: {
@@ -37,19 +64,6 @@ export default createVuetify({
       },
     },
   },
-  defaults: {
-    VBtn: {
-      rounded: "0",
-      class: ["v-btn--primary"],
-      color: "rgb(var(--v-theme-primary))",
-      style: "color: rgb(var(--v-theme-on-primary)); text-transform: none;",
-    },
-    VCard: {
-      rounded: "0",
-      style: `${borderStyle} padding: .25rem 1rem;`,
-    },
-    VToolbar: {
-      style: `${borderStyle}`,
-    },
-  },
 });
+
+export default vuetify;

@@ -1,11 +1,19 @@
 <template>
   <div class="logo-container">
     <div class="logo-squere"></div>
-    CHOOSER
+    <div class="logo-text" v-if="!props.collapse">CHOOSER</div>
   </div>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+const props = defineProps({
+  collapse: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
+});
+</script>
 
 <style scoped lang="scss">
 @use "@/styles/settings.scss" as *;
