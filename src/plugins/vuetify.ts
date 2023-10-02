@@ -12,10 +12,15 @@ import "vuetify/styles";
 import { createVuetify } from "vuetify";
 
 const LightPalette = {
-  primary: "#284B63",
-  secondary: "#3C6E71",
-  background: "#EEE",
-  surface: "#DDD",
+  primary: "#3b3d4a",
+  background: "#fff",
+  surface: "#e9e9f0",
+};
+
+const DarkPalette = {
+  primary: "#8e8f9e",
+  background: "#3b3d4a",
+  surface: "#3f404a",
 };
 
 const borderStyle = "border: 2px solid rgb(var(--v-theme-primary));";
@@ -55,11 +60,20 @@ const vuetify = createVuetify({
         colors: {
           primary: LightPalette.primary,
           "on-primary": LightPalette.background,
-          secondary: LightPalette.secondary,
           background: LightPalette.background,
           "on-background": LightPalette.primary,
           surface: LightPalette.surface,
           "on-surface": LightPalette.primary,
+        },
+      },
+      dark: {
+        colors: {
+          primary: DarkPalette.primary,
+          "on-primary": DarkPalette.background,
+          background: DarkPalette.background,
+          "on-background": DarkPalette.primary,
+          surface: DarkPalette.surface,
+          "on-surface": DarkPalette.primary,
         },
       },
     },
