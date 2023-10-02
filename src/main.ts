@@ -18,3 +18,7 @@ const app = createApp(App);
 registerPlugins(app);
 
 app.mount("#app");
+
+// TODO:
+// - przy pierwszym uruchomieniu projekt się nie załaduje, trzeba odświeżyć stronę (naprawić)
+// - problem z importowaniem composables (naprawić)
