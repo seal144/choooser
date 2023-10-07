@@ -23,7 +23,9 @@ const DarkPalette = {
   surface: "#3f404a",
 };
 
-const borderStyle = "border: 2px solid rgb(var(--v-theme-primary));";
+const lineThickness = "3px";
+
+const borderStyle = `border: ${lineThickness} solid rgb(var(--v-theme-primary));`;
 
 enum Breakpoints {
   xs = 0,
@@ -48,10 +50,19 @@ const vuetify = createVuetify({
     },
     VCard: {
       rounded: "0",
-      style: `${borderStyle} padding: .25rem 1rem;`,
+      style: `${borderStyle}`,
     },
     VToolbar: {
       style: `${borderStyle}`,
+    },
+    VDivider: {
+      thickness: lineThickness,
+      style: "opacity: 1",
+    },
+    VInput: {
+      "input.v-field__input": {
+        style: "padding: .5rem 1rem",
+      },
     },
   },
   theme: {

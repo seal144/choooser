@@ -1,20 +1,17 @@
 <template>
   <v-responsive class="text-center fill-height home-view">
-    <v-card>Hello {{ mockedUser }}</v-card>
-    <v-btn>
-      <v-icon icon="mdi-login" size="large" start />
-      Join room
-    </v-btn>
-    <v-btn>
-      <v-icon icon="mdi-plus" size="large" start />
-      Add new room
-    </v-btn>
-    <v-card>Your Rooms</v-card>
+    <HeaderCard>Hello {{ mockedUser }}</HeaderCard>
+    <JoinCreateRoomDialog variant="join" />
+    <JoinCreateRoomDialog variant="create" />
+    <HeaderCard>Your Rooms</HeaderCard>
     <v-btn v-for="room in mockedRooms" :key="room.id">{{ room.name }}</v-btn>
   </v-responsive>
 </template>
 
 <script lang="ts" setup>
+import JoinCreateRoomDialog from "@/components/JoinCreateRoomDialog.vue";
+import HeaderCard from "@/components/HeaderCard.vue";
+
 const mockedUser = "Rafał";
 const mockedRooms = [
   { id: "1", name: "room1" },
