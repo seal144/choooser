@@ -1,5 +1,5 @@
 <template>
-  <div class="logo-container">
+  <div class="logo-container" :class="{ 'big-logo': big }">
     <div class="logo-squere"></div>
     <div class="logo-text" v-if="!props.collapse">CHOOSER</div>
   </div>
@@ -8,6 +8,11 @@
 <script lang="ts" setup>
 const props = defineProps({
   collapse: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
+  big: {
     type: Boolean,
     required: false,
     default: false,
@@ -32,6 +37,20 @@ const props = defineProps({
     width: 1.25rem;
     height: 1.25rem;
     border: 5px solid rgb(var(--v-theme-primary));
+  }
+
+  &.big-logo {
+    gap: 0.375rem;
+    border-width: 4.5px;
+    padding: 0.375rem 0.375rem;
+    font-size: 1.875rem;
+    line-height: 1.875rem;
+
+    .logo-squere {
+      width: 1.875rem;
+      height: 1.875rem;
+      border-width: 7.5px;
+    }
   }
 }
 </style>

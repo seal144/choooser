@@ -30,9 +30,10 @@ const borderStyle = `border: ${lineThickness} solid rgb(var(--v-theme-primary));
 enum Breakpoints {
   xs = 0,
   sm = 480,
-  md = 810,
-  lg = 1280,
-  xl = 1920,
+  md = 600,
+  lg = 960,
+  xl = 1280,
+  xxl = 1920,
 }
 
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
@@ -51,6 +52,9 @@ const vuetify = createVuetify({
     VCard: {
       rounded: "0",
       style: `${borderStyle}`,
+    },
+    VContainer: {
+      style: "max-width: 1200px;",
     },
     VToolbar: {
       style: `${borderStyle}`,

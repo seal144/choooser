@@ -3,6 +3,7 @@
     class="component-text-field"
     :label="props.label"
     variant="outlined"
+    validate-on="blur"
     :rules="rules"
     rounded="0"
     :readonly="loading"

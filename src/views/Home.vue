@@ -1,6 +1,6 @@
 <template>
   <v-responsive class="text-center fill-height home-view">
-    <HeaderCard>Hello {{ mockedUser }}</HeaderCard>
+    <HeaderCard>&#128075; Hello {{ mockedUser }}</HeaderCard>
     <JoinCreateRoomDialog variant="join" />
     <JoinCreateRoomDialog variant="create" />
     <HeaderCard>Your Rooms</HeaderCard>

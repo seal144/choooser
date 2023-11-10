@@ -6,13 +6,13 @@
     </template>
     <template v-slot:content>
       <v-form v-model="form" @submit.prevent="onSubmit">
-        <TextVield
+        <TextField
           v-model.trim="roomName"
           label="Room name"
           :rules="[required]"
           :loading="loading"
         />
-        <TextVield
+        <TextField
           v-model.trim="password"
           label="Password"
           :loading="loading"
@@ -33,7 +33,7 @@
 <script lang="ts" setup>
 import { computed, ref, PropType } from "vue";
 import Dialog from "./Dialog.vue";
-import TextVield from "./TextVield.vue";
+import TextField from "./TextField.vue";
 
 const props = defineProps({
   variant: {
