@@ -1,5 +1,5 @@
 <template>
-  <v-form v-model="form" @submit.prevent="onSubmit" >
+  <v-form v-model="form" @submit.prevent="onSubmit" validate-on="submit lazy">
     <HeaderCard class="header"><b>Log in</b> or <router-link to="/"><b>Sign&nbsp;up</b></router-link> if new </HeaderCard>
     <TextField
       v-model.trim="email"
@@ -14,9 +14,8 @@
       :loading="loading"
     />
     <v-btn
-    @click="onSubmit"
-    :disabled="!form"
-    :loading="loading"
+      type="submit"
+      :loading="loading"
     >
       Log in
     </v-btn>
@@ -35,7 +34,7 @@ const password = ref("");
 const loading = ref(false);
 
 const required = (value: string) => !!value || "Required";
-const emailValidation = (value: string) => value.match(/^[\w-.]+@([\w-]+\.)[\w]{2,4}$/) || "incorrect email format";
+const emailValidation = (value: string) => Boolean(value.match(/^[\w-.]+@([\w-]+\.)[\w]{2,4}$/)) || "incorrect email format";
 
 const onSubmit = () => {
   if (!form.value) return;
