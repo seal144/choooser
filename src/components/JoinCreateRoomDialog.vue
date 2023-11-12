@@ -10,12 +10,13 @@
           v-model.trim="roomName"
           label="Room name"
           :rules="[required]"
-          :loading="loading"
+          :readonly="loading"
         />
         <TextField
           v-model.trim="password"
           label="Password"
-          :loading="loading"
+          :readonly="loading"
+          type="password"
         />
       </v-form>
     </template>

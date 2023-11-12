@@ -1,5 +1,5 @@
 <template>
-  <LoginSignupForm variant="login" />
+  <LoginSignupForm variant="signup" />
 </template>
 
 <script setup lang="ts">

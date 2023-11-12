@@ -28,6 +28,17 @@ const routes = [
       },
     ],
   },
+  {
+    path: "/Signup",
+    component: () => import("@/layouts/login/Layout.vue"),
+    children: [
+      {
+        path: "",
+        name: "Signup",
+        component: () => import("@/views/Signup.vue"),
+      },
+    ],
+  },
 ];
 
 const router = createRouter({
