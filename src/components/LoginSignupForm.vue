@@ -1,13 +1,14 @@
 <template>
-  <v-form v-model="form" @submit.prevent="onSubmit" >
+  <!-- TODO  improve validation trigger -->
+  <v-form v-model="form" @submit.prevent="onSubmit" validate-on="lazy" >
     <HeaderCard
      class="header"
     >
       <template v-if="props.variant === 'login'">
-        <b>Log in</b> or <router-link to="Signup"><b>Sign&nbsp;up</b></router-link> if you are new
+        <b>Log in</b> or <router-link :to="{name: 'Signup'}"><b>Sign&nbsp;up</b></router-link> if you are new
       </template>
       <template v-else>
-        <b>Sign up</b> or <router-link to="Login"><b>Log&nbsp;in</b></router-link> if you have an account
+        <b>Sign up</b> or <router-link :to="{name: 'Login'}"><b>Log&nbsp;in</b></router-link> if you have an account
       </template>
     </HeaderCard>
     <TextField
@@ -20,7 +21,6 @@
       v-if="props.variant === 'signup'"
       v-model.trim="name"
       label="Display name"
-      :rules="[required]"
       :readonly="loading"
     />
     <TextField
@@ -39,14 +39,18 @@
       <template v-if="props.variant === 'login'">Log in</template>
       <template v-else>Sign up</template>
     </v-btn>
+    <!-- TODO create error component, that would not extend layout -->
+    <div v-if="error">{{ error }}</div>
   </v-form>
-  <router-link class="guest-link" to="/">Continue as guest</router-link>
+  <router-link class="guest-link" :to="{name: 'Home'}">Continue as guest</router-link>
 </template>
 
 <script setup lang="ts">
 import { computed, ref, PropType } from "vue";
+import { useRouter } from "vue-router";
 import TextField from "@/components/TextField.vue";
 import HeaderCard from "@/components/HeaderCard.vue";
+import useSignup from '@/composables/useSignup';
 
 const props = defineProps({
   variant: {
@@ -55,12 +59,21 @@ const props = defineProps({
   },
 });
 
+const { signup, error, loading: loadingSignup } = useSignup();
+const router = useRouter();
+
 const form = ref(false);
 const email = ref("");
 const name = ref("");
 const password = ref("");
-const loading = ref(false);
 const showPassword = ref(false);
+
+const loading = computed(() => {
+  if(loadingSignup.value) {
+    return true;
+  }
+  return false;
+})
 
 const required = (value: string) => !!value || "Required";
 const emailValidation = (value: string) => Boolean(value.match(/^[\w-.]+@([\w-]+\.)[\w]{2,4}$/)) || "incorrect email format";
@@ -73,19 +86,18 @@ const submitLogin = () => {
   if (!form.value) return;
   console.log(form.value)
 
-  loading.value = true;
+  // loading.value = true;
 
-  setTimeout(() => (loading.value = false), 2000);
+  // setTimeout(() => (loading.value = false), 2000);
   console.log('submitLogin', { email: email.value, password: password.value });
 };
 
-const submitSignup = () => {
-  if (!form.value) return;
+const submitSignup = async () => {
+  await signup(email.value, password.value);
 
-  loading.value = true;
-
-  setTimeout(() => (loading.value = false), 2000);
-  console.log('submitSignup', { email: email.value, name: name.value, password: password.value });
+  if (!error.value) {
+    router.push({ name: 'Home' });
+  }
 };
 </script>
 
