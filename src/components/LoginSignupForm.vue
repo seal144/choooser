@@ -1,6 +1,5 @@
 <template>
-  <!-- TODO  improve validation trigger -->
-  <v-form v-model="form" @submit.prevent="onSubmit" validate-on="lazy" >
+  <v-form v-model="form" @submit.prevent="onSubmit" validate-on="blur lazy">
     <HeaderCard
      class="header"
     >
@@ -93,8 +92,10 @@ const submitLogin = () => {
 };
 
 const submitSignup = async () => {
-  await signup(email.value, password.value);
+  if (!form.value) return;
 
+  await signup(email.value, password.value);
+  
   if (!error.value) {
     router.push({ name: 'Home' });
   }
