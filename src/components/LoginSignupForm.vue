@@ -20,12 +20,13 @@
       v-if="props.variant === 'signup'"
       v-model.trim="name"
       label="Display name"
+      :rules="[required, minCharsRequired(3)]"
       :readonly="loading"
     />
     <TextField
       v-model.trim="password"
       label="Password"
-      :rules="[required]"
+      :rules="[required, minCharsRequired(6)]"
       :readonly="loading"
       :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
       @click:append-inner="showPassword = !showPassword"
@@ -38,10 +39,9 @@
       <template v-if="props.variant === 'login'">Log in</template>
       <template v-else>Sign up</template>
     </v-btn>
-    <!-- TODO create error component, that would not extend layout -->
-    <div v-if="error">{{ error }}</div>
   </v-form>
   <router-link class="guest-link" :to="{name: 'Home'}">Continue as guest</router-link>
+  <div class="error-box"  v-if="error">{{ error }}</div>
 </template>
 
 <script setup lang="ts">
@@ -76,6 +76,7 @@ const loading = computed(() => {
 
 const required = (value: string) => !!value || "Required";
 const emailValidation = (value: string) => Boolean(value.match(/^[\w-.]+@([\w-]+\.)[\w]{2,4}$/)) || "incorrect email format";
+const minCharsRequired = (minChars: number) => (value: string) => Number(value.length) >= minChars || `at least ${minChars} characters required`;
 
 const onSubmit = computed(() => {
   return props.variant === "login"? submitLogin : submitSignup;
@@ -116,5 +117,9 @@ const submitSignup = async () => {
   .guest-link {
     display: block;
     text-align: center;
+  }
+  .error-box {
+    margin-top: 1rem;
+    color: rgb(var(--v-theme-error))
   }
 </style>
