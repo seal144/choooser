@@ -43,7 +43,7 @@
   <router-link class="guest-link" :to="{name: 'Home'}">Continue as guest</router-link>
   <!-- TODO create: "invalid-login-credentials error", "email-already-in-use"-->
   <div class="error-box"  v-if="errorLogin && props.variant === 'login'">{{ errorLogin }}</div>
-  <div class="error-box"  v-if="errorSignup && props.variant === 'login'">{{ errorSignup }}</div>
+  <div class="error-box"  v-if="errorSignup && props.variant === 'signup'">{{ errorSignup }}</div>
 </template>
 
 <script setup lang="ts">
