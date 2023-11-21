@@ -41,7 +41,9 @@
     </v-btn>
   </v-form>
   <router-link class="guest-link" :to="{name: 'Home'}">Continue as guest</router-link>
-  <div class="error-box"  v-if="error">{{ error }}</div>
+  <!-- TODO create: "invalid-login-credentials error", "email-already-in-use"-->
+  <div class="error-box"  v-if="errorLogin && props.variant === 'login'">{{ errorLogin }}</div>
+  <div class="error-box"  v-if="errorSignup && props.variant === 'login'">{{ errorSignup }}</div>
 </template>
 
 <script setup lang="ts">
@@ -50,6 +52,7 @@ import { useRouter } from "vue-router";
 import TextField from "@/components/TextField.vue";
 import HeaderCard from "@/components/HeaderCard.vue";
 import useSignup from '@/composables/useSignup';
+import useLogin from '@/composables/useLogin';
 
 const props = defineProps({
   variant: {
@@ -58,7 +61,8 @@ const props = defineProps({
   },
 });
 
-const { signup, error, loading: loadingSignup } = useSignup();
+const { signup, error: errorSignup, loading: loadingSignup } = useSignup();
+const { login, error: errorLogin, loading: loadingLogin } = useLogin();
 const router = useRouter();
 
 const form = ref(false);
@@ -66,9 +70,8 @@ const email = ref("");
 const name = ref("");
 const password = ref("");
 const showPassword = ref(false);
-
 const loading = computed(() => {
-  if(loadingSignup.value) {
+  if(loadingSignup.value || loadingLogin.value) {
     return true;
   }
   return false;
@@ -82,22 +85,22 @@ const onSubmit = computed(() => {
   return props.variant === "login"? submitLogin : submitSignup;
 })
 
-const submitLogin = () => {
+const submitLogin = async () => {
   if (!form.value) return;
-  console.log(form.value)
+  
+  await login(email.value, password.value);
 
-  // loading.value = true;
-
-  // setTimeout(() => (loading.value = false), 2000);
-  console.log('submitLogin', { email: email.value, password: password.value });
+  if (!errorLogin.value) {
+    router.push({ name: 'Home' });
+  }
 };
 
 const submitSignup = async () => {
   if (!form.value) return;
 
-  await signup(email.value, password.value);
+  await signup(email.value, password.value, name.value);
   
-  if (!error.value) {
+  if (!errorSignup.value) {
     router.push({ name: 'Home' });
   }
 };
