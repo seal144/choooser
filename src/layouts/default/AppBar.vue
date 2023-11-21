@@ -3,49 +3,48 @@
     <v-container>
       <v-app-bar-title> <Logo :collapse="xs" /> </v-app-bar-title>
       <div class="action-container">
-        <v-btn v-if="false" :icon="!smAndUp"
+        <v-btn :icon="!smAndUp"
           ><v-icon icon="mdi-cog" /><span v-if="smAndUp">settings</span>
         </v-btn>
-        <v-btn :icon="!smAndUp"
+        <v-btn @click="handleLogout" :icon="!smAndUp"
           ><v-icon icon="mdi-logout" /><span v-if="smAndUp">logout</span></v-btn
         >
-        <v-btn :icon="!smAndUp"
+        <!-- <v-btn :icon="!smAndUp"
           ><v-icon icon="mdi-login" /><span v-if="smAndUp">login</span></v-btn
-        >
+        > -->
       </div>
     </v-container>
   </v-app-bar>
 </template>
 
 <script lang="ts" setup>
-import Logo from "@/components/Logo.vue";
 import { useDisplay } from "vuetify";
+import { signOut } from 'firebase/auth';
+import { auth } from '@/firebase/config'
+import Logo from "@/components/Logo.vue";
 
 const { xs, smAndUp } = useDisplay();
+
+const handleLogout = () => {
+  signOut(auth);
+}
 </script>
 
 <style scoped lang="scss">
-@use "@/styles/settings.scss" as *;
+.v-container{
+  display: flex;
 
-.v-toolbar {
-  border: $border-style;
-
-  .v-container{
+  .action-container {
     display: flex;
+    gap: 1rem;
 
-    .action-container {
-      display: flex;
-      gap: 1rem;
+    .v-btn {
+      height: 34px;
 
-      .v-btn {
-        height: 34px;
-
-        &--icon {
-          width: 34px;
-        }
+      &--icon {
+        width: 34px;
       }
     }
   }
-
 }
 </style>
