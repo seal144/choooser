@@ -1,11 +1,11 @@
 import { ref } from 'vue';
 import { auth } from '@/firebase/config';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 
 const error = ref<string|null>(null);
 const loading = ref(false);
 
-const signup = async (email: string, password: string) => {
+const signup = async (email: string, password: string, displayName: string) => {
   error.value = null;
   loading.value = true;
 
@@ -14,6 +14,10 @@ const signup = async (email: string, password: string) => {
 
     if (!response) {
       throw new Error('Could not complete sign up')
+    }
+
+    if(auth.currentUser) {
+      await updateProfile(auth.currentUser, { displayName })
     }
 
     error.value = null;
