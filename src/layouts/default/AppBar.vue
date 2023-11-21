@@ -22,6 +22,10 @@ import { useDisplay } from "vuetify";
 import { signOut } from 'firebase/auth';
 import { auth } from '@/firebase/config'
 import Logo from "@/components/Logo.vue";
+import getUser from "@/composables/getUser";
+
+//TODO replace with pinia
+getUser();
 
 const { xs, smAndUp } = useDisplay();
 
