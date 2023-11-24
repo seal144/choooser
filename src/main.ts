@@ -5,16 +5,22 @@
  */
 
 // Components
-import App from "./App.vue";
-
+import Application from "./App.vue";
 // Composables
-import { createApp } from "vue";
-
+import { createApp, App } from "vue";
 // Plugins
 import { registerPlugins } from "@/plugins";
+//firebase
+import { auth } from './firebase/config';
+import { onAuthStateChanged } from 'firebase/auth';
 
-const app = createApp(App);
+let app: App<Element>
 
-registerPlugins(app);
-
-app.mount("#app");
+// wait for auth to mount the app
+onAuthStateChanged(auth, () => {
+  if (!app) {
+    app = createApp(Application);
+    registerPlugins(app);
+    app.mount("#app");
+  }
+})
