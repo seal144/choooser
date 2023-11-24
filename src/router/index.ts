@@ -1,5 +1,17 @@
 // Composables
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHistory, RouteLocationNormalized, NavigationGuardNext } from "vue-router";
+import { auth } from '../firebase/config';
+
+const requireAuth = (to:RouteLocationNormalized, from:RouteLocationNormalized, next: NavigationGuardNext) => {
+  const user = auth.currentUser;
+
+  if (!user) {
+    next({name: 'Login'});
+  } else {
+    next();
+  }
+}
+
 
 const routes = [
   {
@@ -16,6 +28,7 @@ const routes = [
           import(/* webpackChunkName: "home" */ "@/views/Home.vue"),
       },
     ],
+    beforeEnter: requireAuth,
   },
   {
     path: "/login",

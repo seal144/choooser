@@ -18,6 +18,7 @@
 </template>
 
 <script lang="ts" setup>
+import { watchEffect } from "vue";
 import { useRouter } from "vue-router";
 import { useDisplay } from "vuetify";
 import { signOut } from 'firebase/auth';
@@ -26,14 +27,18 @@ import Logo from "@/components/Logo.vue";
 import getUser from "@/composables/getUser";
 
 //TODO replace with pinia
-getUser();
+const { user } = getUser();
 const router = useRouter();
-
 const { xs, smAndUp } = useDisplay();
+
+watchEffect(()=>{
+  if(!user.value) {
+    router.push({name: "Login"})
+  }
+})
 
 const handleLogout = () => {
   signOut(auth);
-  router.push({name: "Login"})
 }
 </script>
 
