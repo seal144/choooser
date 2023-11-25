@@ -26,7 +26,6 @@ import { auth } from '@/firebase/config'
 import Logo from "@/components/Logo.vue";
 import getUser from "@/composables/getUser";
 
-//TODO replace with pinia
 const { user } = getUser();
 const router = useRouter();
 const { xs, smAndUp } = useDisplay();

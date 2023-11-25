@@ -3,12 +3,18 @@ import { createRouter, createWebHistory, RouteLocationNormalized, NavigationGuar
 import { auth } from '../firebase/config';
 
 const requireAuth = (to:RouteLocationNormalized, from:RouteLocationNormalized, next: NavigationGuardNext) => {
-  const user = auth.currentUser;
-
-  if (!user) {
+  if (!auth.currentUser) {
     next({name: 'Login'});
   } else {
     next();
+  }
+}
+
+const requireNoAuth = (to:RouteLocationNormalized, from:RouteLocationNormalized, next: NavigationGuardNext) => {
+  if (auth.currentUser) {
+    next({name: 'Home'});
+  } else {
+    next()
   }
 }
 
@@ -40,6 +46,7 @@ const routes = [
         component: () => import("@/views/Login.vue"),
       },
     ],
+    beforeEnter: requireNoAuth,
   },
   {
     path: "/Signup",
@@ -51,6 +58,7 @@ const routes = [
         component: () => import("@/views/Signup.vue"),
       },
     ],
+    beforeEnter: requireNoAuth,
   },
 ];
 
