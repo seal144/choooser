@@ -1,22 +1,29 @@
 <template>
   <v-main>
-    <v-container :class="{['fill-height']:mdAndUp }">
+    <v-container :class="{ ['fill-height']: mdAndUp }">
       <div class="content-wrapper" :class="{ smAndDown: smAndDown }">
         <v-responsive class="align-center">
-          <div class="left-content" :class="{ mdAndDown: mdAndDown, smAndDown: smAndDown }">
+          <div
+            class="left-content"
+            :class="{ mdAndDown: mdAndDown, smAndDown: smAndDown }"
+          >
             <v-card class="text-center">
               <h2 class="mb-3">&#128525; Hello traveler in the CHOOSER</h2>
               <p>
                 App is for choosing from a variety of options in a group of
                 people the best choice for all. Host a room and invite your
-                friends for some choosing. For best user experience create an account.
+                friends for some choosing. For best user experience create an
+                account.
               </p>
             </v-card>
           </div>
         </v-responsive>
         <v-divider vertical />
         <v-responsive class="align-center">
-          <div class="right-content" :class="{ mdAndDown: mdAndDown, smAndDown: smAndDown }">
+          <div
+            class="right-content"
+            :class="{ mdAndDown: mdAndDown, smAndDown: smAndDown }"
+          >
             <router-view />
           </div>
         </v-responsive>
@@ -28,7 +35,7 @@
 <script lang="ts" setup>
 import { useDisplay } from "vuetify";
 
-const { mdAndUp, mdAndDown, smAndDown} = useDisplay();
+const { mdAndUp, mdAndDown, smAndDown } = useDisplay();
 </script>
 
 <style scoped lang="scss">
@@ -72,7 +79,7 @@ const { mdAndUp, mdAndDown, smAndDown} = useDisplay();
     }
 
     &.smAndDown {
-      max-width:400px;
+      max-width: 400px;
       margin: 0 auto;
     }
   }

@@ -1,13 +1,15 @@
 <template>
   <v-form v-model="form" @submit.prevent="onSubmit" validate-on="blur lazy">
-    <HeaderCard
-     class="header"
-    >
+    <HeaderCard class="header">
       <template v-if="props.variant === 'login'">
-        <b>Log in</b> or <router-link :to="{name: 'Signup'}"><b>Sign&nbsp;up</b></router-link> if you are new
+        <b>Log in</b> or
+        <router-link :to="{ name: 'Signup' }"><b>Sign&nbsp;up</b></router-link>
+        if you are new
       </template>
       <template v-else>
-        <b>Sign up</b> or <router-link :to="{name: 'Login'}"><b>Log&nbsp;in</b></router-link> if you have an account
+        <b>Sign up</b> or
+        <router-link :to="{ name: 'Login' }"><b>Log&nbsp;in</b></router-link> if
+        you have an account
       </template>
     </HeaderCard>
     <TextField
@@ -32,18 +34,21 @@
       @click:append-inner="showPassword = !showPassword"
       :type="showPassword ? 'text' : 'password'"
     />
-    <v-btn
-      type="submit"
-      :loading="loading"
-    >
+    <v-btn type="submit" :loading="loading">
       <template v-if="props.variant === 'login'">Log in</template>
       <template v-else>Sign up</template>
     </v-btn>
   </v-form>
-  <router-link class="guest-link" :to="{name: 'Home'}">Continue as guest</router-link>
+  <router-link class="guest-link" :to="{ name: 'Home' }"
+    >Continue as guest</router-link
+  >
   <!-- TODO create: "invalid-login-credentials error", "email-already-in-use"-->
-  <div class="error-box"  v-if="errorLogin && props.variant === 'login'">{{ errorLogin }}</div>
-  <div class="error-box"  v-if="errorSignup && props.variant === 'signup'">{{ errorSignup }}</div>
+  <div class="error-box" v-if="errorLogin && props.variant === 'login'">
+    {{ errorLogin }}
+  </div>
+  <div class="error-box" v-if="errorSignup && props.variant === 'signup'">
+    {{ errorSignup }}
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -51,8 +56,8 @@ import { computed, ref, PropType } from "vue";
 import { useRouter } from "vue-router";
 import TextField from "@/components/TextField.vue";
 import HeaderCard from "@/components/HeaderCard.vue";
-import useSignup from '@/composables/useSignup';
-import useLogin from '@/composables/useLogin';
+import useSignup from "@/composables/useSignup";
+import useLogin from "@/composables/useLogin";
 
 const props = defineProps({
   variant: {
@@ -71,27 +76,31 @@ const name = ref("");
 const password = ref("");
 const showPassword = ref(false);
 const loading = computed(() => {
-  if(loadingSignup.value || loadingLogin.value) {
+  if (loadingSignup.value || loadingLogin.value) {
     return true;
   }
   return false;
-})
+});
 
 const required = (value: string) => !!value || "Required";
-const emailValidation = (value: string) => Boolean(value.match(/^[\w-.]+@([\w-]+\.)[\w]{2,4}$/)) || "incorrect email format";
-const minCharsRequired = (minChars: number) => (value: string) => Number(value.length) >= minChars || `at least ${minChars} characters required`;
+const emailValidation = (value: string) =>
+  Boolean(value.match(/^[\w-.]+@([\w-]+\.)[\w]{2,4}$/)) ||
+  "incorrect email format";
+const minCharsRequired = (minChars: number) => (value: string) =>
+  Number(value.length) >= minChars ||
+  `at least ${minChars} characters required`;
 
 const onSubmit = computed(() => {
-  return props.variant === "login"? submitLogin : submitSignup;
-})
+  return props.variant === "login" ? submitLogin : submitSignup;
+});
 
 const submitLogin = async () => {
   if (!form.value) return;
-  
+
   await login(email.value, password.value);
 
   if (!errorLogin.value) {
-    router.push({ name: 'Home' });
+    router.push({ name: "Home" });
   }
 };
 
@@ -99,30 +108,30 @@ const submitSignup = async () => {
   if (!form.value) return;
 
   await signup(email.value, password.value, name.value);
-  
+
   if (!errorSignup.value) {
-    router.push({ name: 'Home' });
+    router.push({ name: "Home" });
   }
 };
 </script>
 
 <style lang="scss" scoped>
-  .header {
-    margin-bottom: 1.75rem;
-  }
-  .v-input {
-    margin: 0 0 0.5rem;
-  }
-  .v-btn{
-    width: 100%;
-    margin-bottom: 1.2rem;
-  }
-  .guest-link {
-    display: block;
-    text-align: center;
-  }
-  .error-box {
-    margin-top: 1rem;
-    color: rgb(var(--v-theme-error))
-  }
+.header {
+  margin-bottom: 1.75rem;
+}
+.v-input {
+  margin: 0 0 0.5rem;
+}
+.v-btn {
+  width: 100%;
+  margin-bottom: 1.2rem;
+}
+.guest-link {
+  display: block;
+  text-align: center;
+}
+.error-box {
+  margin-top: 1rem;
+  color: rgb(var(--v-theme-error));
+}
 </style>

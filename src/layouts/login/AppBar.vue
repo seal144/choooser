@@ -1,7 +1,7 @@
 <template>
-    <v-container>
-      <Logo big />
-    </v-container>
+  <v-container>
+    <Logo big />
+  </v-container>
 </template>
 
 <script lang="ts" setup>

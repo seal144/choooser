@@ -11,10 +11,10 @@ import { createApp, App } from "vue";
 // Plugins
 import { registerPlugins } from "@/plugins";
 //firebase
-import { auth } from './firebase/config';
-import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from "./firebase/config";
+import { onAuthStateChanged } from "firebase/auth";
 
-let app: App<Element>
+let app: App<Element>;
 
 // wait for auth to mount the app
 onAuthStateChanged(auth, () => {
@@ -23,4 +23,4 @@ onAuthStateChanged(auth, () => {
     registerPlugins(app);
     app.mount("#app");
   }
-})
+});

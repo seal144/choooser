@@ -6,8 +6,7 @@
   ></v-text-field>
 </template>
 
-<script setup lang="ts">
-</script>
+<script setup lang="ts"></script>
 
 <style lang="scss">
 div.component-text-field input.v-field__input {

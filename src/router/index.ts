@@ -1,23 +1,35 @@
 // Composables
-import { createRouter, createWebHistory, RouteLocationNormalized, NavigationGuardNext } from "vue-router";
-import { auth } from '../firebase/config';
+import {
+  createRouter,
+  createWebHistory,
+  RouteLocationNormalized,
+  NavigationGuardNext,
+} from "vue-router";
+import { auth } from "../firebase/config";
 
-const requireAuth = (to:RouteLocationNormalized, from:RouteLocationNormalized, next: NavigationGuardNext) => {
+const requireAuth = (
+  to: RouteLocationNormalized,
+  from: RouteLocationNormalized,
+  next: NavigationGuardNext
+) => {
   if (!auth.currentUser) {
-    next({name: 'Login'});
+    next({ name: "Login" });
   } else {
     next();
   }
-}
+};
 
-const requireNoAuth = (to:RouteLocationNormalized, from:RouteLocationNormalized, next: NavigationGuardNext) => {
+const requireNoAuth = (
+  to: RouteLocationNormalized,
+  from: RouteLocationNormalized,
+  next: NavigationGuardNext
+) => {
   if (auth.currentUser) {
-    next({name: 'Home'});
+    next({ name: "Home" });
   } else {
-    next()
+    next();
   }
-}
-
+};
 
 const routes = [
   {

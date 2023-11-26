@@ -1,15 +1,15 @@
-import { ref } from 'vue'
-import { auth } from '../firebase/config'
-import { onAuthStateChanged } from 'firebase/auth'
+import { ref } from "vue";
+import { auth } from "../firebase/config";
+import { onAuthStateChanged } from "firebase/auth";
 
-const user = ref(auth.currentUser)
+const user = ref(auth.currentUser);
 
-onAuthStateChanged(auth, newUser => {
+onAuthStateChanged(auth, (newUser) => {
   user.value = newUser;
-})
+});
 
 const getUser = () => {
-  return { user } 
-}
+  return { user };
+};
 
-export default getUser
+export default getUser;
