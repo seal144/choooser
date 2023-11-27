@@ -16,38 +16,46 @@
       v-model.trim="email"
       label="Email"
       :rules="[required, emailValidation]"
-      :readonly="loading"
+      :readonly="submitLoading"
     />
     <TextField
       v-if="props.variant === 'signup'"
       v-model.trim="name"
       label="Display name"
       :rules="[required, minCharsRequired(3)]"
-      :readonly="loading"
+      :readonly="submitLoading"
     />
     <TextField
       v-model.trim="password"
       label="Password"
       :rules="[required, minCharsRequired(6)]"
-      :readonly="loading"
+      :readonly="submitLoading"
       :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
       @click:append-inner="showPassword = !showPassword"
       :type="showPassword ? 'text' : 'password'"
     />
-    <v-btn type="submit" :loading="loading">
+    <v-btn type="submit" :loading="submitLoading">
       <template v-if="props.variant === 'login'">Log in</template>
       <template v-else>Sign up</template>
     </v-btn>
   </v-form>
-  <router-link class="guest-link" :to="{ name: 'Home' }"
-    >Continue as guest</router-link
+  <!-- TODO consider change style after gmail authentication implementation -->
+  <v-btn
+    @click="handleContinueAsGuest"
+    class="guest-link"
+    :loading="loadingLoginAnonymous"
   >
-  <!-- TODO create: "invalid-login-credentials error", "email-already-in-use"-->
+    Continue as guest
+  </v-btn>
+  <!-- TODO create error component handle errors: "invalid-login-credentials error", "email-already-in-use"-->
   <div class="error-box" v-if="errorLogin && props.variant === 'login'">
     {{ errorLogin }}
   </div>
   <div class="error-box" v-if="errorSignup && props.variant === 'signup'">
     {{ errorSignup }}
+  </div>
+  <div class="error-box" v-if="errorLoginAnonymous">
+    {{ errorLoginAnonymous }}
   </div>
 </template>
 
@@ -58,6 +66,7 @@ import TextField from "@/components/TextField.vue";
 import HeaderCard from "@/components/HeaderCard.vue";
 import useSignup from "@/composables/useSignup";
 import useLogin from "@/composables/useLogin";
+import useAnonymousAuth from "@/composables/useAnonymousAuth";
 
 const props = defineProps({
   variant: {
@@ -68,6 +77,11 @@ const props = defineProps({
 
 const { signup, error: errorSignup, loading: loadingSignup } = useSignup();
 const { login, error: errorLogin, loading: loadingLogin } = useLogin();
+const {
+  login: loginAnonymous,
+  error: errorLoginAnonymous,
+  loading: loadingLoginAnonymous,
+} = useAnonymousAuth();
 const router = useRouter();
 
 const form = ref(false);
@@ -75,7 +89,7 @@ const email = ref("");
 const name = ref("");
 const password = ref("");
 const showPassword = ref(false);
-const loading = computed(() => {
+const submitLoading = computed(() => {
   if (loadingSignup.value || loadingLogin.value) {
     return true;
   }
@@ -110,6 +124,14 @@ const submitSignup = async () => {
   await signup(email.value, password.value, name.value);
 
   if (!errorSignup.value) {
+    router.push({ name: "Home" });
+  }
+};
+
+const handleContinueAsGuest = async () => {
+  await loginAnonymous();
+
+  if (!errorLoginAnonymous.value) {
     router.push({ name: "Home" });
   }
 };
