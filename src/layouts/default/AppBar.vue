@@ -3,14 +3,16 @@
     <v-container>
       <v-app-bar-title> <Logo :collapse="xs" /> </v-app-bar-title>
       <div class="action-container">
-        <v-btn :icon="!smAndUp"
+        <Button :icon="!smAndUp"
           ><v-icon icon="mdi-cog" /><span v-if="smAndUp">settings</span>
-        </v-btn>
-        <v-btn @click="handleLogout" :icon="!smAndUp"
-          ><v-icon icon="mdi-logout" /><span v-if="smAndUp">logout</span></v-btn
+        </Button>
+        <Button @click="handleLogout" :icon="!smAndUp"
+          ><v-icon icon="mdi-logout" /><span v-if="smAndUp"
+            >logout</span
+          ></Button
         >
-        <!-- <v-btn :icon="!smAndUp"
-          ><v-icon icon="mdi-login" /><span v-if="smAndUp">login</span></v-btn
+        <!-- <Button :icon="!smAndUp"
+          ><v-icon icon="mdi-login" /><span v-if="smAndUp">login</span></Button
         > -->
       </div>
     </v-container>
@@ -21,8 +23,10 @@
 import { watchEffect } from "vue";
 import { useRouter } from "vue-router";
 import { useDisplay } from "vuetify";
+
 import { signOut } from "firebase/auth";
 import { auth } from "@/firebase/config";
+import Button from "@/components/Button.vue";
 import Logo from "@/components/Logo.vue";
 import getUser from "@/composables/getUser";
 

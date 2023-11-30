@@ -1,7 +1,7 @@
 <template>
   <Dialog :title="title" close-label="close">
     <template v-slot:ActivatorButtonLabel>
-      <v-icon :icon="activatorButtonIcon" size="large" start />
+      <v-icon :icon="activatorButtonIcon" size="large" />
       {{ title }}
     </template>
     <template v-slot:content>
@@ -21,18 +21,17 @@
       </v-form>
     </template>
     <template v-slot:action>
-      <v-btn
-        :text="actionButtonLabel"
-        :disabled="!form"
-        @click="onSubmit"
-        :loading="loading"
-      ></v-btn>
+      <Button :disabled="!form" @click="onSubmit" :loading="loading">{{
+        actionButtonLabel
+      }}</Button>
     </template>
   </Dialog>
 </template>
 
 <script lang="ts" setup>
 import { computed, ref, PropType } from "vue";
+
+import Button from "./Button.vue";
 import Dialog from "./Dialog.vue";
 import TextField from "./TextField.vue";
 

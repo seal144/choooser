@@ -44,10 +44,7 @@ const vuetify = createVuetify({
   defaults: {
     VBtn: {
       rounded: "0",
-      class: ["v-btn--primary"],
-      color: "rgb(var(--v-theme-primary))",
-      style:
-        "color: rgb(var(--v-theme-on-primary)); text-transform: none; background-color: rgb(var(--v-theme-primary));",
+      style: "text-transform: none;",
     },
     VCard: {
       rounded: "0",

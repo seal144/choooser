@@ -34,19 +34,30 @@
       @click:append-inner="showPassword = !showPassword"
       :type="showPassword ? 'text' : 'password'"
     />
-    <v-btn type="submit" :loading="submitLoading">
+    <Button class="submit" type="submit" :loading="submitLoading">
       <template v-if="props.variant === 'login'">Log in</template>
       <template v-else>Sign up</template>
-    </v-btn>
+    </Button>
   </v-form>
-  <!-- TODO consider change style after gmail authentication implementation -->
-  <v-btn
-    @click="handleContinueAsGuest"
-    class="guest-link"
-    :loading="loadingLoginAnonymous"
-  >
-    Continue as guest
-  </v-btn>
+  <div class="alternative-auth-container" :class="{ md: md, xs: xs }">
+    <Button
+      @click="handleContinueAsGuest"
+      :loading="loadingLoginAnonymous"
+      size="small"
+      secondary
+    >
+      use Gmail
+    </Button>
+    <!-- TODO consider change style after gmail authentication implementation -->
+    <Button
+      @click="handleContinueAsGuest"
+      :loading="loadingLoginAnonymous"
+      size="small"
+      secondary
+    >
+      Continue as guest
+    </Button>
+  </div>
   <!-- TODO create error component handle errors: "invalid-login-credentials error", "email-already-in-use"-->
   <div class="error-box" v-if="errorLogin && props.variant === 'login'">
     {{ errorLogin }}
@@ -62,6 +73,9 @@
 <script setup lang="ts">
 import { computed, ref, PropType } from "vue";
 import { useRouter } from "vue-router";
+import { useDisplay } from "vuetify";
+
+import Button from "@/components/Button.vue";
 import TextField from "@/components/TextField.vue";
 import HeaderCard from "@/components/HeaderCard.vue";
 import useSignup from "@/composables/useSignup";
@@ -74,6 +88,8 @@ const props = defineProps({
     required: true,
   },
 });
+
+const { md, xs } = useDisplay();
 
 const { signup, error: errorSignup, loading: loadingSignup } = useSignup();
 const { login, error: errorLogin, loading: loadingLogin } = useLogin();
@@ -144,14 +160,29 @@ const handleContinueAsGuest = async () => {
 .v-input {
   margin: 0 0 0.5rem;
 }
-.v-btn {
+.v-btn.submit {
   width: 100%;
   margin-bottom: 1.2rem;
 }
-.guest-link {
-  display: block;
-  text-align: center;
+
+.alternative-auth-container {
+  display: flex;
+  gap: 0.5rem;
+
+  & .v-btn {
+    flex: 1;
+  }
+
+  &.md,
+  &.xs {
+    flex-direction: column;
+
+    & .v-btn {
+      flex: none;
+    }
+  }
 }
+
 .error-box {
   margin-top: 1rem;
   color: rgb(var(--v-theme-error));

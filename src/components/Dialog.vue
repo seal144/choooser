@@ -5,7 +5,7 @@
     class="default-dialog"
   >
     <template v-slot:activator="{ props }">
-      <v-btn v-bind="props"><slot name="ActivatorButtonLabel"></slot></v-btn>
+      <Button v-bind="props"><slot name="ActivatorButtonLabel"></slot></Button>
     </template>
 
     <template v-slot:default="{ isActive }">
@@ -24,11 +24,9 @@
           <slot name="content"></slot>
         </v-card-text>
         <v-card-actions :class="{ xs: xs }">
-          <v-btn
-            :text="closeLabel"
-            @click="isActive.value = false"
-            v-if="closeLabel"
-          ></v-btn>
+          <Button @click="isActive.value = false" v-if="closeLabel">{{
+            closeLabel
+          }}</Button>
           <slot name="action"></slot>
         </v-card-actions>
       </v-card>
@@ -38,6 +36,8 @@
 
 <script lang="ts" setup>
 import { useDisplay } from "vuetify";
+
+import Button from "./Button.vue";
 
 const { xs } = useDisplay();
 

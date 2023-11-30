@@ -4,11 +4,12 @@
     <JoinCreateRoomDialog variant="join" />
     <JoinCreateRoomDialog variant="create" />
     <HeaderCard>Your Rooms</HeaderCard>
-    <v-btn v-for="room in mockedRooms" :key="room.id">{{ room.name }}</v-btn>
+    <Button v-for="room in mockedRooms" :key="room.id">{{ room.name }}</Button>
   </v-responsive>
 </template>
 
 <script lang="ts" setup>
+import Button from "@/components/Button.vue";
 import JoinCreateRoomDialog from "@/components/JoinCreateRoomDialog.vue";
 import HeaderCard from "@/components/HeaderCard.vue";
 
