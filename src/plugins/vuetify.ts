@@ -4,12 +4,13 @@
  * Framework documentation: https://vuetifyjs.com`
  */
 
-// Styles
+import { createVuetify } from "vuetify";
+import { mdi } from "vuetify/iconsets/mdi";
+
+import { customSVGs } from "@/assets/customSVGs/customSVGs";
+
 import "@mdi/font/css/materialdesignicons.css";
 import "vuetify/styles";
-
-// Composables
-import { createVuetify } from "vuetify";
 
 const LightPalette = {
   primary: "#3b3d4a",
@@ -88,6 +89,13 @@ const vuetify = createVuetify({
           "on-surface": DarkPalette.primary,
         },
       },
+    },
+  },
+  icons: {
+    defaultSet: "mdi",
+    sets: {
+      mdi,
+      custom: customSVGs,
     },
   },
 });
