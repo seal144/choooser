@@ -41,12 +41,12 @@
   </v-form>
   <div class="alternative-auth-container" :class="{ md: md, xs: xs }">
     <Button
-      @click="handleContinueAsGuest"
-      :loading="loadingLoginAnonymous"
+      @click="handleUseGoogle"
+      :loading="loadingGoogle"
       size="small"
       secondary
     >
-      use Gmail
+      <v-icon icon="mdi-google" class="mr-1" />use Google
     </Button>
     <!-- TODO consider change style after gmail authentication implementation -->
     <Button
@@ -81,6 +81,7 @@ import HeaderCard from "@/components/HeaderCard.vue";
 import useSignup from "@/composables/useSignup";
 import useLogin from "@/composables/useLogin";
 import useAnonymousAuth from "@/composables/useAnonymousAuth";
+import useLoginGoogle from "@/composables/useloginGoogle";
 
 const props = defineProps({
   variant: {
@@ -98,6 +99,11 @@ const {
   error: errorLoginAnonymous,
   loading: loadingLoginAnonymous,
 } = useAnonymousAuth();
+const {
+  login: loginGoogle,
+  error: errorGoogle,
+  loading: loadingGoogle,
+} = useLoginGoogle();
 const router = useRouter();
 
 const form = ref(false);
@@ -148,6 +154,14 @@ const handleContinueAsGuest = async () => {
   await loginAnonymous();
 
   if (!errorLoginAnonymous.value) {
+    router.push({ name: "Home" });
+  }
+};
+
+const handleUseGoogle = async () => {
+  await loginGoogle();
+
+  if (!errorGoogle.value) {
     router.push({ name: "Home" });
   }
 };
