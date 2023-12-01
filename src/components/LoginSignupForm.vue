@@ -41,17 +41,17 @@
   </v-form>
   <div class="alternative-auth-container" :class="{ md: md, xs: xs }">
     <Button
-      @click="handleContinueAsGuest"
-      :loading="loadingLoginAnonymous"
+      @click="handleUseGoogle"
+      :loading="loadingGoogle"
       size="small"
       secondary
     >
-      use Gmail
+      <v-icon icon="mdi-google" class="mr-1" />use Google
     </Button>
     <!-- TODO consider change style after gmail authentication implementation -->
     <Button
       @click="handleContinueAsGuest"
-      :loading="loadingLoginAnonymous"
+      :loading="loadingAnonymous"
       size="small"
       secondary
     >
@@ -65,8 +65,11 @@
   <div class="error-box" v-if="errorSignup && props.variant === 'signup'">
     {{ errorSignup }}
   </div>
-  <div class="error-box" v-if="errorLoginAnonymous">
-    {{ errorLoginAnonymous }}
+  <div class="error-box" v-if="errorAnonymous">
+    {{ errorAnonymous }}
+  </div>
+  <div class="error-box" v-if="errorGoogle">
+    {{ errorGoogle }}
   </div>
 </template>
 
@@ -81,6 +84,7 @@ import HeaderCard from "@/components/HeaderCard.vue";
 import useSignup from "@/composables/useSignup";
 import useLogin from "@/composables/useLogin";
 import useAnonymousAuth from "@/composables/useAnonymousAuth";
+import useLoginGoogle from "@/composables/useloginGoogle";
 
 const props = defineProps({
   variant: {
@@ -95,9 +99,14 @@ const { signup, error: errorSignup, loading: loadingSignup } = useSignup();
 const { login, error: errorLogin, loading: loadingLogin } = useLogin();
 const {
   login: loginAnonymous,
-  error: errorLoginAnonymous,
-  loading: loadingLoginAnonymous,
+  error: errorAnonymous,
+  loading: loadingAnonymous,
 } = useAnonymousAuth();
+const {
+  login: loginGoogle,
+  error: errorGoogle,
+  loading: loadingGoogle,
+} = useLoginGoogle();
 const router = useRouter();
 
 const form = ref(false);
@@ -147,7 +156,15 @@ const submitSignup = async () => {
 const handleContinueAsGuest = async () => {
   await loginAnonymous();
 
-  if (!errorLoginAnonymous.value) {
+  if (!errorAnonymous.value) {
+    router.push({ name: "Home" });
+  }
+};
+
+const handleUseGoogle = async () => {
+  await loginGoogle();
+
+  if (!errorGoogle.value) {
     router.push({ name: "Home" });
   }
 };
