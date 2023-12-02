@@ -1,6 +1,8 @@
 <template>
   <v-responsive class="text-center fill-height home-view">
-    <HeaderCard>&#128075; Hello {{ mockedUser }}</HeaderCard>
+    <HeaderCard
+      >&#128075; Hello {{ user ? user.displayName : "traveler" }}</HeaderCard
+    >
     <JoinCreateRoomDialog variant="join" />
     <JoinCreateRoomDialog variant="create" />
     <HeaderCard>Your Rooms</HeaderCard>
@@ -12,8 +14,10 @@
 import Button from "@/components/Button.vue";
 import JoinCreateRoomDialog from "@/components/JoinCreateRoomDialog.vue";
 import HeaderCard from "@/components/HeaderCard.vue";
+import getUser from "@/composables/getUser";
 
-const mockedUser = "Rafał";
+const { user } = getUser();
+
 const mockedRooms = [
   { id: "1", name: "room1" },
   { id: "2", name: "room2" },
