@@ -22,7 +22,7 @@
       v-if="props.variant === 'signup'"
       v-model.trim="name"
       label="Display name"
-      :rules="[required, minCharsRequired(3)]"
+      :rules="[required, minCharsRequired(3), maxChars(30)]"
       :readonly="submitLoading"
     />
     <TextField
@@ -48,7 +48,6 @@
     >
       <v-icon icon="mdi-google" class="mr-1" />use Google
     </Button>
-    <!-- TODO consider change style after gmail authentication implementation -->
     <Button
       @click="handleContinueAsGuest"
       :loading="loadingAnonymous"
@@ -128,6 +127,8 @@ const emailValidation = (value: string) =>
 const minCharsRequired = (minChars: number) => (value: string) =>
   Number(value.length) >= minChars ||
   `at least ${minChars} characters required`;
+const maxChars = (maxChars: number) => (value: string) =>
+  Number(value.length) <= maxChars || `max ${maxChars} characters`;
 
 const onSubmit = computed(() => {
   return props.variant === "login" ? submitLogin : submitSignup;
