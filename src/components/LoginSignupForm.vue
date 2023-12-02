@@ -169,14 +169,6 @@ const handleUseGoogle = async () => {
     router.push({ name: "Home" });
   }
 };
-
-const handleUseGoogle = async () => {
-  await loginGoogle();
-
-  if (!errorGoogle.value) {
-    router.push({ name: "Home" });
-  }
-};
 </script>
 
 <style lang="scss" scoped>
