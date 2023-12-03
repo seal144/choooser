@@ -58,17 +58,17 @@
     </Button>
   </div>
   <!-- TODO create error component handle errors: "invalid-login-credentials error", "email-already-in-use"-->
-  <div class="error-box" v-if="errorLogin && props.variant === 'login'">
-    {{ errorLogin }}
-  </div>
-  <div class="error-box" v-if="errorSignup && props.variant === 'signup'">
-    {{ errorSignup }}
-  </div>
-  <div class="error-box" v-if="errorAnonymous">
-    {{ errorAnonymous }}
-  </div>
-  <div class="error-box" v-if="errorGoogle">
-    {{ errorGoogle }}
+  <div class="error-container">
+    <FormError
+      v-if="errorLogin && props.variant === 'login'"
+      :error-message="errorLogin"
+    />
+    <FormError
+      v-else-if="errorSignup && props.variant === 'signup'"
+      :error-message="errorSignup"
+    />
+    <FormError v-else-if="errorGoogle" :error-message="errorGoogle" />
+    <FormError v-else-if="errorAnonymous" :error-message="errorAnonymous" />
   </div>
 </template>
 
@@ -78,8 +78,9 @@ import { useRouter } from "vue-router";
 import { useDisplay } from "vuetify";
 
 import Button from "@/components/Button.vue";
-import TextField from "@/components/TextField.vue";
+import FormError from "@/components/FormError.vue";
 import HeaderCard from "@/components/HeaderCard.vue";
+import TextField from "@/components/TextField.vue";
 import useSignup from "@/composables/useSignup";
 import useLogin from "@/composables/useLogin";
 import useAnonymousAuth from "@/composables/useAnonymousAuth";
@@ -201,8 +202,8 @@ const handleUseGoogle = async () => {
   }
 }
 
-.error-box {
-  margin-top: 1rem;
-  color: rgb(var(--v-theme-error));
+.error-container {
+  position: relative;
+  height: 0;
 }
 </style>
