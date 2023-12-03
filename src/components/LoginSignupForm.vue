@@ -58,7 +58,7 @@
     </Button>
   </div>
   <!-- TODO create error component handle errors: "invalid-login-credentials error", "email-already-in-use"-->
-  <div class="error-container">
+  <div class="submit-errors">
     <FormError
       v-if="errorLogin && props.variant === 'login'"
       :error-message="errorLogin"
@@ -202,8 +202,7 @@ const handleUseGoogle = async () => {
   }
 }
 
-.error-container {
+.submit-errors {
   position: relative;
-  height: 0;
 }
 </style>

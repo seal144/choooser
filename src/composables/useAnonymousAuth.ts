@@ -19,8 +19,9 @@ const login = async () => {
     error.value = null;
     loading.value = false;
   } catch (err) {
-    console.log((err as Error).message);
-    error.value = (err as Error).message;
+    const { message } = err as Error;
+    console.log(message);
+    error.value = message;
     loading.value = false;
   }
 };

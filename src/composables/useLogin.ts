@@ -2,6 +2,16 @@ import { ref } from "vue";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase/config";
 
+const parseErrorMessage = (message: string) => {
+  if (message.includes("invalid-login-credentials")) {
+    return "Invalid login credentials";
+  }
+  if (message.includes("too-many-requests")) {
+    return "Account has been temporarily disabled due to many failed login attempts";
+  }
+  return message;
+};
+
 const error = ref<string | null>(null);
 const loading = ref(false);
 
@@ -18,8 +28,9 @@ const login = async (email: string, password: string) => {
     error.value = null;
     loading.value = false;
   } catch (err) {
-    console.log((err as Error).message);
-    error.value = (err as Error).message;
+    const { message } = err as Error;
+    console.log(message);
+    error.value = parseErrorMessage(message);
     loading.value = false;
   }
 };
