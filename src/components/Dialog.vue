@@ -1,14 +1,17 @@
 <template>
   <v-dialog
+    v-model="isOpen"
     width="500"
     transition="dialog-top-transition"
     class="default-dialog"
   >
-    <template v-slot:activator="{ props }">
-      <Button v-bind="props"><slot name="ActivatorButtonLabel"></slot></Button>
+    <template v-slot:activator>
+      <div @click="isOpen = true">
+        <slot name="ActivatorButtonLabel"></slot>
+      </div>
     </template>
 
-    <template v-slot:default="{ isActive }">
+    <template v-slot:default>
       <v-card>
         <v-card-title v-if="title" :class="{ xs: xs }">{{
           title
@@ -24,7 +27,7 @@
           <slot name="content"></slot>
         </v-card-text>
         <v-card-actions :class="{ xs: xs }">
-          <Button @click="isActive.value = false" v-if="closeLabel">{{
+          <Button @click="isOpen = false" v-if="closeLabel">{{
             closeLabel
           }}</Button>
           <slot name="action"></slot>
@@ -35,9 +38,20 @@
 </template>
 
 <script lang="ts" setup>
+import { ref, watch } from "vue";
 import { useDisplay } from "vuetify";
 
 import Button from "./Button.vue";
+
+const emit = defineEmits(["close"]);
+
+const isOpen = ref(false);
+
+watch(isOpen, () => {
+  if (!isOpen.value) {
+    emit("close");
+  }
+});
 
 const { xs } = useDisplay();
 

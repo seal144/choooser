@@ -1,8 +1,10 @@
 <template>
   <Dialog :title="title" close-label="close">
     <template v-slot:ActivatorButtonLabel>
-      <v-icon :icon="activatorButtonIcon" size="large" />
-      {{ title }}
+      <Button>
+        <v-icon :icon="activatorButtonIcon" size="large" />
+        {{ title }}
+      </Button>
     </template>
     <template v-slot:content>
       <v-form v-model="form" @submit.prevent="onSubmit">
@@ -78,6 +80,9 @@ const onSubmit = () => {
 </script>
 
 <style lang="scss" scoped>
+.v-btn {
+  width: 100%;
+}
 .v-input {
   margin: 0 0 0.5rem;
 

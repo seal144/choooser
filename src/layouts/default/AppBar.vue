@@ -3,9 +3,7 @@
     <v-container>
       <v-app-bar-title> <Logo :collapse="xs" /> </v-app-bar-title>
       <div class="action-container">
-        <Button :icon="!smAndUp"
-          ><v-icon icon="mdi-cog" /><span v-if="smAndUp">settings</span>
-        </Button>
+        <SettingsDialog />
         <Button @click="handleLogout" :icon="!smAndUp"
           ><v-icon icon="mdi-logout" /><span v-if="smAndUp"
             >logout</span
@@ -28,6 +26,7 @@ import { signOut } from "firebase/auth";
 import { auth } from "@/firebase/config";
 import Button from "@/components/Button.vue";
 import Logo from "@/components/Logo.vue";
+import SettingsDialog from "@/components/SettingsDialog.vue";
 import getUser from "@/composables/getUser";
 
 const { user } = getUser();
