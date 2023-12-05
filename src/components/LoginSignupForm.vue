@@ -15,20 +15,20 @@
     <TextField
       v-model.trim="email"
       label="Email"
-      :rules="[required, emailValidation]"
+      :rules="[...emailValidation]"
       :readonly="submitLoading"
     />
     <TextField
       v-if="props.variant === 'signup'"
       v-model.trim="name"
       label="Display name"
-      :rules="[required, minCharsRequired(3), maxChars(30)]"
+      :rules="[...displayNameValidation]"
       :readonly="submitLoading"
     />
     <TextField
       v-model.trim="password"
       label="Password"
-      :rules="[required, minCharsRequired(6)]"
+      :rules="[...passwordValidation]"
       :readonly="submitLoading"
       :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
       @click:append-inner="showPassword = !showPassword"
@@ -85,6 +85,11 @@ import useSignup from "@/composables/useSignup";
 import useLogin from "@/composables/useLogin";
 import useAnonymousAuth from "@/composables/useAnonymousAuth";
 import useLoginGoogle from "@/composables/useloginGoogle";
+import {
+  emailValidation,
+  displayNameValidation,
+  passwordValidation,
+} from "@/utils/validation";
 
 const props = defineProps({
   variant: {
@@ -120,16 +125,6 @@ const submitLoading = computed(() => {
   }
   return false;
 });
-
-const required = (value: string) => !!value || "Required";
-const emailValidation = (value: string) =>
-  Boolean(value.match(/^[\w-.]+@([\w-]+\.)[\w]{2,4}$/)) ||
-  "incorrect email format";
-const minCharsRequired = (minChars: number) => (value: string) =>
-  Number(value.length) >= minChars ||
-  `at least ${minChars} characters required`;
-const maxChars = (maxChars: number) => (value: string) =>
-  Number(value.length) <= maxChars || `max ${maxChars} characters`;
 
 const onSubmit = computed(() => {
   return props.variant === "login" ? submitLogin : submitSignup;

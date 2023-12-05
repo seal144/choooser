@@ -10,7 +10,7 @@
         <TextField
           v-model="displayName"
           label="Display Name"
-          :rules="[required]"
+          :rules="[...displayNameValidation]"
         />
       </v-form>
     </template>
@@ -30,6 +30,7 @@ import Button from "./Button.vue";
 import Dialog from "./Dialog.vue";
 import TextField from "./TextField.vue";
 import getUser from "@/composables/getUser";
+import { displayNameValidation } from "@/utils/validation";
 
 const { smAndUp } = useDisplay();
 const { user } = getUser();
@@ -44,8 +45,6 @@ const isDirty = computed(() => {
   }
   return false;
 });
-
-const required = (value: string) => !!value || "Required";
 
 const onClose = () => {
   displayName.value = user?.value?.displayName;
