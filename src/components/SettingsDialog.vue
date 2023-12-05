@@ -1,5 +1,10 @@
 <template>
-  <Dialog title="Settings" close-label="cancel" @close="onClose">
+  <Dialog
+    title="Settings"
+    close-label="cancel"
+    @close="onClose"
+    class="settings-dialog"
+  >
     <template v-slot:ActivatorButtonLabel>
       <Button class="activator-button" :icon="!smAndUp">
         <v-icon icon="mdi-cog" /><span v-if="smAndUp">settings</span>
@@ -7,6 +12,11 @@
     </template>
     <template v-slot:content>
       <v-form v-model="form" @submit.prevent="onSubmit">
+        <v-switch
+          v-model="darkTheme"
+          hide-details
+          :label="`Theme: ${darkTheme ? 'dark' : 'light'}`"
+        ></v-switch>
         <TextField
           v-model="displayName"
           label="Display Name"
@@ -37,6 +47,7 @@ const { user } = getUser();
 
 const form = ref(false);
 const displayName = ref(user?.value?.displayName);
+const darkTheme = ref(false);
 const loading = ref(false);
 
 const isDirty = computed(() => {
@@ -60,12 +71,30 @@ const onSubmit = () => {
 };
 </script>
 
-<style lang="scss" scoped>
-.activator-button {
-  height: 34px;
+<style lang="scss">
+.settings-dialog {
+  div.v-card-text {
+    padding-top: 0.5rem !important;
+  }
 
-  &.v-btn--icon {
-    width: 34px;
+  .v-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    .v-switch {
+      & div.v-switch__thumb {
+        background-color: rgb(var(--v-theme-primary));
+      }
+    }
+  }
+
+  .activator-button {
+    height: 34px;
+
+    &.v-btn--icon {
+      width: 34px;
+    }
   }
 }
 </style>

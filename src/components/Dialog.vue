@@ -17,13 +17,7 @@
           title
         }}</v-card-title>
         <v-divider v-if="title"></v-divider>
-        <v-card-text
-          :style="
-            xs
-              ? { padding: '1.5rem .5rem 0rem' }
-              : { padding: '1.5rem 2rem 0rem' }
-          "
-        >
+        <v-card-text :class="{ xs: xs }">
           <slot name="content"></slot>
         </v-card-text>
         <v-card-actions :class="{ xs: xs }">
@@ -76,6 +70,15 @@ defineProps({
       padding: 0.125rem 0.5rem;
     }
   }
+
+  div.v-card-text {
+    padding: 1.5rem 2rem 0rem !important;
+
+    &.xs {
+      padding: 1.5rem 0.5rem 0rem !important;
+    }
+  }
+
   div.v-card-actions {
     padding: 0.5rem 2rem 1.5rem;
     gap: 1.875rem;
