@@ -19,7 +19,7 @@ const LightPalette = {
 };
 
 const DarkPalette = {
-  primary: "#8e8f9e",
+  primary: "#74b0ab",
   background: "#3b3d4a",
   surface: "#3f404a",
 };
@@ -68,8 +68,10 @@ const vuetify = createVuetify({
     },
   },
   theme: {
+    defaultTheme: "light",
     themes: {
       light: {
+        dark: false,
         colors: {
           primary: LightPalette.primary,
           "on-primary": LightPalette.background,
@@ -80,6 +82,7 @@ const vuetify = createVuetify({
         },
       },
       dark: {
+        dark: true,
         colors: {
           primary: DarkPalette.primary,
           "on-primary": DarkPalette.background,
