@@ -1,5 +1,5 @@
 <template>
-  <Dialog :title="title" close-label="close">
+  <Dialog :identification="identification" :title="title" close-label="close">
     <template v-slot:ActivatorButtonLabel>
       <Button>
         <v-icon :icon="activatorButtonIcon" size="large" />
@@ -36,6 +36,7 @@ import { computed, ref, PropType } from "vue";
 import Button from "./Button.vue";
 import Dialog from "./Dialog.vue";
 import TextField from "./TextField.vue";
+import { Dialogs } from "@/types";
 
 const props = defineProps({
   variant: {
@@ -48,12 +49,14 @@ const DialogData = computed(() => {
   switch (props.variant) {
     case "join":
       return {
+        identification: Dialogs.JoinRoom,
         title: "Join room",
         activatorButtonIcon: "mdi-login",
         actionButtonLabel: "Join",
       };
     default:
       return {
+        identification: Dialogs.CreateRoom,
         title: "Create room",
         activatorButtonIcon: "mdi-plus",
         actionButtonLabel: "Create",
@@ -61,7 +64,8 @@ const DialogData = computed(() => {
   }
 });
 
-const { title, activatorButtonIcon, actionButtonLabel } = DialogData.value;
+const { identification, title, activatorButtonIcon, actionButtonLabel } =
+  DialogData.value;
 const form = ref(false);
 const roomName = ref("");
 const password = ref("");

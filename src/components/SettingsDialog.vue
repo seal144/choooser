@@ -1,5 +1,6 @@
 <template>
   <Dialog
+    :identification="Dialogs.Settings"
     title="Settings"
     close-label="cancel"
     @close="onClose"
@@ -13,9 +14,9 @@
     <template v-slot:content>
       <v-form v-model="form" @submit.prevent="onSubmit">
         <v-switch
-          v-model="darkTheme"
+          v-model="themeSwitchIsDark"
           hide-details
-          :label="`Theme: ${darkTheme ? 'dark' : 'light'}`"
+          :label="`Theme: ${themeSwitchIsDark ? 'dark' : 'light'}`"
         ></v-switch>
         <TextField
           v-model="displayName"
@@ -33,41 +34,67 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from "vue";
-import { useDisplay } from "vuetify";
+import { computed, ref, watchEffect } from "vue";
+import { useDisplay, useTheme } from "vuetify";
 
+import { useDialogsStore } from "@/store/dialogs";
 import Button from "./Button.vue";
 import Dialog from "./Dialog.vue";
 import TextField from "./TextField.vue";
 import getUser from "@/composables/getUser";
+import { Dialogs } from "@/types";
 import { displayNameValidation } from "@/utils/validation";
 
 const { smAndUp } = useDisplay();
+const dialogs = useDialogsStore();
 const { user } = getUser();
+const theme = useTheme();
 
 const form = ref(false);
 const displayName = ref(user?.value?.displayName);
-const darkTheme = ref(false);
+const themeInitialIsDark = ref(theme.global.current.value.dark);
+const themeSwitchIsDark = ref(themeInitialIsDark.value);
 const loading = ref(false);
+const submitting = ref(false);
+
+watchEffect(() => {
+  if (themeSwitchIsDark.value) {
+    theme.global.name.value = "dark";
+  } else {
+    theme.global.name.value = "light";
+  }
+});
 
 const isDirty = computed(() => {
   if (displayName.value !== user?.value?.displayName) {
+    return true;
+  } else if (themeInitialIsDark.value !== themeSwitchIsDark.value) {
     return true;
   }
   return false;
 });
 
-const onClose = () => {
+const resetValues = () => {
   displayName.value = user?.value?.displayName;
+  if (themeInitialIsDark.value !== themeSwitchIsDark.value) {
+    themeSwitchIsDark.value = !themeSwitchIsDark.value;
+  }
+};
+
+const onClose = () => {
+  if (submitting.value) {
+    submitting.value = false;
+    themeInitialIsDark.value = theme.global.current.value.dark;
+    return;
+  }
+  resetValues();
 };
 
 const onSubmit = () => {
   if (!form.value) return;
-
-  loading.value = true;
-
-  setTimeout(() => (loading.value = false), 2000);
   console.log({ displayName: displayName.value });
+  submitting.value = true;
+  dialogs.isOpen[Dialogs.Settings] = false;
 };
 </script>
 
