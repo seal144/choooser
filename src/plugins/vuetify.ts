@@ -7,10 +7,13 @@
 import { createVuetify } from "vuetify";
 import { mdi } from "vuetify/iconsets/mdi";
 
+import useDefaultTheme from "@/composables/useDefaultTheme";
 import { customSVGs } from "@/assets/customSVGs/customSVGs";
 
 import "@mdi/font/css/materialdesignicons.css";
 import "vuetify/styles";
+
+const { defaultTheme } = useDefaultTheme();
 
 const LightPalette = {
   primary: "#3b3d4a",
@@ -68,7 +71,7 @@ const vuetify = createVuetify({
     },
   },
   theme: {
-    defaultTheme: "light",
+    defaultTheme: defaultTheme.value,
     themes: {
       light: {
         dark: false,

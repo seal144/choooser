@@ -42,9 +42,11 @@ import Button from "./Button.vue";
 import Dialog from "./Dialog.vue";
 import TextField from "./TextField.vue";
 import getUser from "@/composables/getUser";
+import useDefaultTheme from "@/composables/useDefaultTheme";
 import { Dialogs } from "@/types";
 import { displayNameValidation } from "@/utils/validation";
 
+const { defaultTheme } = useDefaultTheme();
 const { smAndUp } = useDisplay();
 const dialogs = useDialogsStore();
 const { user } = getUser();
@@ -65,13 +67,16 @@ watchEffect(() => {
   }
 });
 
+const ThemeIsDirty = computed(
+  () => themeInitialIsDark.value !== themeSwitchIsDark.value
+);
+
+const displayNameIsDirty = computed(
+  () => displayName.value !== user?.value?.displayName
+);
+
 const isDirty = computed(() => {
-  if (displayName.value !== user?.value?.displayName) {
-    return true;
-  } else if (themeInitialIsDark.value !== themeSwitchIsDark.value) {
-    return true;
-  }
-  return false;
+  return ThemeIsDirty.value || displayNameIsDirty.value;
 });
 
 const resetValues = () => {
@@ -83,17 +88,19 @@ const resetValues = () => {
 
 const onClose = () => {
   if (submitting.value) {
-    submitting.value = false;
-    themeInitialIsDark.value = theme.global.current.value.dark;
-    return;
+    return (submitting.value = false);
   }
   resetValues();
 };
 
 const onSubmit = () => {
   if (!form.value) return;
-  console.log({ displayName: displayName.value });
   submitting.value = true;
+  console.log({ displayName: displayName.value });
+  if (ThemeIsDirty.value) {
+    themeInitialIsDark.value = theme.global.current.value.dark;
+    defaultTheme.value = theme.global.current.value.dark ? "dark" : "light";
+  }
   dialogs.isOpen[Dialogs.Settings] = false;
 };
 </script>
