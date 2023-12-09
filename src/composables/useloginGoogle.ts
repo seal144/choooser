@@ -17,7 +17,6 @@ const login = async () => {
       throw new Error("Could not login");
     }
 
-    error.value = null;
     loading.value = false;
   } catch (err) {
     const { message } = err as Error;

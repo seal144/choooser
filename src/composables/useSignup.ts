@@ -31,7 +31,6 @@ const signup = async (email: string, password: string, displayName: string) => {
       await updateProfile(auth.currentUser, { displayName });
     }
 
-    error.value = null;
     loading.value = false;
   } catch (err) {
     const { message } = err as Error;
