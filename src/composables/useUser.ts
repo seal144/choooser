@@ -15,9 +15,8 @@ const updateDisplayName = async (displayName: string) => {
   if (auth.currentUser) {
     try {
       await updateProfile(auth.currentUser, { displayName });
-      if (userStore?.displayName) {
-        userStore.displayName = auth.currentUser.displayName;
-      }
+
+      userStore.displayName = auth.currentUser.displayName;
 
       loading.value = false;
     } catch (err) {

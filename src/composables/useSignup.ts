@@ -1,6 +1,7 @@
 import { ref } from "vue";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "@/firebase/config";
+import { useUserStore } from "@/store/userStore";
 
 const parseErrorMessage = (message: string) => {
   if (message.includes("email-already-in-use")) {
@@ -11,6 +12,7 @@ const parseErrorMessage = (message: string) => {
 
 const error = ref<string | null>(null);
 const loading = ref(false);
+const userStore = useUserStore();
 
 const signup = async (email: string, password: string, displayName: string) => {
   error.value = null;
@@ -29,6 +31,8 @@ const signup = async (email: string, password: string, displayName: string) => {
 
     if (auth.currentUser) {
       await updateProfile(auth.currentUser, { displayName });
+
+      userStore.displayName = auth.currentUser.displayName;
     }
 
     loading.value = false;
