@@ -1,4 +1,3 @@
-// Utilities
 import { defineStore } from "pinia";
 import { Dialogs } from "@/types";
 

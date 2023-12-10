@@ -1,7 +1,7 @@
 <template>
   <v-responsive class="text-center fill-height home-view">
     <HeaderCard
-      >&#128075; Hello {{ user ? user.displayName : "traveler" }}</HeaderCard
+      >&#128075; Hello {{ displayName ? displayName : "Traveler" }}</HeaderCard
     >
     <JoinCreateRoomDialog variant="join" />
     <JoinCreateRoomDialog variant="create" />
@@ -11,12 +11,13 @@
 </template>
 
 <script lang="ts" setup>
+import { toRef } from "vue";
 import Button from "@/components/Button.vue";
 import JoinCreateRoomDialog from "@/components/JoinCreateRoomDialog.vue";
 import HeaderCard from "@/components/HeaderCard.vue";
-import getUser from "@/composables/getUser";
+import { useUserStore } from "@/store/userStore";
 
-const { user } = getUser();
+const displayName = toRef(useUserStore(), "displayName");
 
 const mockedRooms = [
   { id: "1", name: "room1" },

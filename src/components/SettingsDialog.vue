@@ -19,9 +19,10 @@
           :label="`Theme: ${themeSwitchIsDark ? 'dark' : 'light'}`"
         ></v-switch>
         <TextField
-          v-model="displayName"
+          v-model="displayNameInput"
           label="Display Name"
           :rules="[...displayNameValidation]"
+          :error-messages="errorMessage"
         />
       </v-form>
     </template>
@@ -34,29 +35,30 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, watchEffect } from "vue";
+import { computed, ref, toRef, watchEffect } from "vue";
 import { useDisplay, useTheme } from "vuetify";
 
 import { useDialogsStore } from "@/store/dialogs";
 import Button from "./Button.vue";
 import Dialog from "./Dialog.vue";
 import TextField from "./TextField.vue";
-import getUser from "@/composables/getUser";
+import useUser from "@/composables/useUser";
 import useDefaultTheme from "@/composables/useDefaultTheme";
+import { useUserStore } from "@/store/userStore";
 import { Dialogs } from "@/types";
 import { displayNameValidation } from "@/utils/validation";
 
 const { defaultTheme } = useDefaultTheme();
 const { smAndUp } = useDisplay();
 const dialogs = useDialogsStore();
-const { user } = getUser();
+const displayName = toRef(useUserStore(), "displayName");
+const { updateDisplayName, error, loading } = useUser();
 const theme = useTheme();
 
 const form = ref(false);
-const displayName = ref(user?.value?.displayName);
+const displayNameInput = ref(displayName.value);
 const themeInitialIsDark = ref(theme.global.current.value.dark);
 const themeSwitchIsDark = ref(themeInitialIsDark.value);
-const loading = ref(false);
 const submitting = ref(false);
 
 watchEffect(() => {
@@ -67,12 +69,19 @@ watchEffect(() => {
   }
 });
 
+const errorMessage = computed(() => {
+  if (error.value) {
+    return [error.value];
+  }
+  return [];
+});
+
 const ThemeIsDirty = computed(
   () => themeInitialIsDark.value !== themeSwitchIsDark.value
 );
 
 const displayNameIsDirty = computed(
-  () => displayName.value !== user?.value?.displayName
+  () => displayNameInput.value !== displayName.value
 );
 
 const isDirty = computed(() => {
@@ -80,7 +89,7 @@ const isDirty = computed(() => {
 });
 
 const resetValues = () => {
-  displayName.value = user?.value?.displayName;
+  displayNameInput.value = displayName.value;
   if (themeInitialIsDark.value !== themeSwitchIsDark.value) {
     themeSwitchIsDark.value = !themeSwitchIsDark.value;
   }
@@ -93,10 +102,12 @@ const onClose = () => {
   resetValues();
 };
 
-const onSubmit = () => {
+const onSubmit = async () => {
   if (!form.value) return;
   submitting.value = true;
-  console.log({ displayName: displayName.value });
+  if (displayNameIsDirty.value && displayNameInput.value) {
+    await updateDisplayName(displayNameInput.value);
+  }
   if (ThemeIsDirty.value) {
     themeInitialIsDark.value = theme.global.current.value.dark;
     defaultTheme.value = theme.global.current.value.dark ? "dark" : "light";

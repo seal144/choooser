@@ -57,7 +57,6 @@
       Continue as guest
     </Button>
   </div>
-  <!-- TODO create error component handle errors: "invalid-login-credentials error", "email-already-in-use"-->
   <div class="submit-errors">
     <FormError
       v-if="errorLogin && props.variant === 'login'"
