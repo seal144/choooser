@@ -1,5 +1,5 @@
 <template>
-  <div class="error-container" :class="{ xs: xs }">
+  <div class="error-container" :class="{ extendsLayout, alignRight, xs }">
     {{ errorMessage }}
   </div>
 </template>
@@ -11,6 +11,14 @@ defineProps({
   errorMessage: {
     type: String,
     required: true,
+  },
+  extendsLayout: {
+    type: Boolean,
+    default: false,
+  },
+  alignRight: {
+    type: Boolean,
+    default: false,
   },
 });
 
@@ -26,6 +34,14 @@ const { xs } = useDisplay();
 
   &.xs {
     position: static;
+  }
+
+  &.extendsLayout {
+    position: static;
+  }
+
+  &.alignRight {
+    text-align: right;
   }
 }
 </style>

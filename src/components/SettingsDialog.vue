@@ -22,9 +22,14 @@
           v-model="displayNameInput"
           label="Display Name"
           :rules="[...displayNameValidation]"
-          :error-messages="errorMessage"
         />
       </v-form>
+      <FormError
+        extends-layout
+        align-right
+        v-if="error"
+        :error-message="error"
+      />
     </template>
     <template v-slot:action>
       <Button :disabled="!form || !isDirty" @click="onSubmit" :loading="loading"
@@ -42,6 +47,7 @@ import { useDialogsStore } from "@/store/dialogs";
 import Button from "./Button.vue";
 import Dialog from "./Dialog.vue";
 import TextField from "./TextField.vue";
+import FormError from "./FormError.vue";
 import useUser from "@/composables/useUser";
 import useDefaultTheme from "@/composables/useDefaultTheme";
 import { useUserStore } from "@/store/userStore";
@@ -67,13 +73,6 @@ watchEffect(() => {
   } else {
     theme.global.name.value = "light";
   }
-});
-
-const errorMessage = computed(() => {
-  if (error.value) {
-    return [error.value];
-  }
-  return [];
 });
 
 const ThemeIsDirty = computed(
