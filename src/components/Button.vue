@@ -1,5 +1,5 @@
 <template>
-  <v-btn :class="{ secondary: secondary }">
+  <v-btn :class="{ secondary, danger }">
     <slot></slot>
   </v-btn>
 </template>
@@ -8,7 +8,11 @@
 defineProps({
   secondary: {
     type: Boolean,
-    required: false,
+    default: false,
+  },
+  danger: {
+    type: Boolean,
+    default: false,
   },
 });
 </script>
@@ -17,8 +21,13 @@ defineProps({
 .v-btn {
   color: rgb(var(--v-theme-on-primary));
   background-color: rgb(var(--v-theme-primary));
-}
-.v-btn.secondary {
-  background-color: rgba(var(--v-theme-primary), 0.65);
+
+  &.secondary {
+    background-color: rgba(var(--v-theme-primary), 0.65);
+  }
+
+  &.danger {
+    background-color: rgb(var(--v-theme-error));
+  }
 }
 </style>

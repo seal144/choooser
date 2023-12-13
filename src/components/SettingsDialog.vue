@@ -23,6 +23,14 @@
           label="Display Name"
           :rules="[...displayNameValidation]"
         />
+        <Button
+          size="small"
+          danger
+          class="delete-button"
+          @click="onDeleteAccountClick"
+          :loading="loadingDeleteUser"
+          >delete account</Button
+        >
       </v-form>
       <FormError
         extends-layout
@@ -32,7 +40,10 @@
       />
     </template>
     <template v-slot:action>
-      <Button :disabled="!form || !isDirty" @click="onSubmit" :loading="loading"
+      <Button
+        :disabled="!form || !isDirty"
+        @click="onSubmit"
+        :loading="loadingUpdateDisplayName"
         >apply</Button
       >
     </template>
@@ -58,7 +69,13 @@ const { defaultTheme } = useDefaultTheme();
 const { smAndUp } = useDisplay();
 const dialogs = useDialogsStore();
 const displayName = toRef(useUserStore(), "displayName");
-const { updateDisplayName, error, loading } = useUser();
+const {
+  updateDisplayName,
+  deleteUser,
+  error,
+  loadingUpdateDisplayName,
+  loadingDeleteUser,
+} = useUser();
 const theme = useTheme();
 
 const form = ref(false);
@@ -101,6 +118,11 @@ const onClose = () => {
   resetValues();
 };
 
+const onDeleteAccountClick = async () => {
+  await deleteUser();
+  dialogs.isOpen[Dialogs.Settings] = false;
+};
+
 const onSubmit = async () => {
   if (!form.value) return;
   submitting.value = true;
@@ -130,6 +152,10 @@ const onSubmit = async () => {
       & div.v-switch__thumb {
         background-color: rgb(var(--v-theme-primary));
       }
+    }
+
+    .delete-button {
+      width: fit-content;
     }
   }
 

@@ -1,16 +1,17 @@
 import { ref } from "vue";
-import { updateProfile } from "firebase/auth";
+import { updateProfile, deleteUser as deleteUserFirebase } from "firebase/auth";
 
 import { auth } from "@/firebase/config";
 import { useUserStore } from "@/store/userStore";
 
 const error = ref<string | null>(null);
-const loading = ref(false);
+const loadingUpdateDisplayName = ref(false);
+const loadingDeleteUser = ref(false);
 const userStore = useUserStore();
 
 const updateDisplayName = async (displayName: string) => {
   error.value = null;
-  loading.value = true;
+  loadingUpdateDisplayName.value = true;
 
   if (auth.currentUser) {
     try {
@@ -18,20 +19,40 @@ const updateDisplayName = async (displayName: string) => {
 
       userStore.displayName = auth.currentUser.displayName;
 
-      loading.value = false;
+      loadingUpdateDisplayName.value = false;
     } catch (err) {
       const { message } = err as Error;
       console.log(message);
       error.value = message;
-      loading.value = false;
+      loadingUpdateDisplayName.value = false;
+    }
+  }
+};
+
+const deleteUser = async () => {
+  error.value = null;
+  loadingDeleteUser.value = true;
+
+  if (auth.currentUser) {
+    try {
+      await deleteUserFirebase(auth.currentUser);
+
+      loadingDeleteUser.value = false;
+    } catch (err) {
+      const { message } = err as Error;
+      console.log(message);
+      error.value = message;
+      loadingDeleteUser.value = false;
     }
   }
 };
 
 const useUser = () => ({
   updateDisplayName,
+  deleteUser,
   error,
-  loading,
+  loadingUpdateDisplayName,
+  loadingDeleteUser,
 });
 
 export default useUser;
