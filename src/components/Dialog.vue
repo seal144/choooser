@@ -1,9 +1,10 @@
 <template>
   <v-dialog
     v-model="dialogs.isOpen[props.identification]"
-    width="500"
+    :width="small ? '400' : '500'"
     transition="dialog-top-transition"
     class="default-dialog"
+    :class="{ small }"
   >
     <template v-slot:activator>
       <div @click="openDialog">
@@ -39,6 +40,8 @@ import { useDialogsStore } from "@/store/dialogs";
 import Button from "./Button.vue";
 import { Dialogs } from "@/types";
 
+const { xs } = useDisplay();
+
 const props = defineProps({
   identification: {
     type: String as PropType<Dialogs>,
@@ -51,6 +54,10 @@ const props = defineProps({
   closeLabel: {
     type: String,
     required: false,
+  },
+  small: {
+    type: Boolean,
+    default: false,
   },
 });
 
@@ -71,13 +78,11 @@ watchEffect(() => {
     emit("close");
   }
 });
-
-const { xs } = useDisplay();
 </script>
 
 <style lang="scss">
 .default-dialog {
-  div.v-card-title {
+  .v-card-title {
     padding: 0.125rem 2rem;
 
     &.xs {
@@ -85,16 +90,16 @@ const { xs } = useDisplay();
     }
   }
 
-  div.v-card-text {
-    padding: 1.5rem 2rem 0rem !important;
+  .v-card-text {
+    padding: 1.5rem 2rem 1.5rem !important;
 
     &.xs {
-      padding: 1.5rem 0.5rem 0rem !important;
+      padding: 1.5rem 0.5rem 1.5rem !important;
     }
   }
 
-  div.v-card-actions {
-    padding: 0.5rem 2rem 1.5rem;
+  .v-card-actions {
+    padding: 0 2rem 1.5rem;
     gap: 1.875rem;
 
     &.xs {
@@ -104,6 +109,34 @@ const { xs } = useDisplay();
 
     & .v-btn {
       flex: 1;
+      margin-inline-start: 0 !important;
+    }
+  }
+}
+
+.default-dialog.small {
+  margin: 0 1rem;
+
+  .v-card-title {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .v-card-text {
+    padding: 1rem !important;
+
+    &.xs {
+      padding: 0.5rem !important;
+    }
+  }
+
+  .v-card-actions {
+    padding: 0 1rem 1rem;
+    gap: 1rem;
+
+    &.xs {
+      gap: 0.5rem;
+      padding: 0.5rem;
     }
   }
 }

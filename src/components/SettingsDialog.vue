@@ -8,7 +8,9 @@
   >
     <template v-slot:ActivatorButtonLabel>
       <Button class="activator-button" :icon="!smAndUp">
-        <v-icon icon="mdi-cog" /><span v-if="smAndUp">settings</span>
+        <v-icon icon="mdi-cog" size="large" /><span v-if="smAndUp"
+          >settings</span
+        >
       </Button>
     </template>
     <template v-slot:content>
@@ -23,14 +25,25 @@
           label="Display Name"
           :rules="[...displayNameValidation]"
         />
-        <Button
-          size="small"
-          danger
-          class="delete-button"
-          @click="onDeleteAccountClick"
-          :loading="loadingDeleteUser"
-          >delete account</Button
+        <ConfirmDialog
+          title="Are you sure?"
+          text="Do you want to delete your account? This action is irreversible."
         >
+          <template v-slot:activatorButton>
+            <Button size="small" danger
+              ><v-icon icon="mdi-exclamation-thick" />delete account</Button
+            >
+          </template>
+          <template v-slot:confirmButton>
+            <Button danger @click="deleteAccount" :loading="loadingDeleteUser"
+              ><v-icon
+                icon="mdi-exclamation-thick"
+                size="large"
+                v-if="smAndUp"
+              />delete</Button
+            >
+          </template>
+        </ConfirmDialog>
       </v-form>
       <FormError
         extends-layout
@@ -59,6 +72,7 @@ import Button from "./Button.vue";
 import Dialog from "./Dialog.vue";
 import TextField from "./TextField.vue";
 import FormError from "./FormError.vue";
+import ConfirmDialog from "./ConfirmDialog.vue";
 import useUser from "@/composables/useUser";
 import useDefaultTheme from "@/composables/useDefaultTheme";
 import { useUserStore } from "@/store/userStore";
@@ -118,8 +132,9 @@ const onClose = () => {
   resetValues();
 };
 
-const onDeleteAccountClick = async () => {
+const deleteAccount = async () => {
   await deleteUser();
+  dialogs.isOpen[Dialogs.ConfirmDeleteAccount] = false;
   dialogs.isOpen[Dialogs.Settings] = false;
 };
 
@@ -152,18 +167,6 @@ const onSubmit = async () => {
       & div.v-switch__thumb {
         background-color: rgb(var(--v-theme-primary));
       }
-    }
-
-    .delete-button {
-      width: fit-content;
-    }
-  }
-
-  .activator-button {
-    height: 34px;
-
-    &.v-btn--icon {
-      width: 34px;
     }
   }
 }

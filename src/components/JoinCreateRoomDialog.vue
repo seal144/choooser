@@ -1,7 +1,12 @@
 <template>
-  <Dialog :identification="identification" :title="title" close-label="close">
+  <Dialog
+    :identification="identification"
+    :title="title"
+    close-label="close"
+    class="room-dialog"
+  >
     <template v-slot:ActivatorButtonLabel>
-      <Button>
+      <Button class="room-dialog--activator-button">
         <v-icon :icon="activatorButtonIcon" size="large" />
         {{ title }}
       </Button>
@@ -83,15 +88,22 @@ const onSubmit = () => {
 };
 </script>
 
-<style lang="scss" scoped>
-.v-btn {
-  width: 100%;
-}
-.v-input {
-  margin: 0 0 0.5rem;
-
-  &:last-child {
-    margin: 0;
+<style lang="scss">
+.room-dialog {
+  div.v-card-text {
+    padding-bottom: 0.25rem !important;
   }
+
+  .v-input {
+    margin: 0 0 0.5rem;
+
+    &:last-child {
+      margin: 0;
+    }
+  }
+}
+
+.room-dialog--activator-button {
+  width: 100%;
 }
 </style>

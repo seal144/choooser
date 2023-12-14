@@ -1,16 +1,16 @@
 <template>
   <v-app-bar>
-    <v-container>
+    <v-container class="default-app-bar">
       <v-app-bar-title> <Logo :collapse="xs" /> </v-app-bar-title>
       <div class="action-container">
         <SettingsDialog />
-        <Button @click="handleLogout" :icon="!smAndUp" v-if="!user?.isAnonymous"
-          ><v-icon icon="mdi-logout" /><span v-if="smAndUp"
+        <Button @click="handleLogout" :icon="!smAndUp"
+          ><v-icon icon="mdi-logout" size="large" /><span v-if="smAndUp"
             >logout</span
           ></Button
         >
         <!-- <Button :icon="!smAndUp"
-          ><v-icon icon="mdi-login" /><span v-if="smAndUp">login</span></Button
+          ><v-icon icon="mdi-login" size="large"/><span v-if="smAndUp">login</span></Button
         > -->
       </div>
     </v-container>
@@ -44,8 +44,8 @@ const handleLogout = () => {
 };
 </script>
 
-<style scoped lang="scss">
-.v-container {
+<style lang="scss">
+.v-container.default-app-bar {
   display: flex;
 
   .action-container {
@@ -54,7 +54,6 @@ const handleLogout = () => {
 
     .v-btn {
       height: 34px;
-
       &--icon {
         width: 34px;
       }
