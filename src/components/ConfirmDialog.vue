@@ -1,12 +1,12 @@
 <template>
   <Dialog
-    :identification="Dialogs.ConfirmDeleteAccount"
+    :identification="dialogIdentification"
     :title="title"
     :close-label="closeLabel"
     small
   >
     <template v-slot:ActivatorButtonLabel>
-      <slot name="activatorButton"></slot>
+      <slot name="activatorButton" class="activatorButton"></slot>
     </template>
     <template v-slot:content>
       {{ text }}
@@ -18,6 +18,7 @@
 </template>
 
 <script lang="ts" setup>
+import { PropType } from "vue";
 import Dialog from "./Dialog.vue";
 import { Dialogs } from "@/types";
 
@@ -32,6 +33,10 @@ defineProps({
   },
   text: {
     type: String,
+    required: true,
+  },
+  dialogIdentification: {
+    type: String as PropType<Dialogs>,
     required: true,
   },
 });

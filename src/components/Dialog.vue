@@ -7,7 +7,7 @@
     :class="{ small }"
   >
     <template v-slot:activator>
-      <div @click="openDialog">
+      <div @click="openDialog" class="activator-container">
         <slot name="ActivatorButtonLabel"></slot>
       </div>
     </template>
@@ -82,6 +82,10 @@ watchEffect(() => {
 
 <style lang="scss">
 .default-dialog {
+  .activator-container {
+    width: fit-content;
+  }
+
   .v-card-title {
     padding: 0.125rem 2rem;
 
@@ -91,7 +95,7 @@ watchEffect(() => {
   }
 
   .v-card-text {
-    padding: 1.5rem 2rem 1.5rem !important;
+    padding: 2rem !important;
 
     &.xs {
       padding: 1.5rem 0.5rem 1.5rem !important;
@@ -101,10 +105,11 @@ watchEffect(() => {
   .v-card-actions {
     padding: 0 2rem 1.5rem;
     gap: 1.875rem;
+    min-height: unset;
 
     &.xs {
       gap: 0.5rem;
-      padding: 0.5rem;
+      padding: 0 0.5rem 0.5rem;
     }
 
     & .v-btn {

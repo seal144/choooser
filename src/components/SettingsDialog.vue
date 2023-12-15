@@ -26,6 +26,7 @@
           :rules="[...displayNameValidation]"
         />
         <ConfirmDialog
+          :dialogIdentification="Dialogs.ConfirmDeleteAccount"
           title="Are you sure?"
           text="Do you want to delete your account? This action is irreversible."
         >
@@ -156,6 +157,10 @@ const onSubmit = async () => {
 .settings-dialog {
   div.v-card-text {
     padding-top: 0.5rem !important;
+
+    &.xs {
+      padding-top: 0.5rem !important;
+    }
   }
 
   .v-form {

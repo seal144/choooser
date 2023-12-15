@@ -91,7 +91,11 @@ const onSubmit = () => {
 <style lang="scss">
 .room-dialog {
   div.v-card-text {
-    padding-bottom: 0.25rem !important;
+    padding-bottom: 0.75rem !important;
+
+    &.xs {
+      padding-bottom: 0.25rem !important;
+    }
   }
 
   .v-input {
