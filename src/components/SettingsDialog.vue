@@ -25,26 +25,31 @@
           label="Display Name"
           :rules="[...displayNameValidation]"
         />
-        <ConfirmDialog
-          :dialogIdentification="Dialogs.ConfirmDeleteAccount"
-          title="Are you sure?"
-          text="Do you want to delete your account? This action is irreversible."
-        >
-          <template v-slot:activatorButton>
-            <Button size="small" danger
-              ><v-icon icon="mdi-exclamation-thick" />delete account</Button
-            >
-          </template>
-          <template v-slot:confirmButton>
-            <Button danger @click="deleteAccount" :loading="loadingDeleteUser"
-              ><v-icon
-                icon="mdi-exclamation-thick"
-                size="large"
-                v-if="smAndUp"
-              />delete</Button
-            >
-          </template>
-        </ConfirmDialog>
+        <div class="danger-zone" :class="{xs}">
+          <ConfirmDialog
+            :dialogIdentification="Dialogs.ConfirmDeleteAccount"
+            title="Are you sure?"
+            text="Do you want to delete your account? This action is irreversible."
+          >
+            <template v-slot:activatorButton>
+              <Button size="small" danger
+                ><v-icon icon="mdi-exclamation-thick" />delete account</Button
+              >
+            </template>
+            <template v-slot:confirmButton>
+              <Button danger @click="deleteAccount" :loading="loadingDeleteUser"
+                ><v-icon
+                  icon="mdi-exclamation-thick"
+                  size="large"
+                  v-if="smAndUp"
+                />delete</Button
+              >
+            </template>
+          </ConfirmDialog>
+          <div>
+            Danger zone 
+          </div>
+        </div>
       </v-form>
       <FormError
         extends-layout
@@ -81,7 +86,7 @@ import { Dialogs } from "@/types";
 import { displayNameValidation } from "@/utils/validation";
 
 const { defaultTheme } = useDefaultTheme();
-const { smAndUp } = useDisplay();
+const { smAndUp, xs } = useDisplay();
 const dialogs = useDialogsStore();
 const displayName = toRef(useUserStore(), "displayName");
 const {
@@ -169,8 +174,26 @@ const onSubmit = async () => {
     gap: 0.5rem;
 
     .v-switch {
+      margin-bottom: .4rem;
+
       & div.v-switch__thumb {
         background-color: rgb(var(--v-theme-primary));
+      }
+    }
+
+    div.danger-zone {
+      padding: .2rem .5rem .2rem .2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: rgb(var(--v-theme-error));
+      border: 1px solid rgb(var(--v-theme-error));
+
+      &.xs {
+        padding: .5rem 1rem;
+        flex-direction: column-reverse;
+        align-items: start;
+        gap:.2rem;
       }
     }
   }
