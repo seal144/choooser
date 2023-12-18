@@ -179,6 +179,10 @@ const onSubmit = async () => {
       & div.v-switch__thumb {
         background-color: rgb(var(--v-theme-primary));
       }
+
+      & .v-label{
+        opacity: 1
+      }
     }
 
     div.danger-zone {
