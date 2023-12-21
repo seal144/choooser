@@ -12,7 +12,7 @@ const getOwnedRooms = () => {
 
   const q = query(
     collection(db, "rooms"),
-    where("owner.id", "==", user.value?.uid)
+    where("owner", "==", user.value?.uid)
   );
 
   const unsubscribe = onSnapshot(q, (snapshot) => {
