@@ -5,8 +5,10 @@
     >
     <JoinCreateRoomDialog variant="join" />
     <JoinCreateRoomDialog variant="create" />
-    <HeaderCard>Your Rooms</HeaderCard>
-    <Button v-for="room in mockedRooms" :key="room.id">{{ room.name }}</Button>
+    <HeaderCard v-if="ownedRooms.length">Your Rooms</HeaderCard>
+    <Button v-for="room in ownedRooms" :key="room.id"
+      >{{ room.name }} (hosted)</Button
+    >
   </v-responsive>
 </template>
 
@@ -15,14 +17,11 @@ import { toRef } from "vue";
 import Button from "@/components/Button.vue";
 import JoinCreateRoomDialog from "@/components/JoinCreateRoomDialog.vue";
 import HeaderCard from "@/components/HeaderCard.vue";
+import getOwnedRooms from "@/composables/getOwnedRooms";
 import { useUserStore } from "@/store/userStore";
 
 const displayName = toRef(useUserStore(), "displayName");
-
-const mockedRooms = [
-  { id: "1", name: "room1" },
-  { id: "2", name: "room2" },
-];
+const { ownedRooms } = getOwnedRooms();
 </script>
 
 <style lang="scss">
