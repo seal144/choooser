@@ -5,13 +5,13 @@
     >
     <JoinCreateRoomDialog variant="join" />
     <JoinCreateRoomDialog variant="create" />
-    <HeaderCard v-if="ownedRooms.length || guestRooms.length"
+    <HeaderCard v-if="ownedRooms.length || guestedRooms.length"
       >Your Rooms</HeaderCard
     >
     <Button v-for="room in ownedRooms" :key="room.id"
       >{{ room.name }} (hosted)</Button
     >
-    <Button v-for="room in guestRooms" :key="room.id">{{ room.name }}</Button>
+    <Button v-for="room in guestedRooms" :key="room.id">{{ room.name }}</Button>
   </v-responsive>
 </template>
 
@@ -20,13 +20,13 @@ import { toRef } from "vue";
 import Button from "@/components/Button.vue";
 import JoinCreateRoomDialog from "@/components/JoinCreateRoomDialog.vue";
 import HeaderCard from "@/components/HeaderCard.vue";
-import getOwnedRooms from "@/composables/getOwnedRooms";
-import getGuestRooms from "@/composables/getGuestedRooms";
+import getOwnedRooms from "@/composables/subscribeOwnedRooms";
+import getGuestRooms from "@/composables/subscribeGuestedRooms";
 import { useUserStore } from "@/store/userStore";
 
 const displayName = toRef(useUserStore(), "displayName");
 const { ownedRooms } = getOwnedRooms();
-const { guestRooms } = getGuestRooms();
+const { guestedRooms } = getGuestRooms();
 </script>
 
 <style lang="scss">
