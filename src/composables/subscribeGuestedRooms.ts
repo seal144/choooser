@@ -6,8 +6,8 @@ import getUser from "./getUser";
 
 type DocData = Omit<Room, "id">;
 
-const getGuestRooms = () => {
-  const guestRooms = ref<Room[]>([]);
+const subscribeGuestedRooms = () => {
+  const guestedRooms = ref<Room[]>([]);
   const { user } = getUser();
 
   const q = query(
@@ -16,7 +16,7 @@ const getGuestRooms = () => {
   );
 
   const unsubscribe = onSnapshot(q, (snapshot) => {
-    guestRooms.value = snapshot.docs.map((doc) => ({
+    guestedRooms.value = snapshot.docs.map((doc) => ({
       ...(doc.data() as DocData),
       id: doc.id,
     }));
@@ -26,7 +26,7 @@ const getGuestRooms = () => {
     onInvalidate(() => unsubscribe());
   });
 
-  return { guestRooms };
+  return { guestedRooms };
 };
 
-export default getGuestRooms;
+export default subscribeGuestedRooms;
