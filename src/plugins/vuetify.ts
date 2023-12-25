@@ -27,9 +27,9 @@ const DarkPalette = {
   surface: "#3f404a",
 };
 
-const lineThickness = "3px";
+export const lineThickness = "3";
 
-const borderStyle = `border: ${lineThickness} solid rgb(var(--v-theme-primary));`;
+const borderStyle = `border: ${lineThickness}px solid rgb(var(--v-theme-primary));`;
 
 enum Breakpoints {
   xs = 0,
@@ -61,7 +61,7 @@ const vuetify = createVuetify({
       style: `${borderStyle}`,
     },
     VDivider: {
-      thickness: lineThickness,
+      thickness: `${lineThickness}px`,
       style: "opacity: 1",
     },
     VInput: {
