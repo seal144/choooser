@@ -55,7 +55,7 @@ const DialogData = computed(() => {
     case "join":
       return {
         identification: Dialogs.JoinRoom,
-        title: "Join room",
+        title: "Join new room",
         activatorButtonIcon: "mdi-login",
         actionButtonLabel: "Join",
       };
