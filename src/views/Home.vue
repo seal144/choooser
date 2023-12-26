@@ -44,7 +44,7 @@ let delayedHideLoading: NodeJS.Timeout;
 onMounted(() => {
   delayedHideLoading = setTimeout(() => {
     hideLoading.value = true;
-  }, 1000);
+  }, 1500);
 });
 
 onBeforeUnmount(() => {
