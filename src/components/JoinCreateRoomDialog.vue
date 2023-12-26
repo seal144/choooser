@@ -12,23 +12,25 @@
       </Button>
     </template>
     <template v-slot:content>
-      <v-form v-model="form" @submit.prevent="onSubmit">
+      <v-form v-model="form" @submit.prevent="onSubmit" validate-on="blur lazy">
+        <button type="submit" v-show="false" ref="submitButton"></button>
         <TextField
           v-model.trim="roomName"
           label="Room name"
-          :rules="[required]"
+          :rules="[...displayNameValidation]"
           :readonly="loading"
         />
         <TextField
           v-model.trim="password"
           label="Password"
+          :rules="[...roomPasswordValidation]"
           :readonly="loading"
           type="password"
         />
       </v-form>
     </template>
     <template v-slot:action>
-      <Button :disabled="!form" @click="onSubmit" :loading="loading">{{
+      <Button @click="actionButtonClick" :loading="loading">{{
         actionButtonLabel
       }}</Button>
     </template>
@@ -42,6 +44,10 @@ import Button from "./Button.vue";
 import Dialog from "./Dialog.vue";
 import TextField from "./TextField.vue";
 import { Dialogs } from "@/types";
+import {
+  displayNameValidation,
+  roomPasswordValidation,
+} from "@/utils/validation";
 
 const props = defineProps({
   variant: {
@@ -74,9 +80,12 @@ const { identification, title, activatorButtonIcon, actionButtonLabel } =
 const form = ref(false);
 const roomName = ref("");
 const password = ref("");
+const submitButton = ref<HTMLButtonElement | null>(null);
 const loading = ref(false);
 
-const required = (value: string) => !!value || "Required";
+const actionButtonClick = () => {
+  submitButton.value?.click();
+};
 
 const onSubmit = () => {
   if (!form.value) return;

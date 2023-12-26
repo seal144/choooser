@@ -28,7 +28,7 @@
     <TextField
       v-model.trim="password"
       label="Password"
-      :rules="[...passwordValidation]"
+      :rules="[...authPasswordValidation]"
       :readonly="submitLoading"
       :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
       @click:append-inner="showPassword = !showPassword"
@@ -87,7 +87,7 @@ import useLoginGoogle from "@/composables/useloginGoogle";
 import {
   emailValidation,
   displayNameValidation,
-  passwordValidation,
+  authPasswordValidation,
 } from "@/utils/validation";
 
 const props = defineProps({
