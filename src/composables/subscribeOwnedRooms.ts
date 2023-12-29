@@ -4,7 +4,7 @@ import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { Room } from "@/types";
 import getUser from "./getUser";
 
-type DocData = Omit<Room, "id">;
+type RoomData = Omit<Room, "id">;
 
 const getOwnedRooms = () => {
   const ownedRooms = ref<Room[]>([]);
@@ -17,7 +17,7 @@ const getOwnedRooms = () => {
 
   const unsubscribe = onSnapshot(q, (snapshot) => {
     ownedRooms.value = snapshot.docs.map((doc) => ({
-      ...(doc.data() as DocData),
+      ...(doc.data() as RoomData),
       id: doc.id,
     }));
   });

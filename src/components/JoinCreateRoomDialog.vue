@@ -4,6 +4,7 @@
     :title="title"
     close-label="close"
     class="room-dialog"
+    @close="resetForm"
   >
     <template v-slot:ActivatorButtonLabel>
       <Button class="room-dialog--activator-button">
@@ -15,10 +16,11 @@
       <v-form v-model="form" @submit.prevent="onSubmit" validate-on="blur lazy">
         <button type="submit" v-show="false" ref="submitButton"></button>
         <TextField
-          v-model.trim="roomName"
+          v-model.trim="name"
           label="Room name"
           :rules="[...displayNameValidation]"
           :readonly="loading"
+          :error-messages="error ? error : []"
         />
         <TextField
           v-model.trim="password"
@@ -40,9 +42,11 @@
 <script lang="ts" setup>
 import { computed, ref, PropType } from "vue";
 
+import { useDialogsStore } from "@/store/dialogs";
 import Button from "./Button.vue";
 import Dialog from "./Dialog.vue";
 import TextField from "./TextField.vue";
+import useCreateRoom from "@/composables/useCreateRoom";
 import { Dialogs } from "@/types";
 import {
   displayNameValidation,
@@ -78,22 +82,39 @@ const DialogData = computed(() => {
 const { identification, title, activatorButtonIcon, actionButtonLabel } =
   DialogData.value;
 const form = ref(false);
-const roomName = ref("");
+const name = ref("");
 const password = ref("");
 const submitButton = ref<HTMLButtonElement | null>(null);
-const loading = ref(false);
+const { createRoom, error, loading, resetError } = useCreateRoom();
+const dialogs = useDialogsStore();
 
 const actionButtonClick = () => {
   submitButton.value?.click();
 };
 
-const onSubmit = () => {
-  if (!form.value) return;
+const resetForm = () => {
+  form.value = false;
+  name.value = "";
+  password.value = "";
+  resetError();
+};
 
-  loading.value = true;
+const onSubmit = async () => {
+  const isNameValid = [...displayNameValidation].every((validation) => {
+    return validation(name.value) === true;
+  });
+  const isPasswordValid = [...roomPasswordValidation].every((validation) => {
+    return validation(password.value) === true;
+  });
+  // below code doesn't work on first submit when password input is not touched
+  // if (!form.value) return;
+  if (!isNameValid || !isPasswordValid) return;
 
-  setTimeout(() => (loading.value = false), 2000);
-  console.log({ roomName: roomName.value, password: password.value });
+  await createRoom({ name: name.value, password: password.value });
+
+  if (!error.value) {
+    dialogs.isOpen[identification] = false;
+  }
 };
 </script>
 
