@@ -21,7 +21,7 @@ const createRoom = async (roomFormData: RoomFormData) => {
 
   const collectionRef = collection(db, "rooms");
 
-  const getDocsQuery = query(
+  const queryRoomByName = query(
     collectionRef,
     where("name", "==", roomFormData.name)
   );
@@ -31,7 +31,7 @@ const createRoom = async (roomFormData: RoomFormData) => {
       throw new Error("Login as a valid user");
     }
 
-    const snapshot = await getDocs(getDocsQuery);
+    const snapshot = await getDocs(queryRoomByName);
 
     if (!snapshot.empty) {
       throw new Error("Name already in use");
