@@ -10,12 +10,12 @@ const subscribeGuestedRooms = () => {
   const guestedRooms = ref<Room[]>([]);
   const { user } = getUser();
 
-  const q = query(
+  const queryGuestedRooms = query(
     collection(db, "rooms"),
     where("guests", "array-contains", user.value?.uid)
   );
 
-  const unsubscribe = onSnapshot(q, (snapshot) => {
+  const unsubscribe = onSnapshot(queryGuestedRooms, (snapshot) => {
     guestedRooms.value = snapshot.docs.map((doc) => ({
       ...(doc.data() as RoomData),
       id: doc.id,

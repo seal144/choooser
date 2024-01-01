@@ -10,12 +10,12 @@ const getOwnedRooms = () => {
   const ownedRooms = ref<Room[]>([]);
   const { user } = getUser();
 
-  const q = query(
+  const queryOwnedRooms = query(
     collection(db, "rooms"),
     where("owner", "==", user.value?.uid)
   );
 
-  const unsubscribe = onSnapshot(q, (snapshot) => {
+  const unsubscribe = onSnapshot(queryOwnedRooms, (snapshot) => {
     ownedRooms.value = snapshot.docs.map((doc) => ({
       ...(doc.data() as RoomData),
       id: doc.id,
