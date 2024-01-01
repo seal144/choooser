@@ -3,6 +3,7 @@ import { db } from "@/firebase/config";
 import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
 import { Room } from "@/types";
 import getUser from "./getUser";
+import CryptoJS from 'crypto-js';
 
 type RoomData = Omit<Room, "id">;
 type RoomFormData = {
@@ -36,8 +37,12 @@ const createRoom = async (roomFormData: RoomFormData) => {
       throw new Error("Name already in use");
     }
 
+    const groupId = CryptoJS.AES.encrypt(roomFormData.password, import.meta.env.VITE_CRYPTO_JS_SECRET_KEY).toString();
+    // TODO implement decrypt on joining room and delete this commented code.
+    // const decryptedPassword = CryptoJS.AES.decrypt(encryptedPassword, import.meta.env.VITE_CRYPTO_JS_SECRET_KEY).toString(CryptoJS.enc.Utf8);
+
     const room: RoomData = {
-      groupId: roomFormData.password,
+      groupId: groupId,
       name: roomFormData.name,
       owner: user.value.uid,
       guests: [],
@@ -47,7 +52,7 @@ const createRoom = async (roomFormData: RoomFormData) => {
     loading.value = false;
   } catch (err) {
     const { message } = err as Error;
-    console.log(message);
+    console.error(message);
     loading.value = false;
     error.value = message;
   }
