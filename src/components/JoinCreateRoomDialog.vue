@@ -47,6 +47,7 @@ import Button from "./Button.vue";
 import Dialog from "./Dialog.vue";
 import TextField from "./TextField.vue";
 import useCreateRoom from "@/composables/useCreateRoom";
+import useJoinRoom from "@/composables/useJoinRoom";
 import { Dialogs } from "@/types";
 import {
   displayNameValidation,
@@ -65,7 +66,7 @@ const DialogData = computed(() => {
     case "join":
       return {
         identification: Dialogs.JoinRoom,
-        title: "Join new room",
+        title: "Join room",
         activatorButtonIcon: "mdi-login",
         actionButtonLabel: "Join",
       };
@@ -78,14 +79,37 @@ const DialogData = computed(() => {
       };
   }
 });
-
 const { identification, title, activatorButtonIcon, actionButtonLabel } =
   DialogData.value;
+
+const useAction = computed(() => {
+  if (props.variant === "join") {
+    const { joinRoom, error, loading, resetError } = useJoinRoom();
+
+    return {
+      submitAction: joinRoom,
+      loading,
+      error,
+      resetError,
+    };
+  }
+
+  const { createRoom, error, loading, resetError } = useCreateRoom();
+
+  return {
+    submitAction: createRoom,
+    loading,
+    error,
+    resetError,
+  };
+});
+const { submitAction, loading, error, resetError } = useAction.value;
+
 const form = ref(false);
 const name = ref("");
 const password = ref("");
 const submitButton = ref<HTMLButtonElement | null>(null);
-const { createRoom, error, loading, resetError } = useCreateRoom();
+
 const dialogs = useDialogsStore();
 
 const actionButtonClick = () => {
@@ -110,7 +134,7 @@ const onSubmit = async () => {
   // if (!form.value) return;
   if (!isNameValid || !isPasswordValid) return;
 
-  await createRoom({ name: name.value, password: password.value });
+  await submitAction({ name: name.value, password: password.value });
 
   if (!error.value) {
     dialogs.isOpen[identification] = false;
