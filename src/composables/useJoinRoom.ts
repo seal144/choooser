@@ -1,15 +1,9 @@
 import { ref } from "vue";
 import { db } from "@/firebase/config";
-import {
-  collection,
-  getDocs,
-  query,
-  where,
-  doc,
-  updateDoc,
-} from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import getUser from "./getUser";
 import CryptoJS from "crypto-js";
+import getDocs from "./getDocs";
 
 type RoomFormData = {
   name: string;
@@ -43,23 +37,16 @@ const validateRoom = (roomGroupId: string, passedGroupId: string) => {
 };
 
 const joinRoom = async (roomFormData: RoomFormData) => {
-  const { user } = getUser();
   loading.value = true;
   error.value = null;
 
-  const collectionRef = collection(db, "rooms");
-
-  const queryRoomByName = query(
-    collectionRef,
-    where("name", "==", roomFormData.name)
-  );
-
   try {
+    const { user } = getUser();
     if (!user.value) {
       throw new Error("Login as a valid user");
     }
 
-    const snapshot = await getDocs(queryRoomByName);
+    const snapshot = await getDocs("rooms", ["name", "==", roomFormData.name]);
 
     if (snapshot.empty) {
       throw new Error("No room with such a name");
@@ -71,9 +58,9 @@ const joinRoom = async (roomFormData: RoomFormData) => {
     validateParticipants(user.value.uid, [...guests, owner]);
     validateRoom(groupId, roomFormData.password);
 
-    const roomRef = doc(db, "rooms", roomId);
+    const docRef = doc(db, "rooms", roomId);
 
-    await updateDoc(roomRef, {
+    await updateDoc(docRef, {
       guests: [...guests, user.value.uid],
     });
 
