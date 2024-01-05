@@ -12,12 +12,9 @@
     <template v-else>
       <JoinCreateRoomDialog variant="join" />
       <JoinCreateRoomDialog variant="create" />
-      <HeaderCard v-if="ownedRooms.length || guestedRooms.length"
-        >Your Rooms</HeaderCard
-      >
-      <Button v-for="room in ownedRooms" :key="room.id"
-        >{{ room.name }} (hosted)</Button
-      >
+      <HeaderCard v-if="ownedRooms.length">Owned Rooms</HeaderCard>
+      <Button v-for="room in ownedRooms" :key="room.id">{{ room.name }}</Button>
+      <HeaderCard v-if="guestedRooms.length">Joined Rooms</HeaderCard>
       <Button v-for="room in guestedRooms" :key="room.id">{{
         room.name
       }}</Button>
