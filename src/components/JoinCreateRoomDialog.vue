@@ -27,7 +27,9 @@
           label="Password"
           :rules="[...roomPasswordValidation]"
           :readonly="loading"
-          type="password"
+          :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+          @click:append-inner="showPassword = !showPassword"
+          :type="showPassword ? 'text' : 'password'"
         />
       </v-form>
     </template>
@@ -108,6 +110,7 @@ const { submitAction, loading, error, resetError } = useAction.value;
 const form = ref(false);
 const name = ref("");
 const password = ref("");
+const showPassword = ref(false);
 const submitButton = ref<HTMLButtonElement | null>(null);
 
 const dialogs = useDialogsStore();
