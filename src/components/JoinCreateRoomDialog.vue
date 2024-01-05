@@ -20,7 +20,9 @@
           label="Room name"
           :rules="[...displayNameValidation]"
           :readonly="loading"
-          :error-messages="error ? error : []"
+          :error-messages="
+            error && error !== ErrorJoinRoom.InvalidPassword ? error : []
+          "
         />
         <TextField
           v-model.trim="password"
@@ -30,6 +32,7 @@
           :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
           @click:append-inner="showPassword = !showPassword"
           :type="showPassword ? 'text' : 'password'"
+          :error-messages="error === ErrorJoinRoom.InvalidPassword ? error : []"
         />
       </v-form>
     </template>
@@ -50,6 +53,7 @@ import Dialog from "./Dialog.vue";
 import TextField from "./TextField.vue";
 import useCreateRoom from "@/composables/useCreateRoom";
 import useJoinRoom from "@/composables/useJoinRoom";
+import { ErrorJoinRoom } from "@/composables/useJoinRoom";
 import { Dialogs } from "@/types";
 import {
   displayNameValidation,
