@@ -1,5 +1,5 @@
 <template>
-  <v-responsive class="text-center fill-height home-view">
+  <div class="fill-height home-view-container" :class="{ xs: xs }">
     <HeaderCard
       >&#128075; Hello {{ displayName ? displayName : "Traveler" }}</HeaderCard
     >
@@ -19,11 +19,12 @@
         room.name
       }}</Button>
     </template>
-  </v-responsive>
+  </div>
 </template>
 
 <script lang="ts" setup>
 import { computed, ref, onMounted, toRef, onBeforeUnmount } from "vue";
+import { useDisplay } from "vuetify";
 import Button from "@/components/Button.vue";
 import JoinCreateRoomDialog from "@/components/JoinCreateRoomDialog.vue";
 import HeaderCard from "@/components/HeaderCard.vue";
@@ -35,6 +36,7 @@ import { lineThickness } from "@/plugins/vuetify";
 const displayName = toRef(useUserStore(), "displayName");
 const { ownedRooms } = getOwnedRooms();
 const { guestedRooms } = getGuestRooms();
+const { xs } = useDisplay();
 const hideLoading = ref(false);
 let delayedHideLoading: NodeJS.Timeout;
 
@@ -60,19 +62,21 @@ const showProgress = computed(() => {
 });
 </script>
 
-<style lang="scss">
-.home-view.v-responsive {
-  max-width: 400px;
+<style lang="scss" scoped>
+.home-view-container {
+  min-width: 400px;
   margin: 0 auto;
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
 
-  .v-responsive__content {
-    display: flex;
-    gap: 1rem;
-    flex-direction: column;
+  &.xs {
+    min-width: unset;
+    width: 100%;
+  }
 
-    .v-progress-circular {
-      margin: 0 auto;
-    }
+  .v-progress-circular {
+    margin: 0 auto;
   }
 }
 </style>
