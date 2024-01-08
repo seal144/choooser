@@ -69,6 +69,13 @@ const vuetify = createVuetify({
         style: "padding: .5rem 1rem",
       },
     },
+    VList: {
+      rounded: "0",
+      style: `${borderStyle} padding: .25rem 0;`,
+    },
+    VListItem: {
+      style: "padding: .25rem .5rem; min-height: 40px;",
+    },
   },
   theme: {
     defaultTheme: defaultTheme.value,
