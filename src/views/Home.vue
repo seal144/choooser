@@ -13,11 +13,40 @@
       <JoinCreateRoomDialog variant="join" />
       <JoinCreateRoomDialog variant="create" />
       <HeaderCard v-if="ownedRooms.length">Owned Rooms</HeaderCard>
-      <Button v-for="room in ownedRooms" :key="room.id">{{ room.name }}</Button>
+      <Button v-for="room in ownedRooms" :key="room.id">
+        <v-icon icon="mdi-login" size="large" />
+        {{ room.name }}
+        <ButtonSubMenu
+          :id="room.id"
+          :offset="[0, 100]"
+          :actionsList="roomsSubMenu"
+        />
+      </Button>
       <HeaderCard v-if="guestedRooms.length">Joined Rooms</HeaderCard>
-      <Button v-for="room in guestedRooms" :key="room.id">{{
-        room.name
-      }}</Button>
+      <Button v-for="room in guestedRooms" :key="room.id">
+        <v-icon icon="mdi-login" size="large" />
+        {{ room.name }}
+        <!-- TODO left in case that in component approach something is not working, delete it before merge -->
+        <!-- <v-menu :offset="[0, 100]">
+          <template v-slot:activator="{ props }">
+            <v-btn
+              class="button-submenu"
+              variant="plain"
+              icon="mdi-dots-vertical"
+              density="compact"
+              v-bind="props"
+            ></v-btn>
+          </template>
+          <v-list>
+            <v-list-item>
+              <Button block>
+                <v-icon icon="mdi-trash-can-outline" size="large" />
+                Delete
+              </Button>
+            </v-list-item>
+          </v-list>
+        </v-menu> -->
+      </Button>
     </template>
   </div>
 </template>
@@ -28,6 +57,7 @@ import { useDisplay } from "vuetify";
 import Button from "@/components/Button.vue";
 import JoinCreateRoomDialog from "@/components/JoinCreateRoomDialog.vue";
 import HeaderCard from "@/components/HeaderCard.vue";
+import ButtonSubMenu from "@/components/ButtonSubMenu.vue";
 import getOwnedRooms from "@/composables/subscribeOwnedRooms";
 import getGuestRooms from "@/composables/subscribeGuestedRooms";
 import { useUserStore } from "@/store/userStore";
@@ -43,7 +73,7 @@ let delayedHideLoading: NodeJS.Timeout;
 onMounted(() => {
   delayedHideLoading = setTimeout(() => {
     hideLoading.value = true;
-  }, 1500);
+  }, 2000);
 });
 
 onBeforeUnmount(() => {
@@ -60,6 +90,16 @@ const showProgress = computed(() => {
   }
   return false;
 });
+
+const roomsSubMenu = [
+  {
+    label: "Delete",
+    icon: "mdi-trash-can-outline",
+    action: (roomId: string) => {
+      console.log(roomId);
+    },
+  },
+];
 </script>
 
 <style lang="scss" scoped>
@@ -79,4 +119,10 @@ const showProgress = computed(() => {
     margin: 0 auto;
   }
 }
+
+// TODO left in case that in component approach something is not working delete it before merge
+// .button-submenu {
+//   position: absolute;
+//   right: 0.25rem;
+// }
 </style>
