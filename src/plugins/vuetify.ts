@@ -76,6 +76,9 @@ const vuetify = createVuetify({
     VListItem: {
       style: "padding: .25rem .5rem; min-height: 40px;",
     },
+    VAlert: {
+      style: "border-radius: 0;",
+    },
   },
   theme: {
     defaultTheme: defaultTheme.value,
