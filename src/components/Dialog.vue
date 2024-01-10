@@ -1,7 +1,7 @@
 <template>
   <v-dialog
     v-model="dialogs.isOpen[props.identification]"
-    :width="small ? '400' : '500'"
+    :width="small ? '370' : '500'"
     transition="dialog-top-transition"
     class="default-dialog"
     :class="{ small }"

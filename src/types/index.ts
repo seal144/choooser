@@ -3,6 +3,7 @@ export enum Dialogs {
   JoinRoom = "JOINROOM",
   CreateRoom = "CREATEROOM",
   ConfirmDeleteAccount = "CONFIRMDELETEACCOUNT",
+  ConfirmDeleteRoom = "CONFIRMDELETEROOM",
 }
 
 export interface Room {

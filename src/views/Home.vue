@@ -16,8 +16,9 @@
       <Button v-for="room in ownedRooms" :key="room.id">
         <v-icon icon="mdi-login" size="large" />
         {{ room.name }}
-        <ButtonSubMenu
+        <RoomButtonSubMenu
           :id="room.id"
+          :name="room.name"
           :offset="[0, 100]"
           :actionsList="roomsSubMenu"
         />
@@ -26,47 +27,60 @@
       <Button v-for="room in guestedRooms" :key="room.id">
         <v-icon icon="mdi-login" size="large" />
         {{ room.name }}
-        <!-- TODO left in case that in component approach something is not working, delete it before merge -->
-        <!-- <v-menu :offset="[0, 100]">
-          <template v-slot:activator="{ props }">
-            <v-btn
-              class="button-submenu"
-              variant="plain"
-              icon="mdi-dots-vertical"
-              density="compact"
-              v-bind="props"
-            ></v-btn>
-          </template>
-          <v-list>
-            <v-list-item>
-              <Button block>
-                <v-icon icon="mdi-trash-can-outline" size="large" />
-                Delete
-              </Button>
-            </v-list-item>
-          </v-list>
-        </v-menu> -->
       </Button>
+      <ConfirmDialog
+        :dialogIdentification="Dialogs.ConfirmDeleteRoom"
+        title="Are you sure?"
+        :text="confirmDeleteRoomText"
+        @close="onCloseConfirmDialog"
+      >
+        <template v-slot:confirmButton>
+          <Button danger @click="handleDeleteRoom" :loading="loading"
+            ><v-icon
+              icon="mdi-exclamation-thick"
+              size="large"
+              v-if="smAndUp"
+            />delete</Button
+          >
+        </template>
+      </ConfirmDialog>
     </template>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, onMounted, toRef, onBeforeUnmount } from "vue";
+import {
+  computed,
+  ref,
+  reactive,
+  onMounted,
+  toRef,
+  onBeforeUnmount,
+} from "vue";
 import { useDisplay } from "vuetify";
 import Button from "@/components/Button.vue";
 import JoinCreateRoomDialog from "@/components/JoinCreateRoomDialog.vue";
 import HeaderCard from "@/components/HeaderCard.vue";
-import ButtonSubMenu from "@/components/ButtonSubMenu.vue";
+import RoomButtonSubMenu from "@/components/RoomButtonSubMenu.vue";
+import ConfirmDialog from "@/components/ConfirmDialog.vue";
 import getOwnedRooms from "@/composables/subscribeOwnedRooms";
 import getGuestRooms from "@/composables/subscribeGuestedRooms";
+import useDeleteRoom from "@/composables/useDeleteRoom";
 import { useUserStore } from "@/store/userStore";
+import { useDialogsStore } from "@/store/dialogs";
 import { lineThickness } from "@/plugins/vuetify";
+import { Dialogs } from "@/types";
 
 const displayName = toRef(useUserStore(), "displayName");
 const { ownedRooms } = getOwnedRooms();
 const { guestedRooms } = getGuestRooms();
-const { xs } = useDisplay();
+const { xs, smAndUp } = useDisplay();
+const { deleteRoom, loading, error } = useDeleteRoom();
+const dialogs = useDialogsStore();
+const roomToDelete = reactive<{ id: string | null; name: string | null }>({
+  id: null,
+  name: null,
+});
 const hideLoading = ref(false);
 let delayedHideLoading: NodeJS.Timeout;
 
@@ -91,15 +105,35 @@ const showProgress = computed(() => {
   return false;
 });
 
+const confirmDeleteRoomText = computed(() => {
+  return `Do you want to delete "${roomToDelete.name}" room? This action is irreversible.`;
+});
+
+const onCloseConfirmDialog = () => {
+  roomToDelete.id = null;
+  roomToDelete.name = null;
+};
+
 const roomsSubMenu = [
   {
     label: "Delete",
     icon: "mdi-trash-can-outline",
-    action: (roomId: string) => {
-      console.log(roomId);
+    action: (roomId: string, roomName: string) => {
+      roomToDelete.id = roomId;
+      roomToDelete.name = roomName;
+      dialogs.isOpen.CONFIRMDELETEROOM = true;
     },
   },
 ];
+
+const handleDeleteRoom = async () => {
+  if (roomToDelete.id) {
+    await deleteRoom(roomToDelete.id);
+  }
+  if (!error.value) {
+    dialogs.isOpen.CONFIRMDELETEROOM = false;
+  }
+};
 </script>
 
 <style lang="scss" scoped>
@@ -119,10 +153,4 @@ const roomsSubMenu = [
     margin: 0 auto;
   }
 }
-
-// TODO left in case that in component approach something is not working delete it before merge
-// .button-submenu {
-//   position: absolute;
-//   right: 0.25rem;
-// }
 </style>

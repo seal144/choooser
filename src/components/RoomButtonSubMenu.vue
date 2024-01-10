@@ -3,7 +3,7 @@
     <template v-slot:activator="{ props }">
       <v-btn
         class="button-submenu"
-        variant="plain"
+        variant="text"
         icon="mdi-dots-vertical"
         density="compact"
         v-bind="props"
@@ -11,7 +11,7 @@
     </template>
     <v-list>
       <v-list-item v-for="(action, index) in actionsList" :key="index">
-        <Button block @click="action.action(id)">
+        <Button block @click="action.action(id, name)">
           <v-icon v-if="action.icon" :icon="action.icon" size="large" />
           {{ action.label }}
         </Button>
@@ -26,12 +26,16 @@ import Button from "@/components/Button.vue";
 
 interface ActionItem {
   label: string;
-  action: (id: string) => void;
+  action: (id: string, name: string) => void;
   icon?: string;
 }
 
 defineProps({
   id: {
+    type: String,
+    required: true,
+  },
+  name: {
     type: String,
     required: true,
   },
