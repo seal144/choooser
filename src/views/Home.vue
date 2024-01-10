@@ -44,6 +44,11 @@
           >
         </template>
       </ConfirmDialog>
+      <Snackbar
+        v-model="snackbarDeleteError"
+        title="Something went wrong"
+        text="Deleting room failed. Please, try again later."
+      />
     </template>
   </div>
 </template>
@@ -63,6 +68,7 @@ import JoinCreateRoomDialog from "@/components/JoinCreateRoomDialog.vue";
 import HeaderCard from "@/components/HeaderCard.vue";
 import RoomButtonSubMenu from "@/components/RoomButtonSubMenu.vue";
 import ConfirmDialog from "@/components/ConfirmDialog.vue";
+import Snackbar from "@/components/Snackbar.vue";
 import getOwnedRooms from "@/composables/subscribeOwnedRooms";
 import getGuestRooms from "@/composables/subscribeGuestedRooms";
 import useDeleteRoom from "@/composables/useDeleteRoom";
@@ -82,6 +88,7 @@ const roomToDelete = reactive<{ id: string | null; name: string | null }>({
   name: null,
 });
 const hideLoading = ref(false);
+const snackbarDeleteError = ref(false);
 let delayedHideLoading: NodeJS.Timeout;
 
 onMounted(() => {
@@ -130,7 +137,9 @@ const handleDeleteRoom = async () => {
   if (roomToDelete.id) {
     await deleteRoom(roomToDelete.id);
   }
-  if (!error.value) {
+  if (error.value) {
+    snackbarDeleteError.value = true;
+  } else {
     dialogs.isOpen.CONFIRMDELETEROOM = false;
   }
 };
