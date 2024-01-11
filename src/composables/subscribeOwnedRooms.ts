@@ -6,7 +6,7 @@ import getUser from "./getUser";
 
 type RoomData = Omit<Room, "id">;
 
-const getOwnedRooms = () => {
+const subscribeOwnedRooms = () => {
   const ownedRooms = ref<Room[]>([]);
   const { user } = getUser();
 
@@ -29,4 +29,4 @@ const getOwnedRooms = () => {
   return { ownedRooms };
 };
 
-export default getOwnedRooms;
+export default subscribeOwnedRooms;
