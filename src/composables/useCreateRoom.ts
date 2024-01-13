@@ -1,10 +1,10 @@
 import { ref } from "vue";
-import { db } from "@/firebase/config";
 import { Timestamp, addDoc, collection } from "firebase/firestore";
+import { db } from "@/firebase/config";
+import getDocs from "@/firebase/getDocs";
 import { Room } from "@/types";
 import getUser from "./getUser";
 import CryptoJS from "crypto-js";
-import getDocs from "./getDocs";
 
 type RoomData = Omit<Room, "id">;
 type RoomFormData = {

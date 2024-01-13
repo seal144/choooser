@@ -1,9 +1,9 @@
 import { ref } from "vue";
-import { db } from "@/firebase/config";
 import { doc, updateDoc } from "firebase/firestore";
+import { db } from "@/firebase/config";
+import getDocs from "@/firebase/getDocs";
 import getUser from "./getUser";
 import CryptoJS from "crypto-js";
-import getDocs from "./getDocs";
 
 type RoomFormData = {
   name: string;
