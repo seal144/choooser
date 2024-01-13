@@ -23,8 +23,8 @@
           :actionsList="roomsSubMenu"
         />
       </Button>
-      <HeaderCard v-if="guestedRooms.length">Joined Rooms</HeaderCard>
-      <Button v-for="room in guestedRooms" :key="room.id">
+      <HeaderCard v-if="joinedRooms.length">Joined Rooms</HeaderCard>
+      <Button v-for="room in joinedRooms" :key="room.id">
         <v-icon icon="mdi-login" size="large" />
         {{ room.name }}
       </Button>
@@ -69,8 +69,7 @@ import HeaderCard from "@/components/HeaderCard.vue";
 import RoomButtonSubMenu from "@/components/RoomButtonSubMenu.vue";
 import ConfirmDialog from "@/components/ConfirmDialog.vue";
 import Snackbar from "@/components/Snackbar.vue";
-import subscribeOwnedRooms from "@/composables/subscribeOwnedRooms";
-import subscribeGuestedRooms from "@/composables/subscribeGuestedRooms";
+import subscribeRooms, { RoomRole } from "@/composables/subscribeRooms";
 import useDeleteRoom from "@/composables/useDeleteRoom";
 import { useUserStore } from "@/store/userStore";
 import { useDialogsStore } from "@/store/dialogs";
@@ -78,8 +77,8 @@ import { lineThickness } from "@/plugins/vuetify";
 import { Dialogs } from "@/types";
 
 const displayName = toRef(useUserStore(), "displayName");
-const { ownedRooms } = subscribeOwnedRooms();
-const { guestedRooms } = subscribeGuestedRooms();
+const { rooms: ownedRooms } = subscribeRooms(RoomRole.owner);
+const { rooms: joinedRooms } = subscribeRooms(RoomRole.guest);
 const { xs, smAndUp } = useDisplay();
 const { deleteRoom, loading, error } = useDeleteRoom();
 const dialogs = useDialogsStore();
@@ -104,7 +103,7 @@ onBeforeUnmount(() => {
 const showProgress = computed(() => {
   if (
     !ownedRooms.value.length &&
-    !guestedRooms.value.length &&
+    !joinedRooms.value.length &&
     !hideLoading.value
   ) {
     return true;
