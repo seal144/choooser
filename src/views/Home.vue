@@ -12,6 +12,10 @@
     <template v-else>
       <JoinCreateRoomDialog variant="join" />
       <JoinCreateRoomDialog variant="create" />
+      <HeaderCard v-if="!ownedRooms.length && !joinedRooms.length">
+        &#128558; You are not participating in any room. Create or join a room
+        to collaborate with your friends.
+      </HeaderCard>
       <HeaderCard v-if="ownedRooms.length">Owned Rooms</HeaderCard>
       <Button v-for="room in ownedRooms" :key="room.id">
         <v-icon icon="mdi-login" size="large" />
@@ -146,7 +150,7 @@ const handleDeleteRoom = async () => {
 
 <style lang="scss" scoped>
 .home-view-container {
-  min-width: 400px;
+  width: 400px;
   margin: 0 auto;
   display: flex;
   gap: 1rem;
