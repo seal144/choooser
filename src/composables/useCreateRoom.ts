@@ -1,6 +1,6 @@
 import { ref } from "vue";
 import { db } from "@/firebase/config";
-import { addDoc, collection } from "firebase/firestore";
+import { Timestamp, addDoc, collection } from "firebase/firestore";
 import { Room } from "@/types";
 import getUser from "./getUser";
 import CryptoJS from "crypto-js";
@@ -39,6 +39,7 @@ const createRoom = async (roomFormData: RoomFormData) => {
       : "";
 
     const room: RoomData = {
+      createTime: Timestamp.now(),
       groupId: groupId,
       name: roomFormData.name,
       owner: user.value.uid,
