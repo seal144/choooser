@@ -9,6 +9,7 @@ export const useDialogsStore = defineStore("dialogs", {
       [Dialogs.CreateRoom]: false,
       [Dialogs.ConfirmDeleteAccount]: false,
       [Dialogs.ConfirmDeleteRoom]: false,
+      [Dialogs.ConfirmAbandonRoom]: false,
     },
   }),
 });

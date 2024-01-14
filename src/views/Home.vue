@@ -24,13 +24,19 @@
           :id="room.id"
           :name="room.name"
           :offset="[0, 100]"
-          :actionsList="roomsSubMenu"
+          :actionsList="ownedRoomsSubMenu"
         />
       </Button>
       <HeaderCard v-if="joinedRooms.length">Joined Rooms</HeaderCard>
       <Button v-for="room in joinedRooms" :key="room.id">
         <v-icon icon="mdi-login" size="large" />
         {{ room.name }}
+        <RoomButtonSubMenu
+          :id="room.id"
+          :name="room.name"
+          :offset="[0, 108]"
+          :actionsList="joinedRoomsSubMenu"
+        />
       </Button>
       <ConfirmDialog
         :dialogIdentification="Dialogs.ConfirmDeleteRoom"
@@ -45,6 +51,23 @@
               size="large"
               v-if="smAndUp"
             />delete</Button
+          >
+        </template>
+      </ConfirmDialog>
+      <ConfirmDialog
+        :dialogIdentification="Dialogs.ConfirmAbandonRoom"
+        title="Are you sure?"
+        :text="confirmAbandonRoomText"
+        @close="onCloseConfirmDialog"
+      >
+        <template v-slot:confirmButton>
+          <!-- TODO add loading -->
+          <Button @click="handleAbandonRoom" :loading="false"
+            ><v-icon
+              icon="mdi-exit-run"
+              size="large"
+              v-if="smAndUp"
+            />Abandon</Button
           >
         </template>
       </ConfirmDialog>
@@ -86,7 +109,10 @@ const { rooms: joinedRooms } = subscribeRooms(RoomRole.guest);
 const { xs, smAndUp } = useDisplay();
 const { deleteRoom, loading, error } = useDeleteRoom();
 const dialogs = useDialogsStore();
-const roomToDelete = reactive<{ id: string | null; name: string | null }>({
+const selectedRoomForAction = reactive<{
+  id: string | null;
+  name: string | null;
+}>({
   id: null,
   name: null,
 });
@@ -116,35 +142,53 @@ const showProgress = computed(() => {
 });
 
 const confirmDeleteRoomText = computed(() => {
-  return `Do you want to delete "${roomToDelete.name}" room? This action is irreversible.`;
+  return `Do you want to delete "${selectedRoomForAction.name}" room? This action is irreversible.`;
+});
+const confirmAbandonRoomText = computed(() => {
+  return `Do you want to abandon "${selectedRoomForAction.name}" room?`;
 });
 
 const onCloseConfirmDialog = () => {
-  roomToDelete.id = null;
-  roomToDelete.name = null;
+  selectedRoomForAction.id = null;
+  selectedRoomForAction.name = null;
 };
 
-const roomsSubMenu = [
+const ownedRoomsSubMenu = [
   {
     label: "Delete",
     icon: "mdi-trash-can-outline",
     action: (roomId: string, roomName: string) => {
-      roomToDelete.id = roomId;
-      roomToDelete.name = roomName;
+      selectedRoomForAction.id = roomId;
+      selectedRoomForAction.name = roomName;
       dialogs.isOpen.CONFIRMDELETEROOM = true;
+    },
+  },
+];
+const joinedRoomsSubMenu = [
+  {
+    label: "Abandon",
+    icon: "mdi-exit-run",
+    action: (roomId: string, roomName: string) => {
+      selectedRoomForAction.id = roomId;
+      selectedRoomForAction.name = roomName;
+      dialogs.isOpen.CONFIRMABANDONROOM = true;
     },
   },
 ];
 
 const handleDeleteRoom = async () => {
-  if (roomToDelete.id) {
-    await deleteRoom(roomToDelete.id);
+  if (selectedRoomForAction.id) {
+    await deleteRoom(selectedRoomForAction.id);
   }
   if (error.value) {
     snackbarDeleteError.value = true;
   } else {
     dialogs.isOpen.CONFIRMDELETEROOM = false;
   }
+};
+
+const handleAbandonRoom = async () => {
+  console.log("handleAbandonRoom");
 };
 </script>
 
