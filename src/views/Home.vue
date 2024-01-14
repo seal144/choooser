@@ -175,7 +175,7 @@ const ownedRoomsSubMenu = [
     action: (roomId: string, roomName: string) => {
       selectedRoomForAction.id = roomId;
       selectedRoomForAction.name = roomName;
-      dialogs.isOpen.CONFIRMDELETEROOM = true;
+      dialogs.isOpen[Dialogs.ConfirmDeleteRoom] = true;
     },
   },
 ];
@@ -186,7 +186,7 @@ const joinedRoomsSubMenu = [
     action: (roomId: string, roomName: string) => {
       selectedRoomForAction.id = roomId;
       selectedRoomForAction.name = roomName;
-      dialogs.isOpen.CONFIRMABANDONROOM = true;
+      dialogs.isOpen[Dialogs.ConfirmAbandonRoom] = true;
     },
   },
 ];
@@ -198,7 +198,7 @@ const handleDeleteRoom = async () => {
   if (errorDeleteRoom.value) {
     snackbarDeleteError.value = true;
   } else {
-    dialogs.isOpen.CONFIRMDELETEROOM = false;
+    dialogs.isOpen[Dialogs.ConfirmDeleteRoom] = false;
   }
 };
 
@@ -209,7 +209,7 @@ const handleAbandonRoom = async () => {
   if (errorAbandonRoom.value) {
     snackbarAbandonError.value = true;
   } else {
-    dialogs.isOpen.CONFIRMABANDONROOM = false;
+    dialogs.isOpen[Dialogs.ConfirmAbandonRoom] = false;
   }
 };
 </script>
