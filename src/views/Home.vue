@@ -45,7 +45,7 @@
         @close="onCloseConfirmDialog"
       >
         <template v-slot:confirmButton>
-          <Button danger @click="handleDeleteRoom" :loading="loading"
+          <Button danger @click="handleDeleteRoom" :loading="loadingDeleteRoom"
             ><v-icon
               icon="mdi-exclamation-thick"
               size="large"
@@ -61,8 +61,7 @@
         @close="onCloseConfirmDialog"
       >
         <template v-slot:confirmButton>
-          <!-- TODO add loading -->
-          <Button @click="handleAbandonRoom" :loading="false"
+          <Button @click="handleAbandonRoom" :loading="loadingAbandonRoom"
             ><v-icon
               icon="mdi-exit-run"
               size="large"
@@ -75,6 +74,11 @@
         v-model="snackbarDeleteError"
         title="Something went wrong"
         text="Deleting room failed. Please, try again later."
+      />
+      <Snackbar
+        v-model="snackbarAbandonError"
+        title="Something went wrong"
+        text="Abandoning room failed. Please, try again later."
       />
     </template>
   </div>
@@ -98,6 +102,7 @@ import ConfirmDialog from "@/components/ConfirmDialog.vue";
 import Snackbar from "@/components/Snackbar.vue";
 import subscribeRooms, { RoomRole } from "@/composables/subscribeRooms";
 import useDeleteRoom from "@/composables/useDeleteRoom";
+import useAbandonRoom from "@/composables/useAbandonRoom";
 import { useUserStore } from "@/store/userStore";
 import { useDialogsStore } from "@/store/dialogs";
 import { lineThickness } from "@/plugins/vuetify";
@@ -107,7 +112,16 @@ const displayName = toRef(useUserStore(), "displayName");
 const { rooms: ownedRooms } = subscribeRooms(RoomRole.owner);
 const { rooms: joinedRooms } = subscribeRooms(RoomRole.guest);
 const { xs, smAndUp } = useDisplay();
-const { deleteRoom, loading, error } = useDeleteRoom();
+const {
+  deleteRoom,
+  loading: loadingDeleteRoom,
+  error: errorDeleteRoom,
+} = useDeleteRoom();
+const {
+  abandonRoom,
+  loading: loadingAbandonRoom,
+  error: errorAbandonRoom,
+} = useAbandonRoom();
 const dialogs = useDialogsStore();
 const selectedRoomForAction = reactive<{
   id: string | null;
@@ -118,6 +132,7 @@ const selectedRoomForAction = reactive<{
 });
 const hideLoading = ref(false);
 const snackbarDeleteError = ref(false);
+const snackbarAbandonError = ref(false);
 let delayedHideLoading: NodeJS.Timeout;
 
 onMounted(() => {
@@ -180,7 +195,7 @@ const handleDeleteRoom = async () => {
   if (selectedRoomForAction.id) {
     await deleteRoom(selectedRoomForAction.id);
   }
-  if (error.value) {
+  if (errorDeleteRoom.value) {
     snackbarDeleteError.value = true;
   } else {
     dialogs.isOpen.CONFIRMDELETEROOM = false;
@@ -188,7 +203,14 @@ const handleDeleteRoom = async () => {
 };
 
 const handleAbandonRoom = async () => {
-  console.log("handleAbandonRoom");
+  if (selectedRoomForAction.id) {
+    await abandonRoom(selectedRoomForAction.id);
+  }
+  if (errorAbandonRoom.value) {
+    snackbarAbandonError.value = true;
+  } else {
+    dialogs.isOpen.CONFIRMABANDONROOM = false;
+  }
 };
 </script>
 

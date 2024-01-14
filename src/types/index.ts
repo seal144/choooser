@@ -2,6 +2,7 @@ import { Timestamp } from "firebase/firestore";
 
 export enum RoomField {
   createTime = "createTime",
+  guests = "guests",
 }
 
 export enum Dialogs {
@@ -19,5 +20,5 @@ export interface Room {
   groupId: string;
   name: string;
   owner: string;
-  guests: string[];
+  [RoomField.guests]: string[];
 }
