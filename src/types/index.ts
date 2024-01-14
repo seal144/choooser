@@ -6,12 +6,12 @@ export enum RoomField {
 }
 
 export enum Dialogs {
-  Settings = "SETTINGS",
-  JoinRoom = "JOINROOM",
-  CreateRoom = "CREATEROOM",
-  ConfirmDeleteAccount = "CONFIRMDELETEACCOUNT",
-  ConfirmDeleteRoom = "CONFIRMDELETEROOM",
-  ConfirmAbandonRoom = "CONFIRMABANDONROOM",
+  Settings,
+  JoinRoom,
+  CreateRoom,
+  ConfirmDeleteAccount,
+  ConfirmDeleteRoom,
+  ConfirmAbandonRoom,
 }
 
 export interface Room {
