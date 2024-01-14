@@ -1,6 +1,7 @@
 import { ref } from "vue";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase/config";
+import { CommonErrors } from "@/types";
 
 const parseErrorMessage = (message: string) => {
   if (message.includes("invalid-login-credentials")) {
@@ -22,13 +23,13 @@ const login = async (email: string, password: string) => {
   try {
     const response = await signInWithEmailAndPassword(auth, email, password);
     if (!response) {
-      throw new Error("Could not login");
+      throw new Error(CommonErrors.CouldNotLogin);
     }
 
     loading.value = false;
   } catch (err) {
     const { message } = err as Error;
-    console.log(message);
+    console.error(message);
     error.value = parseErrorMessage(message);
     loading.value = false;
   }

@@ -2,7 +2,7 @@ import { ref } from "vue";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "@/firebase/config";
 import getUser from "./getUser";
-import { Room, RoomField } from "@/types";
+import { CommonErrors, Room, RoomField } from "@/types";
 
 const loading = ref(false);
 const error = ref<string | null>(null);
@@ -14,7 +14,7 @@ const abandonRoom = async (roomId: string) => {
   try {
     const { user } = getUser();
     if (!user.value) {
-      throw new Error("Login as a valid user");
+      throw new Error(CommonErrors.LoginAsAValidUser);
     }
 
     const docRef = doc(db, "rooms", roomId);

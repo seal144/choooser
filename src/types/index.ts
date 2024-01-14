@@ -22,3 +22,8 @@ export interface Room {
   owner: string;
   [RoomField.Guests]: string[];
 }
+
+export enum CommonErrors {
+  LoginAsAValidUser = "Login as a valid user",
+  CouldNotLogin = "Could not login",
+}
