@@ -1,6 +1,7 @@
 import { ref } from "vue";
 import { signInWithRedirect, GoogleAuthProvider } from "firebase/auth";
 import { auth } from "@/firebase/config";
+import { CommonErrors } from "@/types";
 
 const error = ref<string | null>(null);
 const loading = ref(false);
@@ -14,13 +15,13 @@ const login = async () => {
     const response = await signInWithRedirect(auth, provider);
 
     if (!response) {
-      throw new Error("Could not login");
+      throw new Error(CommonErrors.CouldNotLogin);
     }
 
     loading.value = false;
   } catch (err) {
     const { message } = err as Error;
-    console.log(message);
+    console.error(message);
     error.value = message;
     loading.value = false;
   }

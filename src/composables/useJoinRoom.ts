@@ -4,6 +4,7 @@ import { db } from "@/firebase/config";
 import getDocs from "@/firebase/getDocs";
 import getUser from "./getUser";
 import CryptoJS from "crypto-js";
+import { CommonErrors } from "@/types";
 
 type RoomFormData = {
   name: string;
@@ -47,7 +48,7 @@ const joinRoom = async (roomFormData: RoomFormData) => {
   try {
     const { user } = getUser();
     if (!user.value) {
-      throw new Error("Login as a valid user");
+      throw new Error(CommonErrors.LoginAsAValidUser);
     }
 
     const snapshot = await getDocs("rooms", ["name", "==", roomFormData.name]);

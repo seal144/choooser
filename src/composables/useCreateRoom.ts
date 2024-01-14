@@ -2,9 +2,9 @@ import { ref } from "vue";
 import { Timestamp, addDoc, collection } from "firebase/firestore";
 import { db } from "@/firebase/config";
 import getDocs from "@/firebase/getDocs";
-import { Room } from "@/types";
 import getUser from "./getUser";
 import CryptoJS from "crypto-js";
+import { CommonErrors, Room } from "@/types";
 
 type RoomData = Omit<Room, "id">;
 type RoomFormData = {
@@ -22,7 +22,7 @@ const createRoom = async (roomFormData: RoomFormData) => {
   try {
     const { user } = getUser();
     if (!user.value) {
-      throw new Error("Login as a valid user");
+      throw new Error(CommonErrors.LoginAsAValidUser);
     }
 
     const snapshot = await getDocs("rooms", ["name", "==", roomFormData.name]);
