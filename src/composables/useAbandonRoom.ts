@@ -25,8 +25,8 @@ const abandonRoom = async (roomId: string) => {
       throw new Error("The document did not found");
     }
 
-    const currentGuestsList: Room[RoomField.guests] = snapshot.get(
-      RoomField.guests
+    const currentGuestsList: Room[RoomField.Guests] = snapshot.get(
+      RoomField.Guests
     );
     const newGuestsList = currentGuestsList.filter(
       (guestId) => guestId !== user.value?.uid

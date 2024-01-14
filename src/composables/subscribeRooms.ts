@@ -39,8 +39,8 @@ const subscribeRooms = (roomRole: RoomRole) => {
     const filteredDocs = snapshot.docs.filter((doc) => {
       const TwoWeeksInSeconds = 60 * 60 * 24 * 14;
       const nowSeconds = Timestamp.now().seconds;
-      const createTime: Room[RoomField.createTime] = doc.get(
-        RoomField.createTime
+      const createTime: Room[RoomField.CreateTime] = doc.get(
+        RoomField.CreateTime
       );
       if (nowSeconds - createTime.seconds > TwoWeeksInSeconds) {
         deleteRoom(doc.id);
