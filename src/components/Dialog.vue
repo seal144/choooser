@@ -37,7 +37,7 @@ import { watchEffect, PropType } from "vue";
 import { useDisplay } from "vuetify";
 
 import { useDialogsStore } from "@/store/dialogs";
-import Button from "./Button.vue";
+import { Button } from "@/components";
 import { Dialogs } from "@/types";
 
 const { xs } = useDisplay();

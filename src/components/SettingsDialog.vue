@@ -25,7 +25,7 @@
           label="Display Name"
           :rules="[...displayNameValidation]"
         />
-        <div class="danger-zone" :class="{xs}">
+        <div class="danger-zone" :class="{ xs }">
           <ConfirmDialog
             :dialogIdentification="Dialogs.ConfirmDeleteAccount"
             title="Are you sure?"
@@ -46,9 +46,7 @@
               >
             </template>
           </ConfirmDialog>
-          <div>
-            Danger zone 
-          </div>
+          <div>Danger zone</div>
         </div>
       </v-form>
       <FormError
@@ -74,16 +72,18 @@ import { computed, ref, toRef, watchEffect } from "vue";
 import { useDisplay, useTheme } from "vuetify";
 
 import { useDialogsStore } from "@/store/dialogs";
-import Button from "./Button.vue";
-import Dialog from "./Dialog.vue";
-import TextField from "./TextField.vue";
-import FormError from "./FormError.vue";
-import ConfirmDialog from "./ConfirmDialog.vue";
+import { useUserStore } from "@/store/userStore";
+import {
+  Button,
+  ConfirmDialog,
+  Dialog,
+  FormError,
+  TextField,
+} from "@/components";
 import useUser from "@/composables/useUser";
 import useDefaultTheme from "@/composables/useDefaultTheme";
-import { useUserStore } from "@/store/userStore";
-import { Dialogs } from "@/types";
 import { displayNameValidation } from "@/utils/validation";
+import { Dialogs } from "@/types";
 
 const { defaultTheme } = useDefaultTheme();
 const { smAndUp, xs } = useDisplay();
@@ -174,19 +174,19 @@ const onSubmit = async () => {
     gap: 0.5rem;
 
     .v-switch {
-      margin-bottom: .4rem;
+      margin-bottom: 0.4rem;
 
       & div.v-switch__thumb {
         background-color: rgb(var(--v-theme-primary));
       }
 
-      & .v-label{
-        opacity: 1
+      & .v-label {
+        opacity: 1;
       }
     }
 
     div.danger-zone {
-      padding: .2rem .5rem .2rem .2rem;
+      padding: 0.2rem 0.5rem 0.2rem 0.2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -194,10 +194,10 @@ const onSubmit = async () => {
       border: 1px solid rgb(var(--v-theme-error));
 
       &.xs {
-        padding: .5rem 1rem;
+        padding: 0.5rem 1rem;
         flex-direction: column-reverse;
         align-items: start;
-        gap:.2rem;
+        gap: 0.2rem;
       }
     }
   }

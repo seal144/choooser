@@ -94,12 +94,14 @@ import {
   onBeforeUnmount,
 } from "vue";
 import { useDisplay } from "vuetify";
-import Button from "@/components/Button.vue";
-import JoinCreateRoomDialog from "@/components/JoinCreateRoomDialog.vue";
-import HeaderCard from "@/components/HeaderCard.vue";
-import RoomButtonSubMenu from "@/components/RoomButtonSubMenu.vue";
-import ConfirmDialog from "@/components/ConfirmDialog.vue";
-import Snackbar from "@/components/Snackbar.vue";
+import {
+  Button,
+  JoinCreateRoomDialog,
+  HeaderCard,
+  RoomButtonSubMenu,
+  ConfirmDialog,
+  Snackbar,
+} from "@/components";
 import subscribeRooms, { RoomRole } from "@/composables/subscribeRooms";
 import useDeleteRoom from "@/composables/useDeleteRoom";
 import useAbandonRoom from "@/composables/useAbandonRoom";

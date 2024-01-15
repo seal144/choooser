@@ -22,7 +22,8 @@
 
 <script setup lang="ts">
 import { PropType } from "vue";
-import Button from "@/components/Button.vue";
+
+import { Button } from "@/components";
 
 interface ActionItem {
   label: string;

@@ -19,7 +19,8 @@
 
 <script lang="ts" setup>
 import { PropType } from "vue";
-import Dialog from "./Dialog.vue";
+
+import { Dialog } from "@/components";
 import { Dialogs } from "@/types";
 
 defineProps({

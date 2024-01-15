@@ -9,9 +9,6 @@
             >logout</span
           ></Button
         >
-        <!-- <Button :icon="!smAndUp"
-          ><v-icon icon="mdi-login" size="large"/><span v-if="smAndUp">login</span></Button
-        > -->
       </div>
     </v-container>
   </v-app-bar>
@@ -21,12 +18,10 @@
 import { watchEffect } from "vue";
 import { useRouter } from "vue-router";
 import { useDisplay } from "vuetify";
-
 import { signOut } from "firebase/auth";
+
 import { auth } from "@/firebase/config";
-import Button from "@/components/Button.vue";
-import Logo from "@/components/Logo.vue";
-import SettingsDialog from "@/components/SettingsDialog.vue";
+import { Button, Logo, SettingsDialog } from "@/components";
 import getUser from "@/composables/getUser";
 
 const { user } = getUser();

@@ -76,10 +76,7 @@ import { computed, ref, PropType } from "vue";
 import { useRouter } from "vue-router";
 import { useDisplay } from "vuetify";
 
-import Button from "@/components/Button.vue";
-import FormError from "@/components/FormError.vue";
-import HeaderCard from "@/components/HeaderCard.vue";
-import TextField from "@/components/TextField.vue";
+import { Button, FormError, HeaderCard, TextField } from "@/components";
 import useSignup from "@/composables/useSignup";
 import useLogin from "@/composables/useLogin";
 import useAnonymousAuth from "@/composables/useAnonymousAuth";

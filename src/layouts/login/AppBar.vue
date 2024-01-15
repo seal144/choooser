@@ -5,5 +5,5 @@
 </template>
 
 <script lang="ts" setup>
-import Logo from "@/components/Logo.vue";
+import { Logo } from "@/components";
 </script>

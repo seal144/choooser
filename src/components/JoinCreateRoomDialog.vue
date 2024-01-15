@@ -48,17 +48,15 @@
 import { computed, ref, PropType } from "vue";
 
 import { useDialogsStore } from "@/store/dialogs";
-import Button from "./Button.vue";
-import Dialog from "./Dialog.vue";
-import TextField from "./TextField.vue";
+import { Button, Dialog, TextField } from "@/components";
 import useCreateRoom from "@/composables/useCreateRoom";
 import useJoinRoom from "@/composables/useJoinRoom";
 import { ErrorJoinRoom } from "@/composables/useJoinRoom";
-import { Dialogs } from "@/types";
 import {
   displayNameValidation,
   roomPasswordValidation,
 } from "@/utils/validation";
+import { Dialogs } from "@/types";
 
 const props = defineProps({
   variant: {
