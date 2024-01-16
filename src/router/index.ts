@@ -7,6 +7,13 @@ import {
 } from "vue-router";
 import { auth } from "../firebase/config";
 
+export enum RoutesNames {
+  Home = "Home",
+  Room = "Room",
+  Login = "Login",
+  Signup = "Signup",
+}
+
 const requireAuth = (
   to: RouteLocationNormalized,
   from: RouteLocationNormalized,
@@ -38,7 +45,7 @@ const routes = [
     children: [
       {
         path: "",
-        name: "Home",
+        name: RoutesNames.Home,
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
@@ -49,12 +56,24 @@ const routes = [
     beforeEnter: requireAuth,
   },
   {
+    path: "/room/:id",
+    component: () => import("@/layouts/default/Layout.vue"),
+    children: [
+      {
+        path: "",
+        name: RoutesNames.Room,
+        component: () => import("@/views/Room.vue"),
+      },
+    ],
+    beforeEnter: requireAuth,
+  },
+  {
     path: "/login",
     component: () => import("@/layouts/login/Layout.vue"),
     children: [
       {
         path: "",
-        name: "Login",
+        name: RoutesNames.Login,
         component: () => import("@/views/Login.vue"),
       },
     ],
@@ -66,7 +85,7 @@ const routes = [
     children: [
       {
         path: "",
-        name: "Signup",
+        name: RoutesNames.Signup,
         component: () => import("@/views/Signup.vue"),
       },
     ],
