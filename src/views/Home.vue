@@ -17,7 +17,11 @@
         to collaborate with your friends.
       </HeaderCard>
       <HeaderCard v-if="ownedRooms.length">Owned Rooms</HeaderCard>
-      <Button v-for="room in ownedRooms" :key="room.id">
+      <Button
+        v-for="room in ownedRooms"
+        :key="room.id"
+        @click="enterRoom(room.id)"
+      >
         <v-icon icon="mdi-login" size="large" />
         {{ room.name }}
         <RoomButtonSubMenu
@@ -28,7 +32,11 @@
         />
       </Button>
       <HeaderCard v-if="joinedRooms.length">Joined Rooms</HeaderCard>
-      <Button v-for="room in joinedRooms" :key="room.id">
+      <Button
+        v-for="room in joinedRooms"
+        :key="room.id"
+        @click="enterRoom(room.id)"
+      >
         <v-icon icon="mdi-login" size="large" />
         {{ room.name }}
         <RoomButtonSubMenu
@@ -93,7 +101,9 @@ import {
   toRef,
   onBeforeUnmount,
 } from "vue";
+import { useRouter } from "vue-router";
 import { useDisplay } from "vuetify";
+
 import {
   Button,
   JoinCreateRoomDialog,
@@ -113,6 +123,7 @@ import { Dialogs } from "@/types";
 const displayName = toRef(useUserStore(), "displayName");
 const { rooms: ownedRooms } = subscribeRooms(RoomRole.owner);
 const { rooms: joinedRooms } = subscribeRooms(RoomRole.guest);
+const router = useRouter();
 const { xs, smAndUp } = useDisplay();
 const {
   deleteRoom,
@@ -213,6 +224,10 @@ const handleAbandonRoom = async () => {
   } else {
     dialogs.isOpen[Dialogs.ConfirmAbandonRoom] = false;
   }
+};
+
+const enterRoom = (roomId: string) => {
+  router.push(`/room/${roomId}`);
 };
 </script>
 
