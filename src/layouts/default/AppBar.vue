@@ -24,8 +24,8 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, watchEffect } from "vue";
-import { useRouter, useRoute } from "vue-router";
+import { watchEffect } from "vue";
+import { useRouter } from "vue-router";
 import { useDisplay } from "vuetify";
 import { signOut } from "firebase/auth";
 
@@ -34,18 +34,19 @@ import { Button, Logo, SettingsDialog } from "@/components";
 import getUser from "@/composables/getUser";
 import { RoutesNames } from "@/router";
 
-const { user } = getUser();
-const router = useRouter();
-const route = useRoute();
-const { xs, smAndUp } = useDisplay();
-
-const isRoom = computed(() => {
-  if (route.name === RoutesNames.Room) return true;
-  return false;
+const props = defineProps({
+  isRoom: {
+    type: Boolean,
+    default: false,
+  },
 });
 
+const { user } = getUser();
+const router = useRouter();
+const { xs, smAndUp } = useDisplay();
+
 watchEffect(() => {
-  if (!user.value) {
+  if (!user.value && !props.isRoom) {
     router.push({ name: "Login" });
   }
 });

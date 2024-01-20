@@ -12,6 +12,9 @@ export enum Dialogs {
   ConfirmDeleteAccount = "ConfirmDeleteAccount",
   ConfirmDeleteRoom = "ConfirmDeleteRoom",
   ConfirmAbandonRoom = "ConfirmAbandonRoom",
+  RoomInfoLogin = "RoomLogin",
+  RoomInfoIsFull = "RoomInfoIsFull",
+  RoomPassword = "RoomPassword",
 }
 
 export interface Room {

@@ -1,9 +1,11 @@
 import { ref } from "vue";
+import CryptoJS from "crypto-js";
 import { doc, updateDoc } from "firebase/firestore";
+
 import { db } from "@/firebase/config";
 import getDocs from "@/firebase/getDocs";
 import getUser from "./getUser";
-import CryptoJS from "crypto-js";
+import { MaxParticipantsInRoom } from "./../utils/validation";
 import { CommonErrors } from "@/types";
 
 type RoomFormData = {
@@ -22,8 +24,10 @@ const validateParticipants = (userId: string, guests: string[]) => {
   if (guests.includes(userId)) {
     throw new Error("You are already a participant of this room");
   }
-  if (guests.length >= 10) {
-    throw new Error("The room is full (max 10 participants)");
+  if (guests.length >= MaxParticipantsInRoom) {
+    throw new Error(
+      `The room is full (max ${MaxParticipantsInRoom} participants)`
+    );
   }
 };
 
