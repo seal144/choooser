@@ -7,7 +7,8 @@
       :width="lineThickness"
     ></v-progress-circular>
     <template v-else>
-      <div>Room {{ route.params.id }}</div>
+      <div>Params id {{ route.params.id }}</div>
+      <div>{{ room }}</div>
     </template>
     <InfoDialog
       @close="loginRedirect"
@@ -20,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watchEffect, computed } from "vue";
+import { computed, watchEffect } from "vue";
 import { useRouter, useRoute } from "vue-router";
 
 import { lineThickness } from "@/plugins/vuetify";
@@ -28,27 +29,30 @@ import { RoutesNames } from "@/router";
 import { useDialogsStore } from "@/store/dialogs";
 import { InfoDialog } from "@/components";
 import getUser from "@/composables/getUser";
+import subscribeRoom from "@/composables/subscribeRoom";
 import { Dialogs } from "@/types";
 
 const router = useRouter();
 const route = useRoute();
 const { user } = getUser();
 const dialogs = useDialogsStore();
-const loading = ref(true);
+const { room } = subscribeRoom(route.params.id as string);
+
+const loading = computed(() => {
+  if (!user.value || !room.value) {
+    return true;
+  }
+  return false;
+});
+
 watchEffect(() => {
   if (!user.value) {
     dialogs.isOpen[Dialogs.RoomInfoLogin] = true;
   }
 });
-const authenticated = computed(() => {
-  if (!user.value) {
-    return false;
-  }
-  return true;
-});
 
 const loginRedirect = () => {
-  if (!authenticated.value) {
+  if (!user.value) {
     router.push({ name: RoutesNames.Login });
   }
 };
