@@ -65,7 +65,6 @@ const routes = [
         component: () => import("@/views/Room.vue"),
       },
     ],
-    beforeEnter: requireAuth,
   },
   {
     path: "/login",

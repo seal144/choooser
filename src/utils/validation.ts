@@ -13,3 +13,5 @@ export const emailValidation = [required, emailFormat];
 export const displayNameValidation = [required, minChars(3), maxChars(18)];
 export const authPasswordValidation = [required, minChars(6), maxChars(16)];
 export const roomPasswordValidation = [minChars(3), maxChars(30)];
+
+export const MaxParticipantsInRoom = 10;
