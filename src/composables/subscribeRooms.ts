@@ -7,13 +7,11 @@ import {
   query as queryFirestore,
   where,
 } from "firebase/firestore";
-import { Room, RoomField } from "@/types";
+import { Room, RoomField, RoomBasicData } from "@/types";
 import getUser from "./getUser";
 import useDeleteRoom from "./useDeleteRoom";
 
 const { deleteRoom } = useDeleteRoom();
-
-type RoomData = Omit<Room, "id">;
 
 export enum RoomRole {
   owner,
@@ -21,7 +19,7 @@ export enum RoomRole {
 }
 
 const subscribeRooms = (roomRole: RoomRole) => {
-  const rooms = ref<Room[]>([]);
+  const rooms = ref<RoomBasicData[]>([]);
   const { user } = getUser();
 
   const collectionRef = collection(db, "rooms");
@@ -50,8 +48,8 @@ const subscribeRooms = (roomRole: RoomRole) => {
     });
 
     rooms.value = filteredDocs.map((doc) => ({
-      ...(doc.data() as RoomData),
       id: doc.id,
+      name: doc.get(RoomField.Name),
     }));
   });
 

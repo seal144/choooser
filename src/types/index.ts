@@ -1,7 +1,11 @@
 import { Timestamp } from "firebase/firestore";
 
 export enum RoomField {
+  Id = "id",
   CreateTime = "createTime",
+  GroupId = "groupId",
+  Name = "name",
+  Owner = "owner",
   Guests = "guests",
 }
 
@@ -18,13 +22,22 @@ export enum Dialogs {
 }
 
 export interface Room {
-  id: string;
+  [RoomField.Id]: string;
   [RoomField.CreateTime]: Timestamp;
-  groupId: string;
-  name: string;
-  owner: string;
+  [RoomField.GroupId]: string;
+  [RoomField.Name]: string;
+  [RoomField.Owner]: string;
   [RoomField.Guests]: string[];
 }
+
+export type RoomData = Omit<Room, RoomField.Id>;
+
+export type RoomBasicData = Omit<
+  Room,
+  RoomField.CreateTime | RoomField.GroupId | RoomField.Owner | RoomField.Guests
+>;
+
+export type RoomDetailsData = Omit<Room, RoomField.GroupId>;
 
 export enum CommonErrors {
   LoginAsAValidUser = "Login as a valid user",

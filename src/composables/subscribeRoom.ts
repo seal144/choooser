@@ -1,13 +1,11 @@
 import { ref, watchEffect } from "vue";
 import { db } from "@/firebase/config";
 import { doc, onSnapshot } from "firebase/firestore";
-import { Room } from "@/types";
+import { RoomDetailsData, RoomField } from "@/types";
 import getUser from "./getUser";
 
-type RoomData = Omit<Room, "id">;
-
 const subscribeRooms = (roomId: string) => {
-  const room = ref<Room | null>(null);
+  const room = ref<RoomDetailsData | null>(null);
   const { user } = getUser();
 
   if (!user.value) {
@@ -18,8 +16,11 @@ const subscribeRooms = (roomId: string) => {
 
   const unsubscribe = onSnapshot(docRef, (snapshot) => {
     room.value = {
-      ...(snapshot.data() as RoomData),
       id: snapshot.id,
+      name: snapshot.get(RoomField.Name),
+      owner: snapshot.get(RoomField.Owner),
+      guests: snapshot.get(RoomField.Guests),
+      createTime: snapshot.get(RoomField.CreateTime),
     };
   });
 
