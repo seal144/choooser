@@ -12,11 +12,17 @@
     <template v-else>
       <JoinCreateRoomDialog variant="join" />
       <JoinCreateRoomDialog variant="create" />
-      <HeaderCard v-if="!ownedRooms.length && !joinedRooms.length">
+      <HeaderCard
+        v-if="
+          ownedRooms && !ownedRooms.length && joinedRooms && !joinedRooms.length
+        "
+      >
         &#128558; You are not participating in any room. Create or join a room
         to collaborate with your friends.
       </HeaderCard>
-      <HeaderCard v-if="ownedRooms.length">Owned Rooms</HeaderCard>
+      <HeaderCard v-if="ownedRooms && ownedRooms.length"
+        >Owned Rooms</HeaderCard
+      >
       <Button
         v-for="room in ownedRooms"
         :key="room.id"
@@ -31,7 +37,9 @@
           :actionsList="ownedRoomsSubMenu"
         />
       </Button>
-      <HeaderCard v-if="joinedRooms.length">Joined Rooms</HeaderCard>
+      <HeaderCard v-if="joinedRooms && joinedRooms.length"
+        >Joined Rooms</HeaderCard
+      >
       <Button
         v-for="room in joinedRooms"
         :key="room.id"
@@ -143,27 +151,17 @@ const selectedRoomForAction = reactive<{
   id: null,
   name: null,
 });
-const hideLoading = ref(false);
+
 const snackbarDeleteError = ref(false);
 const snackbarAbandonError = ref(false);
 let delayedHideLoading: NodeJS.Timeout;
-
-onMounted(() => {
-  delayedHideLoading = setTimeout(() => {
-    hideLoading.value = true;
-  }, 2000);
-});
 
 onBeforeUnmount(() => {
   clearTimeout(delayedHideLoading);
 });
 
 const showProgress = computed(() => {
-  if (
-    !ownedRooms.value.length &&
-    !joinedRooms.value.length &&
-    !hideLoading.value
-  ) {
+  if (!ownedRooms.value || !joinedRooms.value) {
     return true;
   }
   return false;

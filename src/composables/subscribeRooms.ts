@@ -19,7 +19,7 @@ export enum RoomRole {
 }
 
 const subscribeRooms = (roomRole: RoomRole) => {
-  const rooms = ref<RoomBasicData[]>([]);
+  const rooms = ref<RoomBasicData[] | null>(null);
   const { user } = getUser();
 
   const collectionRef = collection(db, "rooms");
