@@ -73,7 +73,7 @@ const routes = [
       {
         path: "",
         name: RoutesNames.Login,
-        component: () => import("@/views/Login.vue"),
+        component: () => import("@/views/Login_SignUp/Login.vue"),
       },
     ],
     beforeEnter: requireNoAuth,
@@ -85,7 +85,7 @@ const routes = [
       {
         path: "",
         name: RoutesNames.Signup,
-        component: () => import("@/views/Signup.vue"),
+        component: () => import("@/views/Login_SignUp/Signup.vue"),
       },
     ],
     beforeEnter: requireNoAuth,

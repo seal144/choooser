@@ -1,6 +1,8 @@
 <template>
   <div class="container">
-    <HeaderCard>Something went wrong! Such a room doesn't exist.</HeaderCard>
+    <HeaderCard
+      >&#128550; Something went wrong! Such a room doesn't exist.</HeaderCard
+    >
     <Button @click="goHome">
       <v-icon icon="mdi-exit-run" size="large" />
       Go Home
