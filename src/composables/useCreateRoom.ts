@@ -4,9 +4,8 @@ import { db } from "@/firebase/config";
 import getDocs from "@/firebase/getDocs";
 import getUser from "./getUser";
 import CryptoJS from "crypto-js";
-import { CommonErrors, Room } from "@/types";
+import { CommonErrors, RoomData } from "@/types";
 
-type RoomData = Omit<Room, "id">;
 type RoomFormData = {
   name: string;
   password: string;

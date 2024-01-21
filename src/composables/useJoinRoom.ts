@@ -6,7 +6,7 @@ import { db } from "@/firebase/config";
 import getDocs from "@/firebase/getDocs";
 import getUser from "./getUser";
 import { MaxParticipantsInRoom } from "./../utils/validation";
-import { CommonErrors } from "@/types";
+import { CommonErrors, RoomData } from "@/types";
 
 type RoomFormData = {
   name: string;
@@ -61,7 +61,7 @@ const joinRoom = async (roomFormData: RoomFormData) => {
       throw new Error("No room with such a name");
     }
 
-    const { groupId, guests, owner } = snapshot.docs[0].data();
+    const { groupId, guests, owner } = snapshot.docs[0].data() as RoomData;
     const roomId = snapshot.docs[0].id;
 
     validateParticipants(user.value.uid, [...guests, owner]);
