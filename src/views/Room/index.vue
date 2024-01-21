@@ -6,6 +6,9 @@
       size="48"
       :width="lineThickness"
     ></v-progress-circular>
+    <template v-else-if="room && !room.name">
+      <RoomNotExist />
+    </template>
     <template v-else>
       <div>Params id {{ route.params.id }}</div>
       <div>{{ room }}</div>
@@ -32,11 +35,15 @@ import getUser from "@/composables/getUser";
 import subscribeRoom from "@/composables/subscribeRoom";
 import { Dialogs } from "@/types";
 
+import RoomNotExist from "./RoomNotExist.vue";
+
 const router = useRouter();
 const route = useRoute();
 const { user } = getUser();
 const dialogs = useDialogsStore();
 const { room } = subscribeRoom(route.params.id as string);
+
+// const userInitValidation
 
 const loading = computed(() => {
   if (!user.value || !room.value) {
