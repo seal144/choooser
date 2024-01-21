@@ -5,7 +5,6 @@ import FormError from "./FormError.vue";
 import HeaderCard from "./HeaderCard.vue";
 import InfoDialog from "./InfoDialog.vue";
 import JoinCreateRoomDialog from "./JoinCreateRoomDialog.vue";
-import LoginSignupForm from "./LoginSignupForm.vue";
 import Logo from "./Logo.vue";
 import RoomButtonSubMenu from "./RoomButtonSubMenu.vue";
 import SettingsDialog from "./SettingsDialog.vue";
@@ -20,7 +19,6 @@ export {
   HeaderCard,
   InfoDialog,
   JoinCreateRoomDialog,
-  LoginSignupForm,
   Logo,
   RoomButtonSubMenu,
   SettingsDialog,
