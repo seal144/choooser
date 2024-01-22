@@ -101,14 +101,7 @@
 </template>
 
 <script lang="ts" setup>
-import {
-  computed,
-  ref,
-  reactive,
-  onMounted,
-  toRef,
-  onBeforeUnmount,
-} from "vue";
+import { computed, ref, reactive, toRef } from "vue";
 import { useRouter } from "vue-router";
 import { useDisplay } from "vuetify";
 
@@ -154,11 +147,6 @@ const selectedRoomForAction = reactive<{
 
 const snackbarDeleteError = ref(false);
 const snackbarAbandonError = ref(false);
-let delayedHideLoading: NodeJS.Timeout;
-
-onBeforeUnmount(() => {
-  clearTimeout(delayedHideLoading);
-});
 
 const showProgress = computed(() => {
   if (!ownedRooms.value || !joinedRooms.value) {

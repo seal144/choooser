@@ -18,7 +18,7 @@ export enum Dialogs {
   ConfirmAbandonRoom = "ConfirmAbandonRoom",
   RoomInfoLogin = "RoomLogin",
   RoomInfoIsFull = "RoomInfoIsFull",
-  RoomPassword = "RoomPassword",
+  JoinRoomFromURL = "joinRoomFromURL",
 }
 
 export interface Room {
@@ -37,7 +37,9 @@ export type RoomBasicData = Omit<
   RoomField.CreateTime | RoomField.GroupId | RoomField.Owner | RoomField.Guests
 >;
 
-export type RoomDetailsData = Omit<Room, RoomField.GroupId>;
+export type RoomDetailsData = Omit<Room, RoomField.GroupId> & {
+  parsedGroupId: number;
+};
 
 export enum CommonErrors {
   LoginAsAValidUser = "Login as a valid user",

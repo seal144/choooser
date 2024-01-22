@@ -84,8 +84,8 @@ const resetError = () => {
   error.value = null;
 };
 
-const useJoinNewRoom = () => {
+const useJoinRoom = () => {
   return { joinRoom, loading, error, resetError };
 };
 
-export default useJoinNewRoom;
+export default useJoinRoom;
