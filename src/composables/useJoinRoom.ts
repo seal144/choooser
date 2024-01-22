@@ -5,7 +5,7 @@ import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/firebase/config";
 import getDocs from "@/firebase/getDocs";
 import getUser from "./getUser";
-import { MaxParticipantsInRoom } from "./../utils/validation";
+import { MaxGuestsInRoom } from "./../utils/validation";
 import { CommonErrors, RoomData } from "@/types";
 
 type RoomFormData = {
@@ -24,10 +24,8 @@ const validateParticipants = (userId: string, guests: string[]) => {
   if (guests.includes(userId)) {
     throw new Error("You are already a participant of this room");
   }
-  if (guests.length >= MaxParticipantsInRoom) {
-    throw new Error(
-      `The room is full (max ${MaxParticipantsInRoom} participants)`
-    );
+  if (guests.length >= MaxGuestsInRoom) {
+    throw new Error(`The room is full (max ${MaxGuestsInRoom} participants)`);
   }
 };
 
