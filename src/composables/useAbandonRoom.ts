@@ -22,7 +22,7 @@ const abandonRoom = async (roomId: string) => {
     const snapshot = await getDoc(docRef);
 
     if (!snapshot.exists()) {
-      throw new Error("The document did not found");
+      throw new Error(CommonErrors.TheDocumentNotFound);
     }
 
     const currentGuestsList: Room[RoomField.Guests] = snapshot.get(

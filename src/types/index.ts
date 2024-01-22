@@ -42,4 +42,6 @@ export type RoomDetailsData = Omit<Room, RoomField.GroupId>;
 export enum CommonErrors {
   LoginAsAValidUser = "Login as a valid user",
   CouldNotLogin = "Could not login",
+  TheDocumentNotFound = "The document not found",
+  TheRoomIsFull = "The room is full",
 }
