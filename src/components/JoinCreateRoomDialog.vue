@@ -6,7 +6,7 @@
     class="room-dialog"
     @close="resetForm"
   >
-    <template v-slot:ActivatorButtonLabel>
+    <template v-if="variant !== 'joinFromUrl'" v-slot:ActivatorButtonLabel>
       <Button class="room-dialog--activator-button">
         <v-icon :icon="activatorButtonIcon" size="large" />
         {{ title }}
@@ -15,9 +15,13 @@
     <template v-slot:content>
       <v-form v-model="form" @submit.prevent="onSubmit" validate-on="blur lazy">
         <button type="submit" v-show="false" ref="submitButton"></button>
+        <p v-if="variant === 'joinFromUrl'" class="note">
+          The room requires a password
+        </p>
         <TextField
           v-model.trim="name"
           label="Room name"
+          :disabled="!!props.roomName"
           :rules="[...displayNameValidation]"
           :readonly="loading"
           :error-messages="
@@ -60,8 +64,13 @@ import { Dialogs } from "@/types";
 
 const props = defineProps({
   variant: {
-    type: String as PropType<"join" | "create">,
+    type: String as PropType<"join" | "create" | "joinFromUrl">,
     required: true,
+  },
+  //roomName is required on "joinFromUrl" variant
+  roomName: {
+    type: String,
+    required: false,
   },
 });
 
@@ -72,6 +81,12 @@ const DialogData = computed(() => {
         identification: Dialogs.JoinRoom,
         title: "Join room",
         activatorButtonIcon: "mdi-login",
+        actionButtonLabel: "Join",
+      };
+    case "joinFromUrl":
+      return {
+        identification: Dialogs.JoinRoomFromURL,
+        title: "Join room",
         actionButtonLabel: "Join",
       };
     default:
@@ -87,21 +102,21 @@ const { identification, title, activatorButtonIcon, actionButtonLabel } =
   DialogData.value;
 
 const useAction = computed(() => {
-  if (props.variant === "join") {
-    const { joinRoom, error, loading, resetError } = useJoinRoom();
+  if (props.variant === "create") {
+    const { createRoom, error, loading, resetError } = useCreateRoom();
 
     return {
-      submitAction: joinRoom,
+      submitAction: createRoom,
       loading,
       error,
       resetError,
     };
   }
 
-  const { createRoom, error, loading, resetError } = useCreateRoom();
+  const { joinRoom, error, loading, resetError } = useJoinRoom();
 
   return {
-    submitAction: createRoom,
+    submitAction: joinRoom,
     loading,
     error,
     resetError,
@@ -110,11 +125,10 @@ const useAction = computed(() => {
 const { submitAction, loading, error, resetError } = useAction.value;
 
 const form = ref(false);
-const name = ref("");
+const name = ref(props.roomName ? props.roomName : "");
 const password = ref("");
 const showPassword = ref(false);
 const submitButton = ref<HTMLButtonElement | null>(null);
-
 const dialogs = useDialogsStore();
 
 const actionButtonClick = () => {
@@ -155,6 +169,11 @@ const onSubmit = async () => {
     &.xs {
       padding-bottom: 0.25rem !important;
     }
+  }
+
+  .note {
+    margin-top: -1rem;
+    margin-bottom: 1rem;
   }
 
   .v-input {

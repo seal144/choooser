@@ -37,10 +37,11 @@ const useSubscribeRoom = (roomId: string) => {
       const unsubscribe = onSnapshot(docRef, (snapshot) => {
         room.value = {
           id: snapshot.id,
+          createTime: snapshot.get(RoomField.CreateTime),
+          parsedGroupId: snapshot.get(RoomField.GroupId) ? 1 : 0,
           name: snapshot.get(RoomField.Name),
           owner: snapshot.get(RoomField.Owner),
           guests: snapshot.get(RoomField.Guests),
-          createTime: snapshot.get(RoomField.CreateTime),
         };
       });
 

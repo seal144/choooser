@@ -12,7 +12,7 @@ export const useDialogsStore = defineStore("dialogs", {
       [Dialogs.ConfirmAbandonRoom]: false,
       [Dialogs.RoomInfoLogin]: false,
       [Dialogs.RoomInfoIsFull]: false,
-      [Dialogs.RoomPassword]: false,
+      [Dialogs.JoinRoomFromURL]: false,
     },
   }),
 });

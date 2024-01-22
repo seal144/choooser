@@ -27,32 +27,62 @@
       :text="`there is already ${MaxGuestsInRoom} guests in the room`"
       closeLabel="go Home"
     />
+    <JoinCreateRoomDialog
+      @close="onCloseJoinRoomDialog"
+      v-if="room"
+      variant="joinFromUrl"
+      :roomName="room.name"
+    />
+    <Snackbar
+      v-model="snackbarJoinRoomError"
+      title="Something went wrong"
+      text="Joining room failed. Please, try again later."
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, watchEffect, ref } from "vue";
+import { computed, onBeforeUnmount, watchEffect, ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
 
 import { lineThickness } from "@/plugins/vuetify";
 import { RoutesNames } from "@/router";
 import { useDialogsStore } from "@/store/dialogs";
-import { InfoDialog } from "@/components";
+import { InfoDialog, JoinCreateRoomDialog, Snackbar } from "@/components";
 import getUser from "@/composables/getUser";
 import useSubscribeRoom from "@/composables/useSubscribeRoom";
+import useJoinRoom from "@/composables/useJoinRoom";
 import { MaxGuestsInRoom } from "@/utils/validation";
 import { CommonErrors, Dialogs } from "@/types";
 
 import RoomNotExist from "./RoomNotExist.vue";
 
+// onBoarding validation START
 const router = useRouter();
 const route = useRoute();
 const { user } = getUser();
 const dialogs = useDialogsStore();
 const userInitValidation = ref(true);
+const snackbarJoinRoomError = ref(false);
 const { room, subscribeRoom, error } = useSubscribeRoom(
   route.params.id as string
 );
+const { joinRoom, error: errorJoinRoom } = useJoinRoom();
+
+let delayedKick: NodeJS.Timeout;
+
+watchEffect(() => {
+  if (errorJoinRoom.value && room.value && room.value.parsedGroupId === 0) {
+    snackbarJoinRoomError.value = true;
+    delayedKick = setTimeout(() => {
+      userInitValidation.value = false;
+    }, 4000);
+  }
+});
+
+onBeforeUnmount(() => {
+  clearTimeout(delayedKick);
+});
 
 watchEffect(() => {
   if (!user.value) {
@@ -83,31 +113,48 @@ const loading = computed(() => {
   return false;
 });
 
+const goHome = () => {
+  router.push({ name: RoutesNames.Home });
+};
+
 const redirectLoginDialog = () => {
   if (!user.value) {
     router.push({ name: RoutesNames.Login });
   }
 };
+
 const redirectHomeDialog = () => {
   if (!userInitValidation.value && !userIsParticipant.value) {
-    router.push({ name: RoutesNames.Home });
+    goHome();
   }
 };
 
-// initial Validation watchEffect
+const onCloseJoinRoomDialog = () => {
+  if (room.value && room.value.parsedGroupId === 1) {
+    userInitValidation.value = false;
+  }
+};
+
+// initial validation watchEffect
 watchEffect(() => {
-  if (!userIsParticipant.value && userInitValidation.value) {
+  if (userInitValidation.value && !userIsParticipant.value) {
     if (error.value === CommonErrors.TheRoomIsFull) {
       userInitValidation.value = false;
       dialogs.isOpen[Dialogs.RoomInfoIsFull] = true;
     }
-    // TODO show give password modal
+    if (room.value && room.value.parsedGroupId === 1) {
+      dialogs.isOpen[Dialogs.JoinRoomFromURL] = true;
+    }
+    if (room.value && room.value.parsedGroupId === 0) {
+      joinRoom({ name: room.value.name, password: "" });
+    }
   } else if (!userIsParticipant.value) {
-    router.push({ name: RoutesNames.Home });
+    goHome();
   } else {
     userInitValidation.value = false;
   }
 });
+// onBoarding validation END
 </script>
 
 <style lang="scss" scoped>
@@ -126,4 +173,5 @@ watchEffect(() => {
 <!-- v bad url -->
 <!-- v non logged user -->
 <!-- v fullRoom -->
-<!-- user isn't participant -->
+<!-- v user isn't participant password -->
+<!-- v user isn't participant no password -->
