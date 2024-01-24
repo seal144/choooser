@@ -7,24 +7,29 @@
     v-model="drawer"
     temporary
     class="side-drawer"
-    :class="{ xxl: xxl }"
+    :class="{ xxl: xxl, xs: xs }"
     :width="drawerWidth"
   >
     <div className="drawer-header">
-      <HeaderCard v-if="!xs" class="drawer-header-text">{{
-        room.name
-      }}</HeaderCard>
+      <HeaderCard class="drawer-header-text">{{ room.name }}</HeaderCard>
       <Button
         icon
         density="compact"
         class="hide-drawer-button"
-        :class="{ xs: xs, smAndUp: smAndUp }"
         @click="drawer = false"
         ><v-icon icon="mdi-chevron-left" size="large"
       /></Button>
     </div>
-    <v-list-item prepend-icon="mdi-account" title="Owner"></v-list-item>
-    <v-list-item prepend-icon="mdi-account-group" title="Guests"></v-list-item>
+    Owner:
+    <div class="owner-container">
+      <PersonCard name="123456789012345678" />
+    </div>
+    Guests:
+    <div class="guests-container">
+      <PersonCard name="123456789012345678" />
+      <PersonCard name="123456789012345678" />
+      <PersonCard name="123456789012345678" />
+    </div>
   </v-navigation-drawer>
   <div class="content" :class="{ xlAndUp: xlAndUp }">
     {{ props.room }}
@@ -35,7 +40,7 @@
 import { computed, PropType, ref } from "vue";
 import { useDisplay } from "vuetify";
 
-import { Button, HeaderCard } from "@/components";
+import { Button, HeaderCard, PersonCard } from "@/components";
 import { RoomDetailsData } from "@/types";
 
 const props = defineProps({
@@ -45,12 +50,11 @@ const props = defineProps({
   },
 });
 
-const { xs, smAndUp, xlAndUp, xxl } = useDisplay();
+const { xs, xlAndUp, xxl } = useDisplay();
 const drawer = ref(false);
 const drawerWidth = computed(() => {
-  if (xxl.value) return "340";
-  if (xs.value) return "220";
-  return "268";
+  if (xxl.value) return "360";
+  return "280";
 });
 </script>
 
@@ -78,6 +82,7 @@ const drawerWidth = computed(() => {
     display: flex;
     justify-content: space-between;
     gap: 0.5rem;
+    margin-bottom: 1rem;
 
     .drawer-header-text {
       flex: 1;
@@ -85,20 +90,28 @@ const drawerWidth = computed(() => {
   }
 
   .hide-drawer-button {
-    &.smAndUp {
-      height: 38px;
+    height: 38px;
+    width: 38px;
+    &--icon {
       width: 38px;
-      &--icon {
-        width: 38px;
-      }
-    }
-
-    &.xs {
-      margin-left: auto;
     }
   }
+
+  .owner-container {
+    margin-bottom: 0.5rem;
+  }
+
+  .guests-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
   &.xxl {
     padding-left: 2rem;
+  }
+  &.xs {
+    padding: 1rem 0.5rem;
   }
 }
 </style>
