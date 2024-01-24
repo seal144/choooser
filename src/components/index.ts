@@ -10,6 +10,7 @@ import RoomButtonSubMenu from "./RoomButtonSubMenu.vue";
 import SettingsDialog from "./SettingsDialog.vue";
 import Snackbar from "./Snackbar.vue";
 import TextField from "./TextField.vue";
+import PersonCard from "./PersonCard.vue";
 
 export {
   Button,
@@ -20,6 +21,7 @@ export {
   InfoDialog,
   JoinCreateRoomDialog,
   Logo,
+  PersonCard,
   RoomButtonSubMenu,
   SettingsDialog,
   Snackbar,
