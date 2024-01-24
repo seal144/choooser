@@ -4,7 +4,7 @@
 
 <style lang="scss" scoped>
 .v-card {
-  padding: 0.25rem 1rem;
+  padding: 0.25rem 0.5rem;
   text-align: center;
 }
 </style>

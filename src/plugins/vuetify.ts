@@ -79,6 +79,9 @@ const vuetify = createVuetify({
     VAlert: {
       style: "border-radius: 0;",
     },
+    VNavigationDrawer: {
+      style: `${borderStyle}`,
+    },
   },
   theme: {
     defaultTheme: defaultTheme.value,
