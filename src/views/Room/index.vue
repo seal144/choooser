@@ -10,8 +10,7 @@
       <RoomNotExist />
     </template>
     <template v-else>
-      <div>Params id {{ route.params.id }}</div>
-      <div>{{ room }}</div>
+      <RoomView v-if="room" :room="room" />
     </template>
     <InfoDialog
       @close="redirectLoginDialog"
@@ -49,6 +48,7 @@ import { lineThickness } from "@/plugins/vuetify";
 import { RoutesNames } from "@/router";
 import { useDialogsStore } from "@/store/dialogs";
 import { InfoDialog, JoinCreateRoomDialog, Snackbar } from "@/components";
+import RoomView from "./RoomView.vue";
 import getUser from "@/composables/getUser";
 import useSubscribeRoom from "@/composables/useSubscribeRoom";
 import useJoinRoom from "@/composables/useJoinRoom";
