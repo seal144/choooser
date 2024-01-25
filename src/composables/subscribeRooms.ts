@@ -7,7 +7,7 @@ import {
   query as queryFirestore,
   where,
 } from "firebase/firestore";
-import { Room, RoomField, RoomBasicData } from "@/types";
+import { Room, RoomField, RoomBasicData, Collection } from "@/types";
 import getUser from "./getUser";
 import useDeleteRoom from "./useDeleteRoom";
 
@@ -22,7 +22,7 @@ const subscribeRooms = (roomRole: RoomRole) => {
   const rooms = ref<RoomBasicData[] | null>(null);
   const { user } = getUser();
 
-  const collectionRef = collection(db, "rooms");
+  const collectionRef = collection(db, Collection.Rooms);
 
   const query =
     roomRole === RoomRole.owner

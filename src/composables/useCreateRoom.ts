@@ -4,7 +4,7 @@ import { db } from "@/firebase/config";
 import getDocs from "@/firebase/getDocs";
 import getUser from "./getUser";
 import CryptoJS from "crypto-js";
-import { CommonErrors, RoomData } from "@/types";
+import { CommonErrors, RoomData, RoomField, Collection } from "@/types";
 
 type RoomFormData = {
   name: string;
@@ -24,7 +24,11 @@ const createRoom = async (roomFormData: RoomFormData) => {
       throw new Error(CommonErrors.LoginAsAValidUser);
     }
 
-    const snapshot = await getDocs("rooms", ["name", "==", roomFormData.name]);
+    const snapshot = await getDocs(Collection.Rooms, [
+      RoomField.Name,
+      "==",
+      roomFormData.name,
+    ]);
 
     if (!snapshot.empty) {
       throw new Error("Name already in use");
@@ -45,7 +49,7 @@ const createRoom = async (roomFormData: RoomFormData) => {
       guests: [],
     };
 
-    await addDoc(collection(db, "rooms"), room);
+    await addDoc(collection(db, Collection.Rooms), room);
     loading.value = false;
   } catch (err) {
     const { message } = err as Error;

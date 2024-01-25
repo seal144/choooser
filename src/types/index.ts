@@ -1,14 +1,5 @@
 import { Timestamp } from "firebase/firestore";
 
-export enum RoomField {
-  Id = "id",
-  CreateTime = "createTime",
-  GroupId = "groupId",
-  Name = "name",
-  Owner = "owner",
-  Guests = "guests",
-}
-
 export enum Dialogs {
   Settings = "Settings",
   JoinRoom = "JoinRoom",
@@ -21,6 +12,27 @@ export enum Dialogs {
   JoinRoomFromURL = "joinRoomFromURL",
 }
 
+export enum Collection {
+  Rooms = "rooms",
+  Users = "users",
+}
+
+export enum UserField {
+  DisplayName = "displayName",
+}
+
+export interface User {
+  [UserField.DisplayName]: string;
+}
+
+export enum RoomField {
+  Id = "id",
+  CreateTime = "createTime",
+  GroupId = "groupId",
+  Name = "name",
+  Owner = "owner",
+  Guests = "guests",
+}
 export interface Room {
   [RoomField.Id]: string;
   [RoomField.CreateTime]: Timestamp;

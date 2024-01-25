@@ -6,7 +6,7 @@ import { db } from "@/firebase/config";
 import getDocs from "@/firebase/getDocs";
 import getUser from "./getUser";
 import { maxGuestsInRoom } from "./../utils/validation";
-import { CommonErrors, RoomData } from "@/types";
+import { CommonErrors, RoomData, RoomField, Collection } from "@/types";
 
 type RoomFormData = {
   name: string;
@@ -53,7 +53,11 @@ const joinRoom = async (roomFormData: RoomFormData) => {
       throw new Error(CommonErrors.LoginAsAValidUser);
     }
 
-    const snapshot = await getDocs("rooms", ["name", "==", roomFormData.name]);
+    const snapshot = await getDocs(Collection.Rooms, [
+      RoomField.Name,
+      "==",
+      roomFormData.name,
+    ]);
 
     if (snapshot.empty) {
       throw new Error("No room with such a name");
@@ -65,7 +69,7 @@ const joinRoom = async (roomFormData: RoomFormData) => {
     validateParticipants(user.value.uid, [...guests, owner]);
     validateRoom(groupId, roomFormData.password);
 
-    const docRef = doc(db, "rooms", roomId);
+    const docRef = doc(db, Collection.Rooms, roomId);
 
     await updateDoc(docRef, {
       guests: [...guests, user.value.uid],

@@ -4,6 +4,7 @@ import { doc, getDoc, onSnapshot } from "firebase/firestore";
 import { CommonErrors, RoomData, RoomDetailsData, RoomField } from "@/types";
 import { maxGuestsInRoom } from "@/utils/validation";
 import getUser from "./getUser";
+import { Collection } from "@/types";
 
 const useSubscribeRoom = (roomId: string) => {
   const room = ref<RoomDetailsData | null>(null);
@@ -16,7 +17,7 @@ const useSubscribeRoom = (roomId: string) => {
         throw new Error(CommonErrors.LoginAsAValidUser);
       }
 
-      const docRef = doc(db, "rooms", roomId);
+      const docRef = doc(db, Collection.Rooms, roomId);
 
       const snapshot = await getDoc(docRef);
 
