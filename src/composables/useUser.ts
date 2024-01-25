@@ -22,7 +22,7 @@ const updateDisplayName = async (displayName: string) => {
       loadingUpdateDisplayName.value = false;
     } catch (err) {
       const { message } = err as Error;
-      console.log(message);
+      console.error(message);
       error.value = message;
       loadingUpdateDisplayName.value = false;
     }
@@ -40,7 +40,7 @@ const deleteUser = async () => {
       loadingDeleteUser.value = false;
     } catch (err) {
       const { message } = err as Error;
-      console.log(message);
+      console.error(message);
       error.value = message;
       loadingDeleteUser.value = false;
     }
