@@ -1,7 +1,7 @@
 import { ref } from "vue";
 import { Timestamp, addDoc, collection } from "firebase/firestore";
 import { db } from "@/firebase/config";
-import getDocs from "@/firebase/getDocs";
+import { getDocs } from "@/firebase/docs";
 import getUser from "./getUser";
 import CryptoJS from "crypto-js";
 import { CommonErrors, RoomData, RoomField, Collection } from "@/types";

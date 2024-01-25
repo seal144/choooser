@@ -24,6 +24,8 @@
           v-model="displayNameInput"
           label="Display Name"
           :rules="[...displayNameValidation]"
+          :readonly="loadingUpdateDisplayName"
+          :error-messages="error === CommonErrors.DisplayNameInUse ? error : []"
         />
         <div class="danger-zone" :class="{ xs }">
           <ConfirmDialog
@@ -52,13 +54,13 @@
       <FormError
         extends-layout
         align-right
-        v-if="error"
-        :error-message="error"
+        v-if="formError"
+        :error-message="formError"
       />
     </template>
     <template v-slot:action>
       <Button
-        :disabled="!form || !isDirty"
+        :disabled="!isDirty"
         @click="onSubmit"
         :loading="loadingUpdateDisplayName"
         >apply</Button
@@ -83,7 +85,7 @@ import {
 import useUser from "@/composables/useUser";
 import useDefaultTheme from "@/composables/useDefaultTheme";
 import { displayNameValidation } from "@/utils/validation";
-import { Dialogs } from "@/types";
+import { CommonErrors, Dialogs } from "@/types";
 
 const { defaultTheme } = useDefaultTheme();
 const { smAndUp, xs } = useDisplay();
@@ -93,16 +95,23 @@ const {
   updateDisplayName,
   deleteUser,
   error,
+  resetError,
   loadingUpdateDisplayName,
   loadingDeleteUser,
 } = useUser();
 const theme = useTheme();
 
+const formError = computed(() => {
+  if (error.value && error.value !== CommonErrors.DisplayNameInUse) {
+    return error.value;
+  }
+  return null;
+});
+
 const form = ref(false);
 const displayNameInput = ref(displayName.value);
 const themeInitialIsDark = ref(theme.global.current.value.dark);
 const themeSwitchIsDark = ref(themeInitialIsDark.value);
-const submitting = ref(false);
 
 watchEffect(() => {
   if (themeSwitchIsDark.value) {
@@ -132,10 +141,8 @@ const resetValues = () => {
 };
 
 const onClose = () => {
-  if (submitting.value) {
-    return (submitting.value = false);
-  }
   resetValues();
+  resetError();
 };
 
 const deleteAccount = async () => {
@@ -145,8 +152,16 @@ const deleteAccount = async () => {
 };
 
 const onSubmit = async () => {
-  if (!form.value) return;
-  submitting.value = true;
+  const isDisplayNameValid = [...displayNameValidation].every((validation) => {
+    if (displayNameInput.value) {
+      return validation(displayNameInput.value) === true;
+    }
+    return false;
+  });
+  if (!isDisplayNameValid) {
+    return;
+  }
+
   if (displayNameIsDirty.value && displayNameInput.value) {
     await updateDisplayName(displayNameInput.value);
   }
@@ -154,7 +169,9 @@ const onSubmit = async () => {
     themeInitialIsDark.value = theme.global.current.value.dark;
     defaultTheme.value = theme.global.current.value.dark ? "dark" : "light";
   }
-  dialogs.isOpen[Dialogs.Settings] = false;
+  if (!error.value) {
+    dialogs.isOpen[Dialogs.Settings] = false;
+  }
 };
 </script>
 

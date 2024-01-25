@@ -18,12 +18,17 @@ export enum Collection {
 }
 
 export enum UserField {
+  Id = "id",
   DisplayName = "displayName",
 }
-
 export interface User {
+  [UserField.Id]: string;
   [UserField.DisplayName]: string;
 }
+
+export type UserData = Omit<User, UserField.Id>;
+
+export type UserDataPartial = Partial<UserData>;
 
 export enum RoomField {
   Id = "id",
@@ -44,6 +49,8 @@ export interface Room {
 
 export type RoomData = Omit<Room, RoomField.Id>;
 
+export type RoomDataPartial = Partial<RoomData>;
+
 export type RoomBasicData = Omit<
   Room,
   RoomField.CreateTime | RoomField.GroupId | RoomField.Owner | RoomField.Guests
@@ -58,4 +65,5 @@ export enum CommonErrors {
   CouldNotLogin = "Could not login",
   TheDocumentNotFound = "The document not found",
   TheRoomIsFull = "The room is full",
+  DisplayNameInUse = "Display name already in use",
 }

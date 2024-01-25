@@ -1,7 +1,10 @@
 import { ref } from "vue";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+
 import { auth } from "@/firebase/config";
+import isUserNameInUse from "@/firebase/isUserNameInUse";
 import initDisplayName from "@/firebase/initDisplayName";
+import { CommonErrors } from "@/types";
 
 const parseErrorMessage = (message: string) => {
   if (message.includes("email-already-in-use")) {
@@ -18,6 +21,11 @@ const signup = async (email: string, password: string, displayName: string) => {
   loading.value = true;
 
   try {
+    const userNameInUse = await isUserNameInUse(displayName);
+    if (userNameInUse) {
+      throw new Error(CommonErrors.DisplayNameInUse);
+    }
+
     const response = await createUserWithEmailAndPassword(
       auth,
       email,

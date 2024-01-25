@@ -1,9 +1,7 @@
 import { ref } from "vue";
 import CryptoJS from "crypto-js";
-import { doc, updateDoc } from "firebase/firestore";
 
-import { db } from "@/firebase/config";
-import getDocs from "@/firebase/getDocs";
+import { getDocs, updateDoc } from "@/firebase/docs";
 import getUser from "./getUser";
 import { maxGuestsInRoom } from "./../utils/validation";
 import { CommonErrors, RoomData, RoomField, Collection } from "@/types";
@@ -69,9 +67,7 @@ const joinRoom = async (roomFormData: RoomFormData) => {
     validateParticipants(user.value.uid, [...guests, owner]);
     validateRoom(groupId, roomFormData.password);
 
-    const docRef = doc(db, Collection.Rooms, roomId);
-
-    await updateDoc(docRef, {
+    await updateDoc(Collection.Rooms, roomId, {
       guests: [...guests, user.value.uid],
     });
 
