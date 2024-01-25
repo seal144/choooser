@@ -2,7 +2,10 @@ import { ref } from "vue";
 import { updateProfile, deleteUser as deleteUserFirebase } from "firebase/auth";
 
 import { auth } from "@/firebase/config";
+import isUserNameInUse from "@/firebase/isUserNameInUse";
+import { updateDoc } from "@/firebase/docs";
 import { useUserStore } from "@/store/userStore";
+import { Collection, CommonErrors } from "@/types";
 
 const error = ref<string | null>(null);
 const loadingUpdateDisplayName = ref(false);
@@ -15,7 +18,13 @@ const updateDisplayName = async (displayName: string) => {
 
   if (auth.currentUser) {
     try {
+      const userNameInUse = await isUserNameInUse(displayName);
+      if (userNameInUse) {
+        throw new Error(CommonErrors.DisplayNameInUse);
+      }
+
       await updateProfile(auth.currentUser, { displayName });
+      await updateDoc(Collection.Users, auth.currentUser.uid, { displayName });
 
       userStore.displayName = auth.currentUser.displayName;
 
@@ -47,10 +56,15 @@ const deleteUser = async () => {
   }
 };
 
+const resetError = () => {
+  error.value = null;
+};
+
 const useUser = () => ({
   updateDisplayName,
   deleteUser,
   error,
+  resetError,
   loadingUpdateDisplayName,
   loadingDeleteUser,
 });
