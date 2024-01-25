@@ -2,7 +2,7 @@ import { ref, watchEffect } from "vue";
 import { db } from "@/firebase/config";
 import { doc, getDoc, onSnapshot } from "firebase/firestore";
 import { CommonErrors, RoomData, RoomDetailsData, RoomField } from "@/types";
-import { MaxGuestsInRoom } from "@/utils/validation";
+import { maxGuestsInRoom } from "@/utils/validation";
 import getUser from "./getUser";
 
 const useSubscribeRoom = (roomId: string) => {
@@ -30,7 +30,7 @@ const useSubscribeRoom = (roomId: string) => {
       const userIsParticipant =
         owner === user.value.uid || guests.includes(user.value.uid);
 
-      if (!userIsParticipant && guests.length >= MaxGuestsInRoom) {
+      if (!userIsParticipant && guests.length >= maxGuestsInRoom) {
         throw new Error(CommonErrors.TheRoomIsFull);
       }
 
