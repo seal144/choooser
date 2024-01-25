@@ -23,7 +23,7 @@
       @close="redirectHomeDialog"
       :dialogIdentification="Dialogs.RoomInfoIsFull"
       title="&#128532; The room is Full"
-      :text="`there is already ${MaxGuestsInRoom} guests in the room`"
+      :text="`there is already ${maxGuestsInRoom} guests in the room`"
       closeLabel="go Home"
     />
     <JoinCreateRoomDialog
@@ -52,7 +52,7 @@ import RoomView from "./RoomView.vue";
 import getUser from "@/composables/getUser";
 import useSubscribeRoom from "@/composables/useSubscribeRoom";
 import useJoinRoom from "@/composables/useJoinRoom";
-import { MaxGuestsInRoom } from "@/utils/validation";
+import { maxGuestsInRoom } from "@/utils/validation";
 import { CommonErrors, Dialogs } from "@/types";
 
 import RoomNotExist from "./RoomNotExist.vue";

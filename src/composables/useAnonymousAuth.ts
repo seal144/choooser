@@ -1,12 +1,10 @@
 import { ref } from "vue";
-import { signInAnonymously, updateProfile } from "firebase/auth";
+import { signInAnonymously } from "firebase/auth";
 import { auth } from "../firebase/config";
-import { generateRandomName } from "@/utils/generateRandomName";
-import { useUserStore } from "@/store/userStore";
+import initDisplayName from "@/firebase/initDisplayName";
 
 const error = ref<string | null>(null);
 const loading = ref(false);
-const userStore = useUserStore();
 
 const login = async () => {
   error.value = null;
@@ -19,13 +17,7 @@ const login = async () => {
       throw new Error("Something went wrong");
     }
 
-    if (auth.currentUser) {
-      await updateProfile(auth.currentUser, {
-        displayName: generateRandomName(),
-      });
-
-      userStore.displayName = auth.currentUser.displayName;
-    }
+    await initDisplayName();
 
     loading.value = false;
   } catch (err) {

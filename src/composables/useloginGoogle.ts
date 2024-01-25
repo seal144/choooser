@@ -1,6 +1,7 @@
 import { ref } from "vue";
-import { signInWithRedirect, GoogleAuthProvider } from "firebase/auth";
+import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { auth } from "@/firebase/config";
+import initDisplayName from "@/firebase/initDisplayName";
 import { CommonErrors } from "@/types";
 
 const error = ref<string | null>(null);
@@ -12,11 +13,13 @@ const login = async () => {
 
   try {
     const provider = new GoogleAuthProvider();
-    const response = await signInWithRedirect(auth, provider);
+    const response = await signInWithPopup(auth, provider);
 
     if (!response) {
       throw new Error(CommonErrors.CouldNotLogin);
     }
+
+    await initDisplayName();
 
     loading.value = false;
   } catch (err) {
