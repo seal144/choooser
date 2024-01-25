@@ -30,7 +30,7 @@ const login = async () => {
     loading.value = false;
   } catch (err) {
     const { message } = err as Error;
-    console.log(message);
+    console.error(message);
     error.value = message;
     loading.value = false;
   }

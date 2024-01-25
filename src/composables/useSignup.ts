@@ -38,7 +38,7 @@ const signup = async (email: string, password: string, displayName: string) => {
     loading.value = false;
   } catch (err) {
     const { message } = err as Error;
-    console.log(message);
+    console.error(message);
     error.value = parseErrorMessage(message);
     loading.value = false;
   }
