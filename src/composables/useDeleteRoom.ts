@@ -1,6 +1,7 @@
 import { ref } from "vue";
 import { db } from "@/firebase/config";
 import { doc, deleteDoc } from "firebase/firestore";
+import { Collection } from "@/types";
 
 const loading = ref(false);
 const error = ref<string | null>(null);
@@ -10,7 +11,7 @@ const deleteRoom = async (roomId: string) => {
   error.value = null;
 
   try {
-    const docRef = doc(db, "rooms", roomId);
+    const docRef = doc(db, Collection.Rooms, roomId);
 
     await deleteDoc(docRef);
 

@@ -2,7 +2,7 @@ import { ref } from "vue";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "@/firebase/config";
 import getUser from "./getUser";
-import { CommonErrors, Room, RoomField } from "@/types";
+import { CommonErrors, Room, RoomField, Collection } from "@/types";
 
 const loading = ref(false);
 const error = ref<string | null>(null);
@@ -17,7 +17,7 @@ const abandonRoom = async (roomId: string) => {
       throw new Error(CommonErrors.LoginAsAValidUser);
     }
 
-    const docRef = doc(db, "rooms", roomId);
+    const docRef = doc(db, Collection.Rooms, roomId);
 
     const snapshot = await getDoc(docRef);
 
