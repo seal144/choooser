@@ -91,13 +91,13 @@ watchEffect(() => {
     subscribeRoom();
   }
 });
-// TODO check, if it is possible to take it from useSubscribeRoom, after joining implementation
+
 const userIsParticipant = computed(() => {
   if (
     user.value &&
     room.value &&
-    (room.value.guests.includes(user.value.uid) ||
-      room.value.owner === user.value.uid)
+    (room.value.guestsIds.includes(user.value.uid) ||
+      room.value.ownerId === user.value.uid)
   ) {
     return true;
   }

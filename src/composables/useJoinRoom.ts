@@ -18,12 +18,14 @@ export enum ErrorJoinRoom {
 const loading = ref(false);
 const error = ref<string | null>(null);
 
-const validateParticipants = (userId: string, guests: string[]) => {
-  if (guests.includes(userId)) {
+const validateParticipants = (userId: string, participants: string[]) => {
+  if (participants.includes(userId)) {
     throw new Error("You are already a participant of this room");
   }
-  if (guests.length >= maxGuestsInRoom) {
-    throw new Error(`The room is full (max ${maxGuestsInRoom} participants)`);
+  if (participants.length >= maxGuestsInRoom + 1) {
+    throw new Error(
+      `The room is full (max ${maxGuestsInRoom + 1} participants)`
+    );
   }
 };
 
@@ -61,14 +63,14 @@ const joinRoom = async (roomFormData: RoomFormData) => {
       throw new Error("No room with such a name");
     }
 
-    const { groupId, guests, owner } = snapshot.docs[0].data() as RoomData;
+    const { groupId, guestsIds, ownerId } = snapshot.docs[0].data() as RoomData;
     const roomId = snapshot.docs[0].id;
 
-    validateParticipants(user.value.uid, [...guests, owner]);
+    validateParticipants(user.value.uid, [...guestsIds, ownerId]);
     validateRoom(groupId, roomFormData.password);
 
     await updateDoc(Collection.Rooms, roomId, {
-      guests: [...guests, user.value.uid],
+      guestsIds: [...guestsIds, user.value.uid],
     });
 
     loading.value = false;

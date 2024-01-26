@@ -26,10 +26,13 @@ const subscribeRooms = (roomRole: RoomRole) => {
 
   const query =
     roomRole === RoomRole.owner
-      ? queryFirestore(collectionRef, where("owner", "==", user.value?.uid))
+      ? queryFirestore(
+          collectionRef,
+          where(RoomField.OwnerId, "==", user.value?.uid)
+        )
       : queryFirestore(
           collectionRef,
-          where("guests", "array-contains", user.value?.uid)
+          where(RoomField.GuestsIds, "array-contains", user.value?.uid)
         );
 
   const unsubscribe = onSnapshot(query, (snapshot) => {
