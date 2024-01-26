@@ -35,29 +35,27 @@ export enum RoomField {
   CreateTime = "createTime",
   GroupId = "groupId",
   Name = "name",
-  Owner = "owner",
-  Guests = "guests",
+  OwnerId = "ownerId",
+  GuestsIds = "guestsIds",
 }
 export interface Room {
   [RoomField.Id]: string;
   [RoomField.CreateTime]: Timestamp;
   [RoomField.GroupId]: string;
   [RoomField.Name]: string;
-  [RoomField.Owner]: string;
-  [RoomField.Guests]: string[];
+  [RoomField.OwnerId]: string;
+  [RoomField.GuestsIds]: string[];
 }
 
 export type RoomData = Omit<Room, RoomField.Id>;
 
 export type RoomDataPartial = Partial<RoomData>;
 
-export type RoomBasicData = Omit<
-  Room,
-  RoomField.CreateTime | RoomField.GroupId | RoomField.Owner | RoomField.Guests
->;
+export type RoomBasicData = Pick<Room, RoomField.Id | RoomField.Name>;
 
 export type RoomDetailsData = Omit<Room, RoomField.GroupId> & {
   parsedGroupId: number;
+  //here add owner and guests
 };
 
 export enum CommonErrors {

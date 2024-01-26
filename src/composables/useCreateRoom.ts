@@ -45,8 +45,8 @@ const createRoom = async (roomFormData: RoomFormData) => {
       createTime: Timestamp.now(),
       groupId: groupId,
       name: roomFormData.name,
-      owner: user.value.uid,
-      guests: [],
+      ownerId: user.value.uid,
+      guestsIds: [],
     };
 
     await addDoc(collection(db, Collection.Rooms), room);

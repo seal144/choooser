@@ -25,25 +25,55 @@ const useSubscribeRoom = (roomId: string) => {
         throw new Error(CommonErrors.TheDocumentNotFound);
       }
 
-      const owner: RoomData[RoomField.Owner] = snapshot.get(RoomField.Owner);
-      const guests: RoomData[RoomField.Guests] = snapshot.get(RoomField.Guests);
+      const ownerId: RoomData[RoomField.OwnerId] = snapshot.get(
+        RoomField.OwnerId
+      );
+      const guestsIds: RoomData[RoomField.GuestsIds] = snapshot.get(
+        RoomField.GuestsIds
+      );
 
       const userIsParticipant =
-        owner === user.value.uid || guests.includes(user.value.uid);
+        ownerId === user.value.uid || guestsIds.includes(user.value.uid);
 
-      if (!userIsParticipant && guests.length >= maxGuestsInRoom) {
+      if (!userIsParticipant && guestsIds.length >= maxGuestsInRoom) {
         throw new Error(CommonErrors.TheRoomIsFull);
       }
 
-      const unsubscribe = onSnapshot(docRef, (snapshot) => {
+      const unsubscribe = onSnapshot(docRef, async (snapshot) => {
         room.value = {
+          // ownerData: null,
           id: snapshot.id,
           createTime: snapshot.get(RoomField.CreateTime),
           parsedGroupId: snapshot.get(RoomField.GroupId) ? 1 : 0,
           name: snapshot.get(RoomField.Name),
-          owner: snapshot.get(RoomField.Owner),
-          guests: snapshot.get(RoomField.Guests),
+          ownerId: snapshot.get(RoomField.OwnerId),
+          guestsIds: snapshot.get(RoomField.GuestsIds),
         };
+
+        // this part after refactor will be used in the future
+
+        // const ownerRef = doc(
+        //   db,
+        //   Collection.Users,
+        //   snapshot.get(RoomField.OwnerId)
+        // );
+
+        // const ownerSnapshot = await getDoc(ownerRef);
+
+        // if (ownerSnapshot.exists()) {
+        //   const unsubscribe = onSnapshot(ownerRef, (snapshot) => {
+        //     if (room.value?.ownerData || room.value?.ownerData === null) {
+        //       room.value.ownerData = {
+        //         id: snapshot.id,
+        //         displayName: snapshot.get("displayName"),
+        //       };
+        //     }
+        //   });
+
+        //   watchEffect((onInvalidate) => {
+        //     onInvalidate(() => unsubscribe());
+        //   });
+        // }
       });
 
       watchEffect((onInvalidate) => {
