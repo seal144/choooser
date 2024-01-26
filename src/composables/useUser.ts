@@ -1,7 +1,8 @@
 import { ref } from "vue";
 import { updateProfile, deleteUser as deleteUserFirebase } from "firebase/auth";
+import { deleteDoc, doc } from "firebase/firestore";
 
-import { auth } from "@/firebase/config";
+import { auth, db } from "@/firebase/config";
 import isUserNameInUse from "@/firebase/isUserNameInUse";
 import { updateDoc } from "@/firebase/docs";
 import { useUserStore } from "@/store/userStore";
@@ -44,6 +45,9 @@ const deleteUser = async () => {
 
   if (auth.currentUser) {
     try {
+      const docRef = doc(db, Collection.Users, auth.currentUser.uid);
+      await deleteDoc(docRef);
+
       await deleteUserFirebase(auth.currentUser);
 
       loadingDeleteUser.value = false;
