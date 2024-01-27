@@ -4,7 +4,7 @@ import CryptoJS from "crypto-js";
 import { getDocs, updateDoc } from "@/firebase/docs";
 import getUser from "./getUser";
 import { maxGuestsInRoom } from "./../utils/validation";
-import { CommonErrors, RoomData, RoomField, Collection } from "@/types";
+import { CommonErrors, RoomDataDB, RoomField, Collection } from "@/types";
 
 type RoomFormData = {
   name: string;
@@ -63,7 +63,8 @@ const joinRoom = async (roomFormData: RoomFormData) => {
       throw new Error("No room with such a name");
     }
 
-    const { groupId, guestsIds, ownerId } = snapshot.docs[0].data() as RoomData;
+    const { groupId, guestsIds, ownerId } =
+      snapshot.docs[0].data() as RoomDataDB;
     const roomId = snapshot.docs[0].id;
 
     validateParticipants(user.value.uid, [...guestsIds, ownerId]);

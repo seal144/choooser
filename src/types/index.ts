@@ -26,37 +26,53 @@ export interface User {
   [UserField.DisplayName]: string;
 }
 
-export type UserData = Omit<User, UserField.Id>;
+export type UserDataDB = Omit<User, UserField.Id>;
 
-export type UserDataPartial = Partial<UserData>;
+export type UserDataDBPartial = Partial<UserDataDB>;
 
 export enum RoomField {
   Id = "id",
   CreateTime = "createTime",
   GroupId = "groupId",
+  ParsedGroupId = "parsedGroupId",
   Name = "name",
   OwnerId = "ownerId",
   GuestsIds = "guestsIds",
+  Owner = "owner",
+  Guests = "guests",
 }
 export interface Room {
   [RoomField.Id]: string;
   [RoomField.CreateTime]: Timestamp;
   [RoomField.GroupId]: string;
+  [RoomField.ParsedGroupId]: 0 | 1;
   [RoomField.Name]: string;
   [RoomField.OwnerId]: string;
   [RoomField.GuestsIds]: string[];
+  [RoomField.Owner]: User | null;
+  [RoomField.Guests]: User[];
 }
 
-export type RoomData = Omit<Room, RoomField.Id>;
+export type RoomDataDB = Omit<
+  Room,
+  RoomField.Id | RoomField.Owner | RoomField.Guests | RoomField.ParsedGroupId
+>;
 
-export type RoomDataPartial = Partial<RoomData>;
+export type RoomDataDBPartial = Partial<RoomDataDB>;
 
 export type RoomBasicData = Pick<Room, RoomField.Id | RoomField.Name>;
 
-export type RoomDetailsData = Omit<Room, RoomField.GroupId> & {
-  parsedGroupId: number;
-  //here add owner and guests
-};
+export type RoomDetailsData = Pick<
+  Room,
+  | RoomField.Id
+  | RoomField.CreateTime
+  | RoomField.ParsedGroupId
+  | RoomField.Name
+  | RoomField.OwnerId
+  | RoomField.GuestsIds
+  | RoomField.Owner
+  | RoomField.Guests
+>;
 
 export enum CommonErrors {
   LoginAsAValidUser = "Login as a valid user",
