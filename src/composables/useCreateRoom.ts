@@ -4,7 +4,7 @@ import { db } from "@/firebase/config";
 import { getDocs } from "@/firebase/docs";
 import getUser from "./getUser";
 import CryptoJS from "crypto-js";
-import { CommonErrors, RoomData, RoomField, Collection } from "@/types";
+import { CommonErrors, RoomDataDB, RoomField, Collection } from "@/types";
 
 type RoomFormData = {
   name: string;
@@ -41,7 +41,7 @@ const createRoom = async (roomFormData: RoomFormData) => {
         ).toString()
       : "";
 
-    const room: RoomData = {
+    const room: RoomDataDB = {
       createTime: Timestamp.now(),
       groupId: groupId,
       name: roomFormData.name,
