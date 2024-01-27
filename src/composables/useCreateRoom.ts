@@ -1,8 +1,7 @@
 import { ref } from "vue";
 import { Timestamp, addDoc, collection } from "firebase/firestore";
-import { db } from "@/firebase/config";
+import { auth, db } from "@/firebase/config";
 import { getDocs } from "@/firebase/docs";
-import getUser from "./getUser";
 import CryptoJS from "crypto-js";
 import { CommonErrors, RoomDataDB, RoomField, Collection } from "@/types";
 
@@ -19,8 +18,7 @@ const createRoom = async (roomFormData: RoomFormData) => {
   error.value = null;
 
   try {
-    const { user } = getUser();
-    if (!user.value) {
+    if (!auth.currentUser) {
       throw new Error(CommonErrors.LoginAsAValidUser);
     }
 
@@ -45,8 +43,15 @@ const createRoom = async (roomFormData: RoomFormData) => {
       createTime: Timestamp.now(),
       groupId: groupId,
       name: roomFormData.name,
-      ownerId: user.value.uid,
+      ownerId: auth.currentUser.uid,
       guestsIds: [],
+      owner: {
+        id: auth.currentUser.uid,
+        displayName: auth.currentUser.displayName
+          ? auth.currentUser.displayName
+          : "",
+      },
+      guests: [],
     };
 
     await addDoc(collection(db, Collection.Rooms), room);

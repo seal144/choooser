@@ -53,61 +53,7 @@ const useSubscribeRoom = (roomId: string) => {
           name: snapshot.get(RoomField.Name),
           ownerId: snapshot.get(RoomField.OwnerId),
           guestsIds: snapshot.get(RoomField.GuestsIds),
-          owner: null,
-          guests: [],
         };
-
-        const ownerRef = doc(db, Collection.Users, room.value.ownerId);
-
-        const ownerSnapshot = await getDoc(ownerRef);
-
-        if (ownerSnapshot.exists()) {
-          const unsubscribe = onSnapshot(ownerRef, (snapshot) => {
-            if (room.value?.owner || room.value?.owner === null) {
-              room.value.owner = {
-                id: snapshot.id,
-                displayName: snapshot.get("displayName"),
-              };
-            }
-          });
-
-          watchEffect((onInvalidate) => {
-            onInvalidate(() => unsubscribe());
-          });
-        }
-
-        room.value.guestsIds.forEach(async (guestId) => {
-          const guestRef = doc(db, Collection.Users, guestId);
-
-          const guestSnapshot = await getDoc(guestRef);
-
-          if (guestSnapshot.exists()) {
-            const unsubscribe = onSnapshot(guestRef, (snapshot) => {
-              if (room.value?.guests) {
-                const guestIndex = room.value?.guests.findIndex(
-                  (guest) => guest.id === guestId
-                );
-                if (guestIndex > -1) {
-                  room.value.guests[guestIndex] = {
-                    id: snapshot.id,
-                    displayName: snapshot.get("displayName"),
-                  };
-                } else {
-                  room.value.guests.push({
-                    id: snapshot.id,
-                    displayName: snapshot.get("displayName"),
-                  });
-                }
-              }
-            });
-
-            watchEffect((onInvalidate) => {
-              onInvalidate(() => unsubscribe());
-            });
-          }
-
-          // TODO FIX: if some user abandon the room, his data will be still in the guests array, the array should be filtered out. I didn't fix it because I am changing approach to store displayName in room doc to avoid unnecessary queries to backend for guests display names
-        });
       });
 
       watchEffect((onInvalidate) => {

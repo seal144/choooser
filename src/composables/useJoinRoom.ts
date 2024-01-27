@@ -2,7 +2,7 @@ import { ref } from "vue";
 import CryptoJS from "crypto-js";
 
 import { getDocs, updateDoc } from "@/firebase/docs";
-import getUser from "./getUser";
+import { auth } from "@/firebase/config";
 import { maxGuestsInRoom } from "./../utils/validation";
 import { CommonErrors, RoomDataDB, RoomField, Collection } from "@/types";
 
@@ -48,8 +48,7 @@ const joinRoom = async (roomFormData: RoomFormData) => {
   error.value = null;
 
   try {
-    const { user } = getUser();
-    if (!user.value) {
+    if (!auth.currentUser) {
       throw new Error(CommonErrors.LoginAsAValidUser);
     }
 
@@ -63,15 +62,24 @@ const joinRoom = async (roomFormData: RoomFormData) => {
       throw new Error("No room with such a name");
     }
 
-    const { groupId, guestsIds, ownerId } =
+    const { groupId, guestsIds, guests, ownerId } =
       snapshot.docs[0].data() as RoomDataDB;
     const roomId = snapshot.docs[0].id;
 
-    validateParticipants(user.value.uid, [...guestsIds, ownerId]);
+    validateParticipants(auth.currentUser.uid, [...guestsIds, ownerId]);
     validateRoom(groupId, roomFormData.password);
 
     await updateDoc(Collection.Rooms, roomId, {
-      guestsIds: [...guestsIds, user.value.uid],
+      guestsIds: [...guestsIds, auth.currentUser.uid],
+      guests: [
+        ...guests,
+        {
+          id: auth.currentUser.uid,
+          displayName: auth.currentUser.displayName
+            ? auth.currentUser.displayName
+            : "",
+        },
+      ],
     });
 
     loading.value = false;
