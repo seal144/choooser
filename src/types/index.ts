@@ -49,14 +49,11 @@ export interface Room {
   [RoomField.Name]: string;
   [RoomField.OwnerId]: string;
   [RoomField.GuestsIds]: string[];
-  [RoomField.Owner]: User | null;
+  [RoomField.Owner]: User;
   [RoomField.Guests]: User[];
 }
 
-export type RoomDataDB = Omit<
-  Room,
-  RoomField.Id | RoomField.Owner | RoomField.Guests | RoomField.ParsedGroupId
->;
+export type RoomDataDB = Omit<Room, RoomField.Id | RoomField.ParsedGroupId>;
 
 export type RoomDataDBPartial = Partial<RoomDataDB>;
 
@@ -70,8 +67,6 @@ export type RoomDetailsData = Pick<
   | RoomField.Name
   | RoomField.OwnerId
   | RoomField.GuestsIds
-  | RoomField.Owner
-  | RoomField.Guests
 >;
 
 export enum CommonErrors {
