@@ -8,11 +8,15 @@ import { updateDoc } from "@/firebase/docs";
 import { getUserOwnedRooms, getUserJoinedRooms } from "@/firebase/getUserRooms";
 import { useUserStore } from "@/store/userStore";
 import { Collection, CommonErrors, RoomField } from "@/types";
+import useDeleteRoom from "./useDeleteRoom";
+import useAbandonRoom from "./useAbandonRoom";
 
 const error = ref<string | null>(null);
 const loadingUpdateDisplayName = ref(false);
 const loadingDeleteUser = ref(false);
 const userStore = useUserStore();
+const { deleteRoom } = useDeleteRoom();
+const { abandonRoom } = useAbandonRoom();
 
 const updateDisplayName = async (displayName: string) => {
   error.value = null;
@@ -77,6 +81,17 @@ const deleteUser = async () => {
     try {
       const docRef = doc(db, Collection.Users, auth.currentUser.uid);
       await deleteDoc(docRef);
+
+      const userRoomsAsOwner = await getUserOwnedRooms();
+      const userRoomsAsGuest = await getUserJoinedRooms();
+
+      userRoomsAsOwner.forEach(async (roomId) => {
+        await deleteRoom(roomId);
+      });
+
+      userRoomsAsGuest.forEach(async (room) => {
+        await abandonRoom(room.id);
+      });
 
       await deleteUserFirebase(auth.currentUser);
 
