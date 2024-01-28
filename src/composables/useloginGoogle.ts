@@ -1,8 +1,10 @@
 import { ref } from "vue";
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import { auth } from "@/firebase/config";
+import { doc, getDoc } from "firebase/firestore";
+
+import { auth, db } from "@/firebase/config";
 import initDisplayName from "@/firebase/initDisplayName";
-import { CommonErrors } from "@/types";
+import { Collection, CommonErrors } from "@/types";
 
 const error = ref<string | null>(null);
 const loading = ref(false);
@@ -19,7 +21,14 @@ const login = async () => {
       throw new Error(CommonErrors.CouldNotLogin);
     }
 
-    await initDisplayName();
+    if (auth.currentUser) {
+      const userRef = doc(db, Collection.Users, auth.currentUser.uid);
+      const snapshot = await getDoc(userRef);
+
+      if (!snapshot.exists) {
+        await initDisplayName();
+      }
+    }
 
     loading.value = false;
   } catch (err) {
