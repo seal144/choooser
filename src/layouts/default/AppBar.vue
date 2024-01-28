@@ -4,7 +4,7 @@
       <v-app-bar-title> <Logo :collapse="xs" /> </v-app-bar-title>
       <div v-if="isRoom" class="action-container">
         <router-link :to="{ name: RoutesNames.Home }">
-          <Button :icon="!smAndUp" v-if="!user?.isAnonymous">
+          <Button :icon="!smAndUp">
             <v-icon icon="mdi-close-thick" size="large" /><span v-if="smAndUp">
               Leave
             </span>
