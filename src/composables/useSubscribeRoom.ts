@@ -54,6 +54,7 @@ const useSubscribeRoom = (roomId: string) => {
           name: snapshot.get(RoomField.Name),
           owner: snapshot.get(RoomField.Owner),
           guestsIds: snapshot.get(RoomField.GuestsIds),
+          guests: snapshot.get(RoomField.Guests),
         };
       });
 

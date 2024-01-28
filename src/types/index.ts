@@ -65,6 +65,7 @@ export type RoomDetailsData = Pick<
   | RoomField.Name
   | RoomField.Owner
   | RoomField.GuestsIds
+  | RoomField.Guests
 >;
 
 export enum RoomRole {
