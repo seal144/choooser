@@ -1,15 +1,16 @@
 import { ref, watchEffect } from "vue";
 import { doc, getDoc, onSnapshot } from "firebase/firestore";
 
-import { db } from "@/firebase/config";
+import { auth, db } from "@/firebase/config";
 import { maxGuestsInRoom } from "@/utils/validation";
-import getUser from "./getUser";
 import {
   Collection,
   CommonErrors,
   RoomDataDB,
   RoomDetailsData,
   RoomField,
+  User,
+  UserField,
 } from "@/types";
 
 const useSubscribeRoom = (roomId: string) => {
@@ -18,8 +19,7 @@ const useSubscribeRoom = (roomId: string) => {
 
   const subscribeRoom = async () => {
     try {
-      const { user } = getUser();
-      if (!user.value) {
+      if (!auth.currentUser) {
         throw new Error(CommonErrors.LoginAsAValidUser);
       }
 
@@ -31,15 +31,16 @@ const useSubscribeRoom = (roomId: string) => {
         throw new Error(CommonErrors.TheDocumentNotFound);
       }
 
-      const ownerId: RoomDataDB[RoomField.OwnerId] = snapshot.get(
-        RoomField.OwnerId
+      const ownerId: User[UserField.Id] = snapshot.get(
+        `${RoomField.Owner}.${UserField.Id}`
       );
       const guestsIds: RoomDataDB[RoomField.GuestsIds] = snapshot.get(
         RoomField.GuestsIds
       );
 
       const userIsParticipant =
-        ownerId === user.value.uid || guestsIds.includes(user.value.uid);
+        ownerId === auth.currentUser.uid ||
+        guestsIds.includes(auth.currentUser.uid);
 
       if (!userIsParticipant && guestsIds.length >= maxGuestsInRoom) {
         throw new Error(CommonErrors.TheRoomIsFull);
@@ -51,7 +52,7 @@ const useSubscribeRoom = (roomId: string) => {
           createTime: snapshot.get(RoomField.CreateTime),
           parsedGroupId: snapshot.get(RoomField.GroupId) ? 1 : 0,
           name: snapshot.get(RoomField.Name),
-          ownerId: snapshot.get(RoomField.OwnerId),
+          owner: snapshot.get(RoomField.Owner),
           guestsIds: snapshot.get(RoomField.GuestsIds),
         };
       });

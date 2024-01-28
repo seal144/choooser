@@ -43,7 +43,6 @@ const createRoom = async (roomFormData: RoomFormData) => {
       createTime: Timestamp.now(),
       groupId: groupId,
       name: roomFormData.name,
-      ownerId: auth.currentUser.uid,
       guestsIds: [],
       owner: {
         id: auth.currentUser.uid,
