@@ -12,7 +12,7 @@ import { Collection, RoomDataDBPartial, UserDataDBPartial } from "@/types";
 
 export const getDocs = async (
   collectionName: Collection,
-  query: [string, WhereFilterOp, string]
+  query: [string, WhereFilterOp, string | undefined]
 ) => {
   const q = queryFireStore(
     collection(db, collectionName),

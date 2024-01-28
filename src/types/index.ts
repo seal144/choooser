@@ -69,6 +69,11 @@ export type RoomDetailsData = Pick<
   | RoomField.GuestsIds
 >;
 
+export enum RoomRole {
+  Owner,
+  Guest,
+}
+
 export enum CommonErrors {
   LoginAsAValidUser = "Login as a valid user",
   CouldNotLogin = "Could not login",

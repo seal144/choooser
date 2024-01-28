@@ -7,16 +7,11 @@ import {
   query as queryFirestore,
   where,
 } from "firebase/firestore";
-import { Room, RoomField, RoomBasicData, Collection } from "@/types";
+import { Room, RoomField, RoomBasicData, RoomRole, Collection } from "@/types";
 import getUser from "./getUser";
 import useDeleteRoom from "./useDeleteRoom";
 
 const { deleteRoom } = useDeleteRoom();
-
-export enum RoomRole {
-  owner,
-  guest,
-}
 
 const subscribeRooms = (roomRole: RoomRole) => {
   const rooms = ref<RoomBasicData[] | null>(null);
@@ -25,7 +20,7 @@ const subscribeRooms = (roomRole: RoomRole) => {
   const collectionRef = collection(db, Collection.Rooms);
 
   const query =
-    roomRole === RoomRole.owner
+    roomRole === RoomRole.Owner
       ? queryFirestore(
           collectionRef,
           where(RoomField.OwnerId, "==", user.value?.uid)

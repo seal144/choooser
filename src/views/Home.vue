@@ -113,17 +113,17 @@ import {
   ConfirmDialog,
   Snackbar,
 } from "@/components";
-import subscribeRooms, { RoomRole } from "@/composables/subscribeRooms";
+import subscribeRooms from "@/composables/subscribeRooms";
 import useDeleteRoom from "@/composables/useDeleteRoom";
 import useAbandonRoom from "@/composables/useAbandonRoom";
 import { useUserStore } from "@/store/userStore";
 import { useDialogsStore } from "@/store/dialogs";
 import { lineThickness } from "@/plugins/vuetify";
-import { Dialogs } from "@/types";
+import { Dialogs, RoomRole } from "@/types";
 
 const displayName = toRef(useUserStore(), "displayName");
-const { rooms: ownedRooms } = subscribeRooms(RoomRole.owner);
-const { rooms: joinedRooms } = subscribeRooms(RoomRole.guest);
+const { rooms: ownedRooms } = subscribeRooms(RoomRole.Owner);
+const { rooms: joinedRooms } = subscribeRooms(RoomRole.Guest);
 const router = useRouter();
 const { xs, smAndUp } = useDisplay();
 const {
