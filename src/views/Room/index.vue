@@ -97,7 +97,7 @@ const userIsParticipant = computed(() => {
     user.value &&
     room.value &&
     (room.value.guestsIds.includes(user.value.uid) ||
-      room.value.ownerId === user.value.uid)
+      room.value.owner.id === user.value.uid)
   ) {
     return true;
   }

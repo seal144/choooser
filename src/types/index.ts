@@ -36,7 +36,6 @@ export enum RoomField {
   GroupId = "groupId",
   ParsedGroupId = "parsedGroupId",
   Name = "name",
-  OwnerId = "ownerId",
   GuestsIds = "guestsIds",
   Owner = "owner",
   Guests = "guests",
@@ -47,7 +46,6 @@ export interface Room {
   [RoomField.GroupId]: string;
   [RoomField.ParsedGroupId]: 0 | 1;
   [RoomField.Name]: string;
-  [RoomField.OwnerId]: string;
   [RoomField.GuestsIds]: string[];
   [RoomField.Owner]: User;
   [RoomField.Guests]: User[];
@@ -65,7 +63,7 @@ export type RoomDetailsData = Pick<
   | RoomField.CreateTime
   | RoomField.ParsedGroupId
   | RoomField.Name
-  | RoomField.OwnerId
+  | RoomField.Owner
   | RoomField.GuestsIds
 >;
 

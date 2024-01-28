@@ -1,5 +1,5 @@
 import { ref, watchEffect } from "vue";
-import { db } from "@/firebase/config";
+import { auth, db } from "@/firebase/config";
 import {
   Timestamp,
   collection,
@@ -7,15 +7,20 @@ import {
   query as queryFirestore,
   where,
 } from "firebase/firestore";
-import { Room, RoomField, RoomBasicData, RoomRole, Collection } from "@/types";
-import getUser from "./getUser";
+import {
+  Room,
+  RoomField,
+  RoomBasicData,
+  RoomRole,
+  Collection,
+  UserField,
+} from "@/types";
 import useDeleteRoom from "./useDeleteRoom";
 
 const { deleteRoom } = useDeleteRoom();
 
 const subscribeRooms = (roomRole: RoomRole) => {
   const rooms = ref<RoomBasicData[] | null>(null);
-  const { user } = getUser();
 
   const collectionRef = collection(db, Collection.Rooms);
 
@@ -23,11 +28,15 @@ const subscribeRooms = (roomRole: RoomRole) => {
     roomRole === RoomRole.Owner
       ? queryFirestore(
           collectionRef,
-          where(RoomField.OwnerId, "==", user.value?.uid)
+          where(
+            `${RoomField.Owner}.${UserField.Id}`,
+            "==",
+            auth.currentUser?.uid
+          )
         )
       : queryFirestore(
           collectionRef,
-          where(RoomField.GuestsIds, "array-contains", user.value?.uid)
+          where(RoomField.GuestsIds, "array-contains", auth.currentUser?.uid)
         );
 
   const unsubscribe = onSnapshot(query, (snapshot) => {

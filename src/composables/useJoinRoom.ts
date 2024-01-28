@@ -62,11 +62,11 @@ const joinRoom = async (roomFormData: RoomFormData) => {
       throw new Error("No room with such a name");
     }
 
-    const { groupId, guestsIds, guests, ownerId } =
+    const { groupId, guestsIds, guests, owner } =
       snapshot.docs[0].data() as RoomDataDB;
     const roomId = snapshot.docs[0].id;
 
-    validateParticipants(auth.currentUser.uid, [...guestsIds, ownerId]);
+    validateParticipants(auth.currentUser.uid, [...guestsIds, owner.id]);
     validateRoom(groupId, roomFormData.password);
 
     await updateDoc(Collection.Rooms, roomId, {
