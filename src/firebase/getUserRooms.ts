@@ -1,6 +1,6 @@
 import { auth } from "@/firebase/config";
 import { getDocs } from "@/firebase/docs";
-import { Collection, RoomField, UserField, User } from "@/types";
+import { Collection, RoomField, UserField, Room } from "@/types";
 
 export const getUserOwnedRooms = async () => {
   const snapshot = await getDocs(Collection.Rooms, [
@@ -24,7 +24,7 @@ export const getUserJoinedRooms = async () => {
   return snapshot.docs.map((doc) => {
     return {
       id: doc.id,
-      [RoomField.Guests]: doc.get(RoomField.Guests) as User[],
+      [RoomField.Guests]: doc.get(RoomField.Guests) as Room[RoomField.Guests],
     };
   });
 };

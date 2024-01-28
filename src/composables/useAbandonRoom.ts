@@ -25,15 +25,24 @@ const abandonRoom = async (roomId: string) => {
       throw new Error(CommonErrors.TheDocumentNotFound);
     }
 
-    const currentGuestsList: Room[RoomField.GuestsIds] = snapshot.get(
+    const currentGuestsIds: Room[RoomField.GuestsIds] = snapshot.get(
       RoomField.GuestsIds
     );
-    const newGuestsList = currentGuestsList.filter(
+    const currentGuests: Room[RoomField.Guests] = snapshot.get(
+      RoomField.Guests
+    );
+
+    const newGuestsIds = currentGuestsIds.filter(
       (guestId) => guestId !== user.value?.uid
     );
 
+    const newGuests = currentGuests.filter(
+      (guest) => guest.id !== user.value?.uid
+    );
+
     await updateDoc(docRef, {
-      [RoomField.GuestsIds]: [...newGuestsList],
+      [RoomField.GuestsIds]: [...newGuestsIds],
+      [RoomField.Guests]: [...newGuests],
     });
 
     loading.value = false;
