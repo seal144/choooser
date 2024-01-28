@@ -1,7 +1,6 @@
 import { ref } from "vue";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { db } from "@/firebase/config";
-import getUser from "./getUser";
+import { auth, db } from "@/firebase/config";
 import { CommonErrors, Room, RoomField, Collection } from "@/types";
 
 const loading = ref(false);
@@ -12,8 +11,7 @@ const abandonRoom = async (roomId: string) => {
   error.value = null;
 
   try {
-    const { user } = getUser();
-    if (!user.value) {
+    if (!auth.currentUser) {
       throw new Error(CommonErrors.LoginAsAValidUser);
     }
 
@@ -33,11 +31,11 @@ const abandonRoom = async (roomId: string) => {
     );
 
     const newGuestsIds = currentGuestsIds.filter(
-      (guestId) => guestId !== user.value?.uid
+      (guestId) => guestId !== auth.currentUser?.uid
     );
 
     const newGuests = currentGuests.filter(
-      (guest) => guest.id !== user.value?.uid
+      (guest) => guest.id !== auth.currentUser?.uid
     );
 
     await updateDoc(docRef, {
