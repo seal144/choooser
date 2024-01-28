@@ -22,13 +22,15 @@
     </div>
     Owner:
     <div class="owner-container">
-      <PersonCard name="123456789012345678" />
+      <PersonCard :name="room.owner.displayName" />
     </div>
     Guests:
     <div class="guests-container">
-      <PersonCard name="123456789012345678" />
-      <PersonCard name="123456789012345678" />
-      <PersonCard name="123456789012345678" />
+      <PersonCard
+        v-for="guest in room.guests"
+        :key="guest.id"
+        :name="guest.displayName"
+      />
     </div>
   </v-navigation-drawer>
   <div class="content" :class="{ xlAndUp: xlAndUp }">
