@@ -2,25 +2,30 @@
   <v-navigation-drawer
     v-model="drawer"
     temporary
-    class="side-drawer"
     :class="{ xxl: xxl, xs: xs }"
     :width="drawerWidth"
   >
-    <div className="drawer-header">
-      <HeaderCard class="drawer-header-text">{{ room.name }}</HeaderCard>
-      <ButtonIcon icon="mdi-menu-open" @click="drawer = false" />
-    </div>
-    Owner:
-    <div class="owner-container">
-      <PersonCard :name="room.owner.displayName" />
-    </div>
-    Guests:
-    <div class="guests-container">
-      <PersonCard
-        v-for="guest in room.guests"
-        :key="guest.id"
-        :name="guest.displayName"
-      />
+    <div class="drawer-content">
+      <div className="drawer-header">
+        <HeaderCard class="drawer-header-text">{{ room.name }}</HeaderCard>
+        <ButtonIcon icon="mdi-menu-open" @click="drawer = false" />
+      </div>
+      <div class="prop-container">
+        <p>Created at:</p>
+        <HeaderCard>{{ formattedTime }}</HeaderCard>
+      </div>
+      <div class="prop-container">
+        <p>Owner:</p>
+        <PersonCard :name="room.owner.displayName" />
+      </div>
+      <p v-if="room.guests.length">Guests:</p>
+      <div class="prop-container guests-container">
+        <PersonCard
+          v-for="guest in room.guests"
+          :key="guest.id"
+          :name="guest.displayName"
+        />
+      </div>
     </div>
   </v-navigation-drawer>
   <div class="content-container">
@@ -43,6 +48,7 @@
 <script setup lang="ts">
 import { computed, PropType, ref } from "vue";
 import { useDisplay } from "vuetify";
+import { format } from "date-fns";
 
 import { ButtonIcon, HeaderCard, PersonCard } from "@/components";
 import { RoomDetailsData } from "@/types";
@@ -60,6 +66,11 @@ const drawerWidth = computed(() => {
   if (xxl.value) return "360";
   return "280";
 });
+
+const formattedTime = format(
+  props.room.createTime.toDate(),
+  "dd.MM.yyy | HH:mm"
+);
 </script>
 
 <style lang="scss" scoped>
@@ -97,7 +108,7 @@ const drawerWidth = computed(() => {
   }
 }
 
-.side-drawer {
+.drawer-content {
   padding: 28px 1rem;
 
   .drawer-header {
@@ -111,7 +122,7 @@ const drawerWidth = computed(() => {
     }
   }
 
-  .owner-container {
+  .prop-container {
     margin-bottom: 0.5rem;
   }
 
