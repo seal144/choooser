@@ -6,6 +6,13 @@ import { auth, db } from "@/firebase/config";
 import initDisplayName from "@/firebase/initDisplayName";
 import { Collection, CommonErrors } from "@/types";
 
+const parseErrorMessage = (message: string) => {
+  if (message.includes("popup-closed-by-user")) {
+    return "To be authorized by Google, please do not close the popup.";
+  }
+  return message;
+};
+
 const error = ref<string | null>(null);
 const loading = ref(false);
 
@@ -34,7 +41,7 @@ const login = async () => {
   } catch (err) {
     const { message } = err as Error;
     console.error(message);
-    error.value = message;
+    error.value = parseErrorMessage(message);
     loading.value = false;
   }
 };
