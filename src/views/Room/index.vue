@@ -57,7 +57,6 @@ import { CommonErrors, Dialogs } from "@/types";
 
 import RoomNotExist from "./RoomNotExist.vue";
 
-// onBoarding validation START
 const router = useRouter();
 const route = useRoute();
 const { user } = getUser();
@@ -135,7 +134,6 @@ const onCloseJoinRoomDialog = () => {
   }
 };
 
-// initial validation watchEffect
 watchEffect(() => {
   if (userInitValidation.value && !userIsParticipant.value) {
     if (error.value === CommonErrors.TheRoomIsFull) {
@@ -154,7 +152,6 @@ watchEffect(() => {
     userInitValidation.value = false;
   }
 });
-// onBoarding validation END
 </script>
 
 <style lang="scss" scoped>
@@ -169,9 +166,9 @@ watchEffect(() => {
 }
 </style>
 
-<!-- handle init: -->
-<!-- v bad url -->
-<!-- v non logged user -->
-<!-- v fullRoom -->
-<!-- v user isn't participant password -->
-<!-- v user isn't participant no password -->
+<!-- handled on url join: -->
+<!-- bad url -->
+<!-- non logged user -->
+<!-- fullRoom -->
+<!-- user isn't participant password -->
+<!-- user isn't participant no password -->
