@@ -1,4 +1,5 @@
 import Button from "./Button.vue";
+import ButtonIcon from "./ButtonIcon.vue";
 import ConfirmDialog from "./ConfirmDialog.vue";
 import Dialog from "./Dialog.vue";
 import FormError from "./FormError.vue";
@@ -14,6 +15,7 @@ import PersonCard from "./PersonCard.vue";
 
 export {
   Button,
+  ButtonIcon,
   ConfirmDialog,
   Dialog,
   FormError,

@@ -1,8 +1,4 @@
 <template>
-  <v-card class="side-button" @click="drawer = true">
-    <v-icon v-if="xxl" icon="mdi-chevron-right" size="40" />
-    <v-icon v-else icon="mdi-chevron-right" size="large" />
-  </v-card>
   <v-navigation-drawer
     v-model="drawer"
     temporary
@@ -12,13 +8,7 @@
   >
     <div className="drawer-header">
       <HeaderCard class="drawer-header-text">{{ room.name }}</HeaderCard>
-      <Button
-        icon
-        density="compact"
-        class="hide-drawer-button"
-        @click="drawer = false"
-        ><v-icon icon="mdi-chevron-left" size="large"
-      /></Button>
+      <ButtonIcon icon="mdi-menu-open" @click="drawer = false" />
     </div>
     Owner:
     <div class="owner-container">
@@ -33,8 +23,20 @@
       />
     </div>
   </v-navigation-drawer>
-  <div class="content" :class="{ xlAndUp: xlAndUp }">
-    {{ props.room }}
+  <div class="content-container">
+    <ButtonIcon
+      icon="mdi-menu-open"
+      class="open-menu-button"
+      :class="{ hide: drawer }"
+      @click="drawer = true"
+      rotate
+    />
+    <div class="content" :class="{ mdAndDown }">
+      <HeaderCard class="content-title" :class="{ xs }">{{
+        room.name
+      }}</HeaderCard>
+      {{ props.room }}
+    </div>
   </div>
 </template>
 
@@ -42,7 +44,7 @@
 import { computed, PropType, ref } from "vue";
 import { useDisplay } from "vuetify";
 
-import { Button, HeaderCard, PersonCard } from "@/components";
+import { ButtonIcon, HeaderCard, PersonCard } from "@/components";
 import { RoomDetailsData } from "@/types";
 
 const props = defineProps({
@@ -52,7 +54,7 @@ const props = defineProps({
   },
 });
 
-const { xs, xlAndUp, xxl } = useDisplay();
+const { xs, mdAndDown, xxl } = useDisplay();
 const drawer = ref(false);
 const drawerWidth = computed(() => {
   if (xxl.value) return "360";
@@ -61,24 +63,42 @@ const drawerWidth = computed(() => {
 </script>
 
 <style lang="scss" scoped>
+.content-container {
+  width: 100%;
+}
 .content {
-  padding-left: 28px;
+  margin-top: -38px;
+  padding: 0 3.5rem;
 
-  &.xlAndUp {
-    padding-left: 0;
+  .content-title {
+    width: fit-content;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    margin: 0 auto 1.5rem;
+
+    &.xs {
+      margin: 0 0 1.5rem 3.1rem;
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+      width: unset;
+    }
+  }
+
+  &.mdAndDown {
+    padding: 0;
   }
 }
-.side-button {
-  position: fixed;
-  left: 0;
-  top: 0;
-  height: 100vh;
-  display: flex;
-  align-items: center;
+
+.open-menu-button {
+  position: sticky;
+  top: 5.2rem;
+  &.hide {
+    transform: translateX(-600px) rotate(180deg);
+  }
 }
 
 .side-drawer {
-  padding: 1rem 1rem;
+  padding: 28px 1rem;
 
   .drawer-header {
     display: flex;
@@ -88,14 +108,6 @@ const drawerWidth = computed(() => {
 
     .drawer-header-text {
       flex: 1;
-    }
-  }
-
-  .hide-drawer-button {
-    height: 38px;
-    width: 38px;
-    &--icon {
-      width: 38px;
     }
   }
 
@@ -113,7 +125,7 @@ const drawerWidth = computed(() => {
     padding-left: 2rem;
   }
   &.xs {
-    padding: 1rem 0.5rem;
+    padding: 28px 0.5rem;
   }
 }
 </style>
