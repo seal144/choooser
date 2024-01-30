@@ -11,7 +11,7 @@
     </template>
     <v-list>
       <v-list-item v-for="(action, index) in actionsList" :key="index">
-        <Button block @click="action.action(id, name)">
+        <Button block @click="action.action(id, name)" :danger="action.danger">
           <v-icon v-if="action.icon" :icon="action.icon" size="large" />
           {{ action.label }}
         </Button>
@@ -29,6 +29,7 @@ interface ActionItem {
   label: string;
   action: (id: string, name: string) => void;
   icon?: string;
+  danger?: boolean;
 }
 
 defineProps({

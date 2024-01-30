@@ -54,38 +54,20 @@
           :actionsList="joinedRoomsSubMenu"
         />
       </Button>
-      <ConfirmDialog
-        :dialogIdentification="Dialogs.ConfirmDeleteRoom"
-        title="Are you sure?"
+      <ConfirmDeleteAbandonRoom
+        variant="delete"
         :text="confirmDeleteRoomText"
+        :confirm="handleDeleteRoom"
+        :loading="loadingDeleteRoom"
         @close="onCloseConfirmDialog"
-      >
-        <template v-slot:confirmButton>
-          <Button danger @click="handleDeleteRoom" :loading="loadingDeleteRoom"
-            ><v-icon
-              icon="mdi-exclamation-thick"
-              size="large"
-              v-if="smAndUp"
-            />delete</Button
-          >
-        </template>
-      </ConfirmDialog>
-      <ConfirmDialog
-        :dialogIdentification="Dialogs.ConfirmAbandonRoom"
-        title="Are you sure?"
+      />
+      <ConfirmDeleteAbandonRoom
+        variant="abandon"
         :text="confirmAbandonRoomText"
+        :confirm="handleAbandonRoom"
+        :loading="loadingAbandonRoom"
         @close="onCloseConfirmDialog"
-      >
-        <template v-slot:confirmButton>
-          <Button @click="handleAbandonRoom" :loading="loadingAbandonRoom"
-            ><v-icon
-              icon="mdi-exit-run"
-              size="large"
-              v-if="smAndUp"
-            />Abandon</Button
-          >
-        </template>
-      </ConfirmDialog>
+      />
       <Snackbar
         v-model="snackbarDeleteError"
         title="Something went wrong"
@@ -107,10 +89,10 @@ import { useDisplay } from "vuetify";
 
 import {
   Button,
+  ConfirmDeleteAbandonRoom,
   JoinCreateRoomDialog,
   HeaderCard,
   RoomButtonSubMenu,
-  ConfirmDialog,
   Snackbar,
 } from "@/components";
 import subscribeRooms from "@/composables/subscribeRooms";
@@ -125,7 +107,7 @@ const displayName = toRef(useUserStore(), "displayName");
 const { rooms: ownedRooms } = subscribeRooms(RoomRole.Owner);
 const { rooms: joinedRooms } = subscribeRooms(RoomRole.Guest);
 const router = useRouter();
-const { xs, smAndUp } = useDisplay();
+const { xs } = useDisplay();
 const {
   deleteRoom,
   loading: loadingDeleteRoom,
@@ -176,6 +158,7 @@ const ownedRoomsSubMenu = [
       selectedRoomForAction.name = roomName;
       dialogs.isOpen[Dialogs.ConfirmDeleteRoom] = true;
     },
+    danger: true,
   },
 ];
 const joinedRoomsSubMenu = [

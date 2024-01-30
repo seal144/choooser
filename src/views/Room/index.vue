@@ -95,6 +95,8 @@ const userIsParticipant = computed(() => {
   if (
     user.value &&
     room.value &&
+    // next line is needed to avoid console error on deleting room from inside the room
+    room.value.guestsIds &&
     (room.value.guestsIds.includes(user.value.uid) ||
       room.value.owner.id === user.value.uid)
   ) {
