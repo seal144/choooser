@@ -2,14 +2,14 @@
   <Dialog
     :identification="Dialogs.Settings"
     title="Settings"
-    close-label="cancel"
+    close-label="Cancel"
     @close="onClose"
     class="settings-dialog"
   >
     <template v-slot:ActivatorButtonLabel>
       <Button class="activator-button" :icon="!smAndUp">
         <v-icon icon="mdi-cog" size="large" /><span v-if="smAndUp"
-          >settings</span
+          >Settings</span
         >
       </Button>
     </template>
@@ -63,7 +63,7 @@
         :disabled="!isDirty"
         @click="onSubmit"
         :loading="loadingUpdateDisplayName"
-        >apply</Button
+        >Apply</Button
       >
     </template>
   </Dialog>

@@ -28,7 +28,7 @@
             :kickButton="isOwner"
             :kickCallback="
               () => {
-                openKickUserDialog(guest.id);
+                openKickUserDialog(guest);
               }
             "
           />
@@ -61,6 +61,18 @@
     :confirm="handleAbandonRoom"
     :loading="loadingAbandonRoom"
   />
+  <ConfirmDeleteAbandonRoom
+    :identification="Dialogs.ConfirmKickUser"
+    variant="kickUser"
+    :text="
+      selectedUserForAction
+        ? `Do you want to kick ${selectedUserForAction.displayName} out of the room?`
+        : undefined
+    "
+    :confirm="handleKickUser"
+    :loading="loadingAbandonRoom"
+    @close="onCloseKickDialog"
+  />
   <Snackbar
     v-model="snackbarDeleteError"
     title="Something went wrong"
@@ -92,7 +104,7 @@ import useDeleteRoom from "@/composables/useDeleteRoom";
 import useAbandonRoom from "@/composables/useAbandonRoom";
 import getUser from "@/composables/getUser";
 import { RoutesNames } from "@/router";
-import { Dialogs, RoomDetailsData } from "@/types";
+import { Dialogs, RoomDetailsData, User } from "@/types";
 
 const props = defineProps({
   room: {
@@ -119,6 +131,7 @@ const {
 
 const snackbarDeleteError = ref(false);
 const snackbarAbandonError = ref(false);
+const selectedUserForAction = ref<User | null>(null);
 
 const drawerWidth = computed(() => {
   if (xxl.value) return "360";
@@ -137,8 +150,13 @@ const formattedTime = format(
   "dd.MM.yyy | HH:mm"
 );
 
-const openKickUserDialog = (userId: string) => {
-  console.log("openKickUserDialog", userId);
+const openKickUserDialog = (guest: User) => {
+  selectedUserForAction.value = guest;
+  dialogs.isOpen[Dialogs.ConfirmKickUser] = true;
+};
+
+const onCloseKickDialog = () => {
+  selectedUserForAction.value = null;
 };
 
 const openConfirmDeleteDialog = () => {
@@ -149,6 +167,16 @@ const openConfirmAbandonDialog = () => {
   dialogs.isOpen[Dialogs.ConfirmAbandonRoomInside] = true;
 };
 
+const handleKickUser = async () => {
+  if (selectedUserForAction.value) {
+    await abandonRoom(props.room.id, selectedUserForAction.value.id);
+    if (errorAbandonRoom.value) {
+      snackbarAbandonError.value = true;
+    } else {
+      dialogs.isOpen[Dialogs.ConfirmKickUser] = false;
+    }
+  }
+};
 const handleDeleteRoom = async () => {
   await deleteRoom(props.room.id);
   if (errorDeleteRoom.value) {

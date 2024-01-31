@@ -15,7 +15,7 @@
         <SettingsDialog />
         <Button @click="handleLogout" :icon="!smAndUp" v-if="!user?.isAnonymous"
           ><v-icon icon="mdi-logout" size="large" /><span v-if="smAndUp"
-            >logout</span
+            >Logout</span
           ></Button
         >
       </div>
