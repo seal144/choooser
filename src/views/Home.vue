@@ -56,12 +56,14 @@
       </Button>
       <ConfirmDeleteAbandonRoom
         variant="delete"
+        :identification="Dialogs.ConfirmDeleteRoom"
         :text="confirmDeleteRoomText"
         :confirm="handleDeleteRoom"
         :loading="loadingDeleteRoom"
         @close="onCloseConfirmDialog"
       />
       <ConfirmDeleteAbandonRoom
+        :identification="Dialogs.ConfirmAbandonRoom"
         variant="abandon"
         :text="confirmAbandonRoomText"
         :confirm="handleAbandonRoom"

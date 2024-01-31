@@ -1,6 +1,6 @@
 <template>
   <ConfirmDialog
-    :dialogIdentification="DialogData.identification"
+    :dialogIdentification="identification"
     title="Are you sure?"
     :text="text ? text : DialogData.defaultText"
   >
@@ -26,6 +26,10 @@ const props = defineProps({
     type: String as PropType<"delete" | "abandon">,
     required: true,
   },
+  identification: {
+    type: String as PropType<Dialogs>,
+    required: true,
+  },
   text: {
     type: String,
     required: false,
@@ -46,7 +50,6 @@ const DialogData = computed(() => {
   switch (props.variant) {
     case "delete":
       return {
-        identification: Dialogs.ConfirmDeleteRoom,
         defaultText:
           "Do you want to delete this room? This action is irreversible.",
         ButtonIcon: "mdi-exclamation-thick",
@@ -54,7 +57,6 @@ const DialogData = computed(() => {
       };
     default:
       return {
-        identification: Dialogs.ConfirmAbandonRoom,
         defaultText: "Do you want to abandon this room?",
         ButtonIcon: "mdi-exit-run",
         ButtonLabel: "Abandon",

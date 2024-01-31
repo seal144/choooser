@@ -50,11 +50,13 @@
     </div>
   </v-navigation-drawer>
   <ConfirmDeleteAbandonRoom
+    :identification="Dialogs.ConfirmDeleteRoomInside"
     variant="delete"
     :confirm="handleDeleteRoom"
     :loading="loadingDeleteRoom"
   />
   <ConfirmDeleteAbandonRoom
+    :identification="Dialogs.ConfirmAbandonRoomInside"
     variant="abandon"
     :confirm="handleAbandonRoom"
     :loading="loadingAbandonRoom"
@@ -140,11 +142,11 @@ const openKickUserDialog = (userId: string) => {
 };
 
 const openConfirmDeleteDialog = () => {
-  dialogs.isOpen[Dialogs.ConfirmDeleteRoom] = true;
+  dialogs.isOpen[Dialogs.ConfirmDeleteRoomInside] = true;
 };
 
 const openConfirmAbandonDialog = () => {
-  dialogs.isOpen[Dialogs.ConfirmAbandonRoom] = true;
+  dialogs.isOpen[Dialogs.ConfirmAbandonRoomInside] = true;
 };
 
 const handleDeleteRoom = async () => {
@@ -152,7 +154,7 @@ const handleDeleteRoom = async () => {
   if (errorDeleteRoom.value) {
     snackbarDeleteError.value = true;
   } else {
-    dialogs.isOpen[Dialogs.ConfirmDeleteRoom] = false;
+    dialogs.isOpen[Dialogs.ConfirmDeleteRoomInside] = false;
     router.push({ name: RoutesNames.Home });
   }
 };
@@ -161,7 +163,7 @@ const handleAbandonRoom = async () => {
   if (errorAbandonRoom.value) {
     snackbarAbandonError.value = true;
   } else {
-    dialogs.isOpen[Dialogs.ConfirmAbandonRoom] = false;
+    dialogs.isOpen[Dialogs.ConfirmAbandonRoomInside] = false;
   }
 };
 </script>
