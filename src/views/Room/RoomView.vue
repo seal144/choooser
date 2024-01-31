@@ -42,7 +42,7 @@ const drawer = ref(false);
   width: 100%;
 }
 .content {
-  margin-top: -38px;
+  margin-top: -36px;
   padding: 0 3.5rem;
 
   .content-title {
@@ -68,7 +68,7 @@ const drawer = ref(false);
   position: sticky;
   top: 5.2rem;
   &.hide {
-    transform: translateX(-600px) rotate(180deg);
+    transform: translateX(-600px);
   }
 }
 </style>

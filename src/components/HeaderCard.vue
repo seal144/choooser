@@ -13,7 +13,7 @@ defineProps({
 
 <style lang="scss" scoped>
 .v-card {
-  padding: 0.25rem 0.5rem;
+  padding: 3.6px 0.5rem;
   text-align: center;
 
   &.left {

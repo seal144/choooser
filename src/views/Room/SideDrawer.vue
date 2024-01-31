@@ -25,6 +25,12 @@
             v-for="guest in room.guests"
             :key="guest.id"
             :name="guest.displayName"
+            :kickButton="isOwner"
+            :kickCallback="
+              () => {
+                openKickUserDialog(guest.id);
+              }
+            "
           />
         </div>
       </div>
@@ -128,6 +134,10 @@ const formattedTime = format(
   props.room.createTime.toDate(),
   "dd.MM.yyy | HH:mm"
 );
+
+const openKickUserDialog = (userId: string) => {
+  console.log("openKickUserDialog", userId);
+};
 
 const openConfirmDeleteDialog = () => {
   dialogs.isOpen[Dialogs.ConfirmDeleteRoom] = true;
