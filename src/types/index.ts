@@ -9,6 +9,7 @@ export enum Dialogs {
   ConfirmDeleteRoomInside = "ConfirmDeleteRoomInside",
   ConfirmAbandonRoom = "ConfirmAbandonRoom",
   ConfirmAbandonRoomInside = "ConfirmAbandonRoomInside",
+  ConfirmKickUser = "ConfirmKickUser",
   RoomInfoLogin = "RoomLogin",
   RoomInfoIsFull = "RoomInfoIsFull",
   JoinRoomFromURL = "joinRoomFromURL",

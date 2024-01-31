@@ -12,6 +12,7 @@ export const useDialogsStore = defineStore("dialogs", {
       [Dialogs.ConfirmDeleteRoomInside]: false,
       [Dialogs.ConfirmAbandonRoom]: false,
       [Dialogs.ConfirmAbandonRoomInside]: false,
+      [Dialogs.ConfirmKickUser]: false,
       [Dialogs.RoomInfoLogin]: false,
       [Dialogs.RoomInfoIsFull]: false,
       [Dialogs.JoinRoomFromURL]: false,

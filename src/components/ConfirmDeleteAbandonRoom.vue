@@ -23,7 +23,7 @@ import { Dialogs } from "@/types";
 
 const props = defineProps({
   variant: {
-    type: String as PropType<"delete" | "abandon">,
+    type: String as PropType<"delete" | "abandon" | "kickUser">,
     required: true,
   },
   identification: {
@@ -54,6 +54,12 @@ const DialogData = computed(() => {
           "Do you want to delete this room? This action is irreversible.",
         ButtonIcon: "mdi-exclamation-thick",
         ButtonLabel: "Delete",
+      };
+    case "kickUser":
+      return {
+        defaultText: "Do you want to kick the user out of the room?",
+        ButtonIcon: "mdi-karate",
+        ButtonLabel: "Kick",
       };
     default:
       return {

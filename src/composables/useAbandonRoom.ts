@@ -6,7 +6,7 @@ import { CommonErrors, Room, RoomField, Collection } from "@/types";
 const loading = ref(false);
 const error = ref<string | null>(null);
 
-const abandonRoom = async (roomId: string) => {
+const abandonRoom = async (roomId: string, userId?: string) => {
   loading.value = true;
   error.value = null;
 
@@ -30,12 +30,14 @@ const abandonRoom = async (roomId: string) => {
       RoomField.Guests
     );
 
+    const userIdToFilterOut = userId ? userId : auth.currentUser?.uid;
+
     const newGuestsIds = currentGuestsIds.filter(
-      (guestId) => guestId !== auth.currentUser?.uid
+      (guestId) => guestId !== userIdToFilterOut
     );
 
     const newGuests = currentGuests.filter(
-      (guest) => guest.id !== auth.currentUser?.uid
+      (guest) => guest.id !== userIdToFilterOut
     );
 
     await updateDoc(docRef, {

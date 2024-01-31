@@ -30,7 +30,7 @@ defineProps({
   },
   closeLabel: {
     type: String,
-    default: "cancel",
+    default: "Cancel",
   },
   text: {
     type: String,
