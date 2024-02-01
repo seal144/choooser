@@ -73,6 +73,9 @@ const vuetify = createVuetify({
       rounded: "0",
       style: `${borderStyle} padding: .25rem 0;`,
     },
+    VTextarea: {
+      rounded: "0",
+    },
     VListItem: {
       style: "padding: .25rem .5rem; min-height: 40px;",
     },

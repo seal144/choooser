@@ -9,6 +9,8 @@
 //   $color-pack: false
 // );
 
+$border-style: 3px solid rgb(var(--v-theme-primary));
+
 @font-face {
   font-family: 'Roboto Mono', monospace;
   font-style: normal;

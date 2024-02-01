@@ -20,3 +20,4 @@ export const displayNameValidation = [
 ];
 export const authPasswordValidation = [required, minChars(6), maxChars(30)];
 export const roomPasswordValidation = [minChars(3), maxChars(30)];
+export const messageValidation = [maxChars(2000)];

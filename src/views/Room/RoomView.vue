@@ -12,7 +12,9 @@
       <HeaderCard class="content-title" :class="{ xs }">{{
         room.name
       }}</HeaderCard>
-      {{ props.room }}
+      <div class="chat-container">
+        <Chat />
+      </div>
     </div>
   </div>
 </template>
@@ -22,6 +24,7 @@ import { PropType, ref } from "vue";
 import { useDisplay } from "vuetify";
 
 import SideDrawer from "./SideDrawer.vue";
+import Chat from "./Chat.vue";
 import { ButtonIcon, HeaderCard } from "@/components";
 import { RoomDetailsData } from "@/types";
 
@@ -67,8 +70,14 @@ const drawer = ref(false);
 .open-menu-button {
   position: sticky;
   top: 5.2rem;
+  z-index: 100;
   &.hide {
     transform: translateX(-600px);
   }
+}
+
+.chat-container {
+  height: calc(100vh - 180px);
+  min-height: 400px;
 }
 </style>
