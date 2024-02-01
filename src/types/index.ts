@@ -18,6 +18,7 @@ export enum Dialogs {
 export enum Collection {
   Rooms = "rooms",
   Users = "users",
+  Chats = "chats",
 }
 
 export enum UserField {
@@ -32,6 +33,30 @@ export interface User {
 export type UserDataDB = Omit<User, UserField.Id>;
 
 export type UserDataDBPartial = Partial<UserDataDB>;
+
+export enum MessageField {
+  AuthorId = "authorId",
+  CreateTime = "createTime",
+  Message = "Message",
+}
+
+export interface Message {
+  [MessageField.AuthorId]: string;
+  [MessageField.CreateTime]: Timestamp;
+  [MessageField.Message]: string;
+}
+
+export enum ChatField {
+  RoomId = "RoomId",
+  Chat = "chat",
+}
+
+export interface Chat {
+  [ChatField.RoomId]: string;
+  [ChatField.Chat]: Message[];
+}
+
+export type ChatDataDB = Omit<Chat, ChatField.RoomId>;
 
 export enum RoomField {
   Id = "id",

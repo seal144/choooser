@@ -15,6 +15,10 @@ const deleteRoom = async (roomId: string) => {
 
     await deleteDoc(docRef);
 
+    const chatRef = doc(db, Collection.Chats, roomId);
+
+    await deleteDoc(chatRef);
+
     loading.value = false;
   } catch (err) {
     const { message } = err as Error;
