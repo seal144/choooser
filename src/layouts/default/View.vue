@@ -12,6 +12,6 @@
 
 <style scoped lang="scss">
 .v-container {
-  padding: 2rem 1rem;
+  padding: 2rem 1rem 1rem;
 }
 </style>
