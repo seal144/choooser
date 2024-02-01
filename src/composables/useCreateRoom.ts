@@ -1,5 +1,5 @@
 import { ref } from "vue";
-import { Timestamp, addDoc, collection } from "firebase/firestore";
+import { Timestamp, addDoc, collection, doc, setDoc } from "firebase/firestore";
 import { auth, db } from "@/firebase/config";
 import { getDocs } from "@/firebase/docs";
 import CryptoJS from "crypto-js";
@@ -53,7 +53,15 @@ const createRoom = async (roomFormData: RoomFormData) => {
       guests: [],
     };
 
-    await addDoc(collection(db, Collection.Rooms), room);
+    const response = await addDoc(collection(db, Collection.Rooms), room);
+
+    if (!response) {
+      throw new Error("Could not create the new room");
+    }
+
+    const chatRef = doc(db, Collection.Chats, response.id);
+    await setDoc(chatRef, { chat: [] });
+
     loading.value = false;
   } catch (err) {
     const { message } = err as Error;
