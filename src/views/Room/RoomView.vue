@@ -13,7 +13,7 @@
         room.name
       }}</HeaderCard>
       <div class="chat-container">
-        <Chat />
+        <Chat :room="room" />
       </div>
     </div>
   </div>
