@@ -37,7 +37,7 @@ export type UserDataDBPartial = Partial<UserDataDB>;
 export enum MessageField {
   AuthorId = "authorId",
   CreateTime = "createTime",
-  Message = "Message",
+  Message = "message",
 }
 
 export interface Message {
@@ -47,16 +47,18 @@ export interface Message {
 }
 
 export enum ChatField {
-  RoomId = "RoomId",
+  Id = "id",
   Chat = "chat",
 }
 
 export interface Chat {
-  [ChatField.RoomId]: string;
+  [ChatField.Id]: string;
   [ChatField.Chat]: Message[];
 }
 
-export type ChatDataDB = Omit<Chat, ChatField.RoomId>;
+export type ChatDataDB = Omit<Chat, ChatField.Id>;
+
+export type ChatDataDBPartial = Partial<ChatDataDB>;
 
 export enum RoomField {
   Id = "id",
@@ -102,9 +104,11 @@ export enum RoomRole {
 }
 
 export enum CommonErrors {
-  LoginAsAValidUser = "Login as a valid user",
-  CouldNotLogin = "Could not login",
-  TheDocumentNotFound = "The document not found",
-  TheRoomIsFull = "The room is full",
-  DisplayNameInUse = "Display name already in use",
+  OperationFailed = "Operation Failed. Something went wrong.",
+  CouldNotFetch = "Something went wrong! Could not fetch the data.",
+  LoginAsAValidUser = "Login as a valid user.",
+  CouldNotLogin = "Could not login.",
+  TheDocumentNotFound = "The document not found.",
+  TheRoomIsFull = "The room is full.",
+  DisplayNameInUse = "Display name already in use.",
 }

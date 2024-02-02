@@ -8,7 +8,12 @@ import {
   where,
   WhereFilterOp,
 } from "firebase/firestore";
-import { Collection, RoomDataDBPartial, UserDataDBPartial } from "@/types";
+import {
+  Collection,
+  ChatDataDBPartial,
+  RoomDataDBPartial,
+  UserDataDBPartial,
+} from "@/types";
 
 export const getDocs = async (
   collectionName: Collection,
@@ -27,7 +32,7 @@ export const getDocs = async (
 export const updateDoc = async (
   collectionName: Collection,
   id: string,
-  data: RoomDataDBPartial | UserDataDBPartial
+  data: RoomDataDBPartial | UserDataDBPartial | ChatDataDBPartial
 ) => {
   const docRef = doc(db, collectionName, id);
 

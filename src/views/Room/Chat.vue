@@ -1,12 +1,29 @@
 <template>
   <div class="chat-wrapper">
-    <v-card class="chat-window"></v-card>
+    <v-card class="chat-window">
+      <div v-if="errorChat" class="chat-error">
+        {{ errorChat }}
+      </div>
+      <v-progress-circular
+        class="chat-loading"
+        v-else-if="chat === null"
+        indeterminate
+        size="48"
+        :width="lineThickness"
+      ></v-progress-circular>
+      <div v-else v-for="message in chat" :key="message.createTime.nanoseconds">
+        <p>{{ message.authorId }}</p>
+        <p>{{ message.message }}</p>
+      </div>
+    </v-card>
     <div>
-      <v-form v-model="form" @submit.prevent="sendMessage">
+      <v-form v-model="form" @submit.prevent="submitMessage">
         <Textarea
           :rules="[...messageValidation]"
           v-model="message"
           placeholder="Write some nice 😉"
+          @keypress.enter.exact.prevent="submitMessage"
+          :error-messages="errorSendMessage ? errorSendMessage : []"
         />
         <div class="actions">
           <ButtonIcon icon="mdi-send" type="submit" />
@@ -17,17 +34,32 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, PropType } from "vue";
 
+import { lineThickness } from "@/plugins/vuetify";
 import { ButtonIcon, Textarea } from "@/components";
+import useSendMessage from "@/composables/useSendMessage";
+import subscribeChat from "@/composables/subscribeChat";
 import { messageValidation } from "@/utils/validation";
+import { RoomDetailsData } from "@/types";
+
+const props = defineProps({
+  room: {
+    type: Object as PropType<RoomDetailsData>,
+    required: true,
+  },
+});
+
+const { sendMessage, error: errorSendMessage } = useSendMessage();
+const { chat, error: errorChat } = subscribeChat(props.room.id);
 
 const form = ref(false);
 const message = ref("");
 
-const sendMessage = () => {
+const submitMessage = () => {
   if (!form.value || !message.value.trim()) return;
-  console.log(message.value);
+  sendMessage(props.room.id, message.value);
+  message.value = "";
 };
 </script>
 
@@ -40,6 +72,22 @@ const sendMessage = () => {
 
   .chat-window {
     flex: 1;
+    position: relative;
+    overflow: auto;
+
+    .chat-error {
+      text-align: center;
+      margin-top: 3rem;
+      padding: 1rem;
+      color: rgb(var(--v-theme-error));
+    }
+
+    .chat-loading {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
   }
 
   .actions {
