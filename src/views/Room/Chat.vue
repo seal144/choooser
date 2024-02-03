@@ -11,10 +11,13 @@
         size="48"
         :width="lineThickness"
       ></v-progress-circular>
-      <div v-else v-for="message in chat" :key="message.createTime.nanoseconds">
-        <p>{{ message.authorId }}</p>
-        <p>{{ message.message }}</p>
-      </div>
+      <Message
+        v-else
+        v-for="message in chat"
+        :key="message.createTime.nanoseconds"
+        :message="message"
+        :participantsList="[...room.guests, room.owner]"
+      />
     </v-card>
     <div>
       <v-form v-model="form" @submit.prevent="submitMessage">
@@ -38,6 +41,7 @@ import { ref, PropType } from "vue";
 
 import { lineThickness } from "@/plugins/vuetify";
 import { ButtonIcon, Textarea } from "@/components";
+import Message from "./Message.vue";
 import useSendMessage from "@/composables/useSendMessage";
 import subscribeChat from "@/composables/subscribeChat";
 import { messageValidation } from "@/utils/validation";
@@ -74,6 +78,7 @@ const submitMessage = () => {
     flex: 1;
     position: relative;
     overflow: auto;
+    padding: 1rem;
 
     .chat-error {
       text-align: center;
