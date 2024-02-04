@@ -1,10 +1,11 @@
 import { ref } from "vue";
 import CryptoJS from "crypto-js";
+import { FieldValue, arrayUnion, doc, updateDoc } from "firebase/firestore";
 
-import { getDocs, updateDoc } from "@/firebase/docs";
-import { auth } from "@/firebase/config";
+import { getDocs } from "@/firebase/docs";
+import { auth, db } from "@/firebase/config";
 import { maxGuestsInRoom } from "./../utils/validation";
-import { CommonErrors, RoomDataDB, RoomField, Collection } from "@/types";
+import { CommonErrors, Room, RoomDataDB, RoomField, Collection } from "@/types";
 
 type RoomFormData = {
   name: string;
@@ -62,25 +63,38 @@ const joinRoom = async (roomFormData: RoomFormData) => {
       throw new Error("No room with such a name");
     }
 
-    const { groupId, guestsIds, guests, owner } =
+    const { groupId, guestsIds, owner, pastGuests } =
       snapshot.docs[0].data() as RoomDataDB;
     const roomId = snapshot.docs[0].id;
 
     validateParticipants(auth.currentUser.uid, [...guestsIds, owner.id]);
     validateRoom(groupId, roomFormData.password);
 
-    await updateDoc(Collection.Rooms, roomId, {
-      guestsIds: [...guestsIds, auth.currentUser.uid],
-      guests: [
-        ...guests,
-        {
-          id: auth.currentUser.uid,
-          displayName: auth.currentUser.displayName
-            ? auth.currentUser.displayName
-            : "",
-        },
-      ],
-    });
+    const updates: {
+      guestsIds: FieldValue;
+      guests: FieldValue;
+      pastGuests?: Room[RoomField.PastGuests];
+    } = {
+      guestsIds: arrayUnion(auth.currentUser.uid),
+      guests: arrayUnion({
+        id: auth.currentUser.uid,
+        displayName: auth.currentUser.displayName
+          ? auth.currentUser.displayName
+          : "",
+      }),
+    };
+
+    const newPastGuests = pastGuests.filter(
+      (user) => user.id !== auth.currentUser?.uid
+    );
+
+    if (pastGuests.length !== newPastGuests.length) {
+      updates.pastGuests = [...newPastGuests];
+    }
+
+    const docRef = doc(db, Collection.Rooms, roomId);
+
+    await updateDoc(docRef, updates);
 
     loading.value = false;
   } catch (err) {

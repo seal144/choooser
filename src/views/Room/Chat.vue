@@ -16,7 +16,7 @@
         v-for="message in chat"
         :key="message.createTime.nanoseconds"
         :message="message"
-        :participantsList="[...room.guests, room.owner]"
+        :participantsList="[...room.guests, ...room.pastGuests, room.owner]"
       />
     </v-card>
     <div>

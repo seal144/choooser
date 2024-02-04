@@ -1,7 +1,13 @@
 import { ref } from "vue";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import {
+  arrayRemove,
+  arrayUnion,
+  doc,
+  getDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { auth, db } from "@/firebase/config";
-import { CommonErrors, Room, RoomField, Collection } from "@/types";
+import { CommonErrors, Room, RoomField, Collection, UserField } from "@/types";
 
 const loading = ref(false);
 const error = ref<string | null>(null);
@@ -23,26 +29,28 @@ const abandonRoom = async (roomId: string, userId?: string) => {
       throw new Error(CommonErrors.TheDocumentNotFound);
     }
 
-    const currentGuestsIds: Room[RoomField.GuestsIds] = snapshot.get(
-      RoomField.GuestsIds
-    );
     const currentGuests: Room[RoomField.Guests] = snapshot.get(
       RoomField.Guests
     );
 
-    const userIdToFilterOut = userId ? userId : auth.currentUser?.uid;
-
-    const newGuestsIds = currentGuestsIds.filter(
-      (guestId) => guestId !== userIdToFilterOut
-    );
+    const userAbandoningId = userId ? userId : auth.currentUser?.uid;
+    const userAbandoningDisplayName = currentGuests.find(
+      (guest) => guest.id === userAbandoningId
+    )?.displayName;
 
     const newGuests = currentGuests.filter(
-      (guest) => guest.id !== userIdToFilterOut
+      (guest) => guest.id !== userAbandoningId
     );
 
     await updateDoc(docRef, {
-      [RoomField.GuestsIds]: [...newGuestsIds],
+      [RoomField.GuestsIds]: arrayRemove(userAbandoningId),
       [RoomField.Guests]: [...newGuests],
+      [RoomField.PastGuests]: arrayUnion({
+        [UserField.Id]: userAbandoningId,
+        [UserField.DisplayName]: userAbandoningDisplayName
+          ? userAbandoningDisplayName
+          : "Unknown User",
+      }),
     });
 
     loading.value = false;

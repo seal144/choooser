@@ -111,11 +111,11 @@ const resetError = () => {
 
 const useUser = () => ({
   updateDisplayName,
+  loadingUpdateDisplayName,
   deleteUser,
+  loadingDeleteUser,
   error,
   resetError,
-  loadingUpdateDisplayName,
-  loadingDeleteUser,
 });
 
 export default useUser;

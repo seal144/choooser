@@ -51,6 +51,7 @@ const createRoom = async (roomFormData: RoomFormData) => {
           : "",
       },
       guests: [],
+      pastGuests: [],
     };
 
     const response = await addDoc(collection(db, Collection.Rooms), room);
