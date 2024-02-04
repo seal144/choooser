@@ -22,11 +22,11 @@ const props = defineProps({
   },
 });
 
-const displayName = ref(
-  props.participantsList.find(
+const displayName = computed(() => {
+  return props.participantsList.find(
     (participant) => participant.id === props.message.authorId
-  )?.displayName
-);
+  )?.displayName;
+});
 
 const formattedTime = computed(() => {
   const createDate = props.message.createTime.toDate();
