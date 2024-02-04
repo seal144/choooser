@@ -69,6 +69,7 @@ export enum RoomField {
   GuestsIds = "guestsIds",
   Owner = "owner",
   Guests = "guests",
+  PastGuests = "pastGuests",
 }
 export interface Room {
   [RoomField.Id]: string;
@@ -79,6 +80,7 @@ export interface Room {
   [RoomField.GuestsIds]: string[];
   [RoomField.Owner]: User;
   [RoomField.Guests]: User[];
+  [RoomField.PastGuests]: User[];
 }
 
 export type RoomDataDB = Omit<Room, RoomField.Id | RoomField.ParsedGroupId>;
@@ -96,6 +98,7 @@ export type RoomDetailsData = Pick<
   | RoomField.Owner
   | RoomField.GuestsIds
   | RoomField.Guests
+  | RoomField.PastGuests
 >;
 
 export enum RoomRole {
