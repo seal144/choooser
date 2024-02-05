@@ -18,8 +18,8 @@ const { defaultTheme } = useDefaultTheme();
 const LightPalette = {
   primary: "#3b3d4a",
   background: "#fff",
-  surface: "#e9e9f0",
-  surface2: "#f5fffa",
+  surface: "#ededf5",
+  surface2: "#e7f7f7",
   surface3: "#fffffd",
 };
 
@@ -27,8 +27,8 @@ const DarkPalette = {
   primary: "#74b0ab",
   background: "#3b3d4a",
   surface: "#3f404a",
-  surface2: "#465450",
-  surface3: "#526056",
+  surface2: "#455550",
+  surface3: "#606060",
 };
 
 export const lineThickness = "3";
