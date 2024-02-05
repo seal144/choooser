@@ -6,7 +6,7 @@
       ref="chatWindow"
       @click="focusChatWindow"
       v-click-outside="unFocusChatWindow"
-      @scroll="setIsChatOnBottom"
+      @scroll="setShowScrollBottomBtn"
     >
       <div v-if="errorChat" class="chat-error">
         {{ errorChat }}
@@ -40,7 +40,8 @@
         </div>
       </v-form>
       <ButtonScrollToBottom
-        v-if="!errorChat && chat?.length && !isChatOnBottom"
+        v-if="!errorChat && chat?.length && showScrollBottomBtn"
+        :text="scrollBottomBtnText"
         class="btn-scroll-down"
         @click="scrollToBottom"
       />
@@ -75,20 +76,22 @@ const form = ref(false);
 const message = ref("");
 const chatWindow = ref<HTMLDivElement | null>(null);
 const scrollSmooth = ref(false);
-const isChatOnBottom = ref(false);
+const scrollBottomBtnText = ref("");
+const showScrollBottomBtn = ref(false);
 const isChatWindowFocused = ref(false);
 
-const setIsChatOnBottom = () => {
+const setShowScrollBottomBtn = () => {
   if (
     chatWindow.value &&
     chatWindow.value.scrollHeight - chatWindow.value.scrollTop > 700
   ) {
-    isChatOnBottom.value = false;
+    showScrollBottomBtn.value = true;
     scrollSmooth.value = true;
     focusChatWindow();
   } else {
-    isChatOnBottom.value = true;
+    showScrollBottomBtn.value = false;
     unFocusChatWindow();
+    scrollBottomBtnText.value = "";
   }
 };
 
@@ -108,6 +111,8 @@ watch(chat, async () => {
 const autoScrollToBottom = () => {
   if (chatWindow.value && !isChatWindowFocused.value) {
     chatWindow.value.scrollTop = chatWindow.value.scrollHeight;
+  } else {
+    scrollBottomBtnText.value = "New message";
   }
 };
 
