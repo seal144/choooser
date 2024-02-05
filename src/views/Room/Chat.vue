@@ -1,6 +1,6 @@
 <template>
   <div class="chat-wrapper">
-    <v-card class="chat-window">
+    <v-card class="chat-window" :class="{ smAndDown }">
       <div v-if="errorChat" class="chat-error">
         {{ errorChat }}
       </div>
@@ -38,6 +38,7 @@
 
 <script setup lang="ts">
 import { ref, PropType } from "vue";
+import { useDisplay } from "vuetify";
 
 import { lineThickness } from "@/plugins/vuetify";
 import { ButtonIcon, Textarea } from "@/components";
@@ -54,6 +55,7 @@ const props = defineProps({
   },
 });
 
+const { smAndDown } = useDisplay();
 const { sendMessage, error: errorSendMessage } = useSendMessage();
 const { chat, error: errorChat } = subscribeChat(props.room.id);
 
@@ -78,7 +80,11 @@ const submitMessage = () => {
     flex: 1;
     position: relative;
     overflow: auto;
-    padding: 1rem;
+    padding: 1.5rem;
+
+    &.smAndDown {
+      padding: 0.8rem;
+    }
 
     .chat-error {
       text-align: center;
