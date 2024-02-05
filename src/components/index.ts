@@ -1,5 +1,6 @@
 import Button from "./Button.vue";
 import ButtonIcon from "./ButtonIcon.vue";
+import ButtonScrollToBottom from "./ButtonScrollToBottom.vue";
 import ConfirmDeleteAbandonRoom from "./ConfirmDeleteAbandonRoom.vue";
 import ConfirmDialog from "./ConfirmDialog.vue";
 import Dialog from "./Dialog.vue";
@@ -18,6 +19,7 @@ import PersonCard from "./PersonCard.vue";
 export {
   Button,
   ButtonIcon,
+  ButtonScrollToBottom,
   ConfirmDeleteAbandonRoom,
   ConfirmDialog,
   Dialog,
