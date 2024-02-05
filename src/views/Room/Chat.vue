@@ -2,10 +2,11 @@
   <div class="chat-wrapper">
     <div
       class="chat-window"
-      :class="{ smAndDown }"
+      :class="{ smAndDown, scrollSmooth }"
       ref="chatWindow"
       @click="focusChatWindow"
       v-click-outside="unFocusChatWindow"
+      @scroll="setIsChatOnBottom"
     >
       <div v-if="errorChat" class="chat-error">
         {{ errorChat }}
@@ -25,7 +26,7 @@
         :participantsList="[...room.guests, ...room.pastGuests, room.owner]"
       />
     </div>
-    <div>
+    <div class="bottom-row">
       <v-form v-model="form" @submit.prevent="submitMessage">
         <Textarea
           :rules="[...messageValidation]"
@@ -38,6 +39,11 @@
           <ButtonIcon icon="mdi-send" type="submit" />
         </div>
       </v-form>
+      <ButtonScrollToBottom
+        v-if="!errorChat && chat?.length && !isChatOnBottom"
+        class="btn-scroll-down"
+        @click="scrollToBottom"
+      />
     </div>
   </div>
 </template>
@@ -47,7 +53,7 @@ import { ref, PropType, watch } from "vue";
 import { useDisplay } from "vuetify";
 
 import { lineThickness } from "@/plugins/vuetify";
-import { ButtonIcon, Textarea } from "@/components";
+import { ButtonIcon, ButtonScrollToBottom, Textarea } from "@/components";
 import Message from "./Message.vue";
 import useSendMessage from "@/composables/useSendMessage";
 import subscribeChat from "@/composables/subscribeChat";
@@ -68,7 +74,23 @@ const { chat, error: errorChat } = subscribeChat(props.room.id);
 const form = ref(false);
 const message = ref("");
 const chatWindow = ref<HTMLDivElement | null>(null);
+const scrollSmooth = ref(false);
+const isChatOnBottom = ref(false);
 const isChatWindowFocused = ref(false);
+
+const setIsChatOnBottom = () => {
+  if (
+    chatWindow.value &&
+    chatWindow.value.scrollHeight - chatWindow.value.scrollTop > 700
+  ) {
+    isChatOnBottom.value = false;
+    scrollSmooth.value = true;
+    focusChatWindow();
+  } else {
+    isChatOnBottom.value = true;
+    unFocusChatWindow();
+  }
+};
 
 const focusChatWindow = () => {
   isChatWindowFocused.value = true;
@@ -80,12 +102,19 @@ const unFocusChatWindow = () => {
 watch(chat, async () => {
   // Not working properly without this await
   await (() => {})();
-  scrollToBottom();
+  autoScrollToBottom();
 });
 
-const scrollToBottom = () => {
+const autoScrollToBottom = () => {
   if (chatWindow.value && !isChatWindowFocused.value) {
     chatWindow.value.scrollTop = chatWindow.value.scrollHeight;
+  }
+};
+
+const scrollToBottom = () => {
+  if (chatWindow.value) {
+    chatWindow.value.scrollTop = chatWindow.value.scrollHeight;
+    unFocusChatWindow();
   }
 };
 
@@ -100,6 +129,7 @@ const submitMessage = () => {
 @import "../../styles/settings.scss";
 .chat-wrapper {
   height: 100%;
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -111,6 +141,10 @@ const submitMessage = () => {
     position: relative;
     overflow: auto;
     padding: 1.5rem;
+
+    &.scrollSmooth {
+      scroll-behavior: smooth;
+    }
 
     &.smAndDown {
       padding: 0.8rem;
@@ -131,10 +165,20 @@ const submitMessage = () => {
     }
   }
 
-  .actions {
-    width: fit-content;
-    margin-left: auto;
-    margin-top: -0.8rem;
+  .bottom-row {
+    position: relative;
+    .actions {
+      width: fit-content;
+      margin-left: auto;
+      margin-top: -0.8rem;
+    }
+  }
+
+  .btn-scroll-down {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: -3.5rem;
   }
 }
 </style>
