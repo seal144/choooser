@@ -6,25 +6,77 @@
       ref="chatWindow"
       @click="focusChatWindow"
       v-click-outside="unFocusChatWindow"
-      @scroll="setShowScrollBottomBtn"
+      @scroll="handleChatScroll"
     >
       <div v-if="errorChat" class="chat-error">
         {{ errorChat }}
       </div>
       <v-progress-circular
         class="chat-loading"
-        v-else-if="chat === null"
+        v-else-if="wholeChat === null"
         indeterminate
         size="48"
         :width="lineThickness"
       ></v-progress-circular>
-      <Message
-        v-else
-        v-for="message in chat"
-        :key="message.createTime.nanoseconds"
-        :message="message"
-        :participantsList="[...room.guests, ...room.pastGuests, room.owner]"
-      />
+      <div v-else>
+        <!-- TODO extract to component -->
+        <v-lazy transition="fade-transition" v-if="isOldestChatMounted">
+          <div>
+            <Message
+              v-for="(message, index) in oldestChat"
+              :key="index"
+              :message="message"
+              :participantsList="[
+                ...room.guests,
+                ...room.pastGuests,
+                room.owner,
+              ]"
+            />
+          </div>
+        </v-lazy>
+        <v-lazy
+          transition="fade-transition"
+          v-if="isOlderChatMounted"
+          @vue:updated="isOldestChatMounted = true"
+        >
+          <div>
+            <Message
+              v-for="(message, index) in olderChat"
+              :key="index"
+              :message="message"
+              :participantsList="[
+                ...room.guests,
+                ...room.pastGuests,
+                room.owner,
+              ]"
+            />
+          </div>
+        </v-lazy>
+        <v-lazy
+          transition="fade-transition"
+          v-if="isOldChatMounted"
+          @vue:updated="isOlderChatMounted = true"
+        >
+          <div>
+            <Message
+              v-for="(message, index) in oldChat"
+              :key="index"
+              :message="message"
+              :participantsList="[
+                ...room.guests,
+                ...room.pastGuests,
+                room.owner,
+              ]"
+            />
+          </div>
+        </v-lazy>
+        <Message
+          v-for="(message, index) in latestChat"
+          :key="index"
+          :message="message"
+          :participantsList="[...room.guests, ...room.pastGuests, room.owner]"
+        />
+      </div>
     </div>
     <div class="bottom-row">
       <v-form v-model="form" @submit.prevent="submitMessage">
@@ -40,7 +92,7 @@
         </div>
       </v-form>
       <ButtonScrollToBottom
-        v-if="!errorChat && chat?.length && showScrollBottomBtn"
+        v-if="!errorChat && wholeChat?.length && showScrollBottomBtn"
         :text="scrollBottomBtnText"
         class="btn-scroll-down"
         @click="scrollToBottom"
@@ -50,7 +102,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, PropType, watch } from "vue";
+import { computed, ref, PropType, watch } from "vue";
 import { useDisplay } from "vuetify";
 
 import { lineThickness } from "@/plugins/vuetify";
@@ -70,7 +122,20 @@ const props = defineProps({
 
 const { smAndDown } = useDisplay();
 const { sendMessage, error: errorSendMessage } = useSendMessage();
-const { chat, error: errorChat } = subscribeChat(props.room.id);
+const { chat: wholeChat, error: errorChat } = subscribeChat(props.room.id);
+
+const latestChat = computed(() => {
+  return wholeChat.value?.slice(-10);
+});
+const oldChat = computed(() => {
+  return wholeChat.value?.slice(-20, -10);
+});
+const olderChat = computed(() => {
+  return wholeChat.value?.slice(-30, -20);
+});
+const oldestChat = computed(() => {
+  return wholeChat.value?.slice(0, -30);
+});
 
 const form = ref(false);
 const message = ref("");
@@ -79,19 +144,28 @@ const scrollSmooth = ref(false);
 const scrollBottomBtnText = ref("");
 const showScrollBottomBtn = ref(false);
 const isChatWindowFocused = ref(false);
+const isOldChatMounted = ref(false);
+const isOlderChatMounted = ref(false);
+const isOldestChatMounted = ref(false);
 
-const setShowScrollBottomBtn = () => {
+const handleChatScroll = () => {
   if (
     chatWindow.value &&
-    chatWindow.value.scrollHeight - chatWindow.value.scrollTop > 700
+    chatWindow.value.scrollHeight - chatWindow.value.scrollTop > 800
   ) {
+    // TODO add condition before ref update
     showScrollBottomBtn.value = true;
     scrollSmooth.value = true;
     focusChatWindow();
   } else {
+    // TODO add condition before ref update
     showScrollBottomBtn.value = false;
     unFocusChatWindow();
     scrollBottomBtnText.value = "";
+  }
+
+  if (!isOldChatMounted.value) {
+    isOldChatMounted.value = true;
   }
 };
 
@@ -102,7 +176,7 @@ const unFocusChatWindow = () => {
   isChatWindowFocused.value = false;
 };
 
-watch(chat, async () => {
+watch(wholeChat, async () => {
   // Not working properly without this await
   await (() => {})();
   autoScrollToBottom();
