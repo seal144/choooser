@@ -170,15 +170,17 @@ const handleChatScroll = () => {
     chatWindow.value.scrollHeight - chatWindow.value.scrollTop >
       nearBottomValue.value
   ) {
-    // TODO add condition before ref update
-    showScrollBottomBtn.value = true;
-    scrollSmooth.value = true;
-    focusChatWindow();
+    if (!showScrollBottomBtn.value || !scrollSmooth.value) {
+      showScrollBottomBtn.value = true;
+      scrollSmooth.value = true;
+      focusChatWindow();
+    }
   } else {
-    // TODO add condition before ref update
-    showScrollBottomBtn.value = false;
-    unFocusChatWindow();
-    scrollBottomBtnText.value = "";
+    if (showScrollBottomBtn.value || !!scrollBottomBtnText.value) {
+      showScrollBottomBtn.value = false;
+      scrollBottomBtnText.value = "";
+      unFocusChatWindow();
+    }
   }
 
   if (!isOldChatMounted.value) {
