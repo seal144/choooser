@@ -124,19 +124,6 @@ const { smAndDown } = useDisplay();
 const { sendMessage, error: errorSendMessage } = useSendMessage();
 const { chat: wholeChat, error: errorChat } = subscribeChat(props.room.id);
 
-const latestChat = computed(() => {
-  return wholeChat.value?.slice(-10);
-});
-const oldChat = computed(() => {
-  return wholeChat.value?.slice(-20, -10);
-});
-const olderChat = computed(() => {
-  return wholeChat.value?.slice(-30, -20);
-});
-const oldestChat = computed(() => {
-  return wholeChat.value?.slice(0, -30);
-});
-
 const form = ref(false);
 const message = ref("");
 const chatWindow = ref<HTMLDivElement | null>(null);
@@ -147,11 +134,33 @@ const isChatWindowFocused = ref(false);
 const isOldChatMounted = ref(false);
 const isOlderChatMounted = ref(false);
 const isOldestChatMounted = ref(false);
+const newMessages = ref(-1);
+
+const ChatChunk = 30;
+
+const latestChat = computed(() => {
+  return wholeChat.value?.slice(-(ChatChunk * 1 + newMessages.value));
+});
+const oldChat = computed(() => {
+  return wholeChat.value?.slice(
+    -(ChatChunk * 2 + newMessages.value),
+    -(ChatChunk * 1 + newMessages.value)
+  );
+});
+const olderChat = computed(() => {
+  return wholeChat.value?.slice(
+    -(ChatChunk * 3 + newMessages.value),
+    -(ChatChunk * 2 + newMessages.value)
+  );
+});
+const oldestChat = computed(() => {
+  return wholeChat.value?.slice(0, -(ChatChunk * 3 + newMessages.value));
+});
 
 const handleChatScroll = () => {
   if (
     chatWindow.value &&
-    chatWindow.value.scrollHeight - chatWindow.value.scrollTop > 800
+    chatWindow.value.scrollHeight - chatWindow.value.scrollTop > 700
   ) {
     // TODO add condition before ref update
     showScrollBottomBtn.value = true;
@@ -177,8 +186,8 @@ const unFocusChatWindow = () => {
 };
 
 watch(wholeChat, async () => {
-  // Not working properly without this await
-  await (() => {})();
+  // Not working properly without await
+  await newMessages.value++;
   autoScrollToBottom();
 });
 
