@@ -4,7 +4,11 @@
       <span>{{ displayName }}</span>
       <span>{{ " " }}{{ formattedTime }}</span>
     </div>
-    <div class="message-body">{{ message.message }}</div>
+    <div class="message-body">
+      <p v-for="(paragraph, index) in paragraphs" :key="index">
+        {{ paragraph }}
+      </p>
+    </div>
   </div>
 </template>
 <script lang="ts" setup>
@@ -30,6 +34,10 @@ const { user } = getUser();
 const { smAndDown } = useDisplay();
 
 const isLoggedUser = ref(props.message.authorId === user.value?.uid);
+
+const paragraphs = computed(() => {
+  return props.message.message.split("\n");
+});
 
 const displayName = computed(() => {
   return props.participantsList.find(
@@ -86,7 +94,6 @@ const formattedTime = computed(() => {
     margin-left: 3rem;
 
     & .message-body {
-      text-align: right;
       background: rgb(var(--v-theme-surface3));
 
       &::after {
