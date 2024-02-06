@@ -135,6 +135,9 @@ const isOldChatMounted = ref(false);
 const isOlderChatMounted = ref(false);
 const isOldestChatMounted = ref(false);
 const newMessages = ref(-1);
+const isFirefox = computed(() => {
+  return /firefox/i.test(navigator.userAgent);
+});
 
 const ChatChunk = 30;
 
@@ -157,10 +160,15 @@ const oldestChat = computed(() => {
   return wholeChat.value?.slice(0, -(ChatChunk * 3 + newMessages.value));
 });
 
+const nearBottomValue = computed(() => {
+  return isFirefox.value ? 850 : 600;
+});
+
 const handleChatScroll = () => {
   if (
     chatWindow.value &&
-    chatWindow.value.scrollHeight - chatWindow.value.scrollTop > 700
+    chatWindow.value.scrollHeight - chatWindow.value.scrollTop >
+      nearBottomValue.value
   ) {
     // TODO add condition before ref update
     showScrollBottomBtn.value = true;
