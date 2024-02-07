@@ -19,7 +19,7 @@ const LightPalette = {
   primary: "#3b3d4a",
   background: "#fff",
   surface: "#ededf5",
-  surface2: "#e7f7f7",
+  surface2: "#ccdddd",
   surface3: "#fffffd",
 };
 
