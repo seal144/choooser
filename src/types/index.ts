@@ -13,6 +13,7 @@ export enum Dialogs {
   RoomInfoLogin = "RoomLogin",
   RoomInfoIsFull = "RoomInfoIsFull",
   JoinRoomFromURL = "joinRoomFromURL",
+  AppInfo = "appInfo",
 }
 
 export enum Collection {
