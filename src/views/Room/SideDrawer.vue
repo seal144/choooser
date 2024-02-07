@@ -16,7 +16,7 @@
           <HeaderCard>{{ formattedTime }}</HeaderCard>
         </div>
         <div class="prop-container">
-          <p>Owner:</p>
+          <p>Host:</p>
           <PersonCard :name="room.owner.displayName" />
         </div>
         <p v-if="room.guests.length">Guests:</p>
