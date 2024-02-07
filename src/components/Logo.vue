@@ -1,11 +1,14 @@
 <template>
   <div class="logo-container" :class="{ 'big-logo': big }">
     <div class="logo-squere"></div>
-    <div class="logo-text" v-if="!props.collapse">CHOOSER</div>
+    <div class="logo-text" v-if="!props.collapse">{{ appName }}</div>
   </div>
 </template>
 
 <script lang="ts" setup>
+// const appName = "CHOOSER";
+const appName = "COMMUNICATOR";
+
 const props = defineProps({
   collapse: {
     type: Boolean,
