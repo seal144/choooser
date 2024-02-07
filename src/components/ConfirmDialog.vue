@@ -3,7 +3,7 @@
     :identification="dialogIdentification"
     :title="title"
     :close-label="closeLabel"
-    small
+    size="small"
   >
     <template v-slot:ActivatorButtonLabel>
       <slot name="activatorButton" class="activatorButton"></slot>

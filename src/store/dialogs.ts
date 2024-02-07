@@ -16,6 +16,7 @@ export const useDialogsStore = defineStore("dialogs", {
       [Dialogs.RoomInfoLogin]: false,
       [Dialogs.RoomInfoIsFull]: false,
       [Dialogs.JoinRoomFromURL]: false,
+      [Dialogs.AppInfo]: false,
     },
   }),
 });
