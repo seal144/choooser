@@ -19,62 +19,28 @@
         :width="lineThickness"
       ></v-progress-circular>
       <div v-else>
-        <!-- TODO extract to component -->
-        <v-lazy transition="fade-transition" v-if="isOldestChatMounted">
-          <div>
-            <Message
-              v-for="(message, index) in oldestChat"
-              :key="index"
-              :message="message"
-              :participantsList="[
-                ...room.guests,
-                ...room.pastGuests,
-                room.owner,
-              ]"
-            />
-          </div>
-        </v-lazy>
-        <v-lazy
-          transition="fade-transition"
-          v-if="isOlderChatMounted"
-          @vue:updated="isOldestChatMounted = true"
-        >
-          <div>
-            <Message
-              v-for="(message, index) in olderChat"
-              :key="index"
-              :message="message"
-              :participantsList="[
-                ...room.guests,
-                ...room.pastGuests,
-                room.owner,
-              ]"
-            />
-          </div>
-        </v-lazy>
-        <v-lazy
-          transition="fade-transition"
-          v-if="isOldChatMounted"
-          @vue:updated="isOlderChatMounted = true"
-        >
-          <div>
-            <Message
-              v-for="(message, index) in oldChat"
-              :key="index"
-              :message="message"
-              :participantsList="[
-                ...room.guests,
-                ...room.pastGuests,
-                room.owner,
-              ]"
-            />
-          </div>
-        </v-lazy>
+        <LazyMessagesChunk
+          :isMounted="isOldestChatMounted"
+          :messagesChunk="oldestChat"
+          :participantsList="participantsList"
+        />
+        <LazyMessagesChunk
+          :isMounted="isOlderChatMounted"
+          @updated="isOldestChatMounted = true"
+          :messagesChunk="olderChat"
+          :participantsList="participantsList"
+        />
+        <LazyMessagesChunk
+          :isMounted="isOldChatMounted"
+          @updated="isOlderChatMounted = true"
+          :messagesChunk="oldChat"
+          :participantsList="participantsList"
+        />
         <Message
           v-for="(message, index) in latestChat"
           :key="index"
           :message="message"
-          :participantsList="[...room.guests, ...room.pastGuests, room.owner]"
+          :participantsList="participantsList"
         />
       </div>
     </div>
@@ -108,6 +74,7 @@ import { useDisplay } from "vuetify";
 import { lineThickness } from "@/plugins/vuetify";
 import { ButtonIcon, ButtonScrollToBottom, Textarea } from "@/components";
 import Message from "./Message.vue";
+import LazyMessagesChunk from "./LazyMessagesChunk.vue";
 import useSendMessage from "@/composables/useSendMessage";
 import subscribeChat from "@/composables/subscribeChat";
 import { messageValidation } from "@/utils/validation";
@@ -142,26 +109,46 @@ const isFirefox = computed(() => {
 const ChatChunk = 30;
 
 const latestChat = computed(() => {
-  return wholeChat.value?.slice(-(ChatChunk * 1 + newMessages.value));
+  if (wholeChat.value) {
+    return wholeChat.value.slice(-(ChatChunk * 1 + newMessages.value));
+  } else {
+    return [];
+  }
 });
 const oldChat = computed(() => {
-  return wholeChat.value?.slice(
-    -(ChatChunk * 2 + newMessages.value),
-    -(ChatChunk * 1 + newMessages.value)
-  );
+  if (wholeChat.value) {
+    return wholeChat.value?.slice(
+      -(ChatChunk * 2 + newMessages.value),
+      -(ChatChunk * 1 + newMessages.value)
+    );
+  } else {
+    return [];
+  }
 });
 const olderChat = computed(() => {
-  return wholeChat.value?.slice(
-    -(ChatChunk * 3 + newMessages.value),
-    -(ChatChunk * 2 + newMessages.value)
-  );
+  if (wholeChat.value) {
+    return wholeChat.value?.slice(
+      -(ChatChunk * 3 + newMessages.value),
+      -(ChatChunk * 2 + newMessages.value)
+    );
+  } else {
+    return [];
+  }
 });
 const oldestChat = computed(() => {
-  return wholeChat.value?.slice(0, -(ChatChunk * 3 + newMessages.value));
+  if (wholeChat.value) {
+    return wholeChat.value?.slice(0, -(ChatChunk * 3 + newMessages.value));
+  } else {
+    return [];
+  }
 });
 
 const nearBottomValue = computed(() => {
   return isFirefox.value ? 850 : 600;
+});
+
+const participantsList = computed(() => {
+  return [...props.room.guests, ...props.room.pastGuests, props.room.owner];
 });
 
 const handleChatScroll = () => {
@@ -196,7 +183,7 @@ const unFocusChatWindow = () => {
 };
 
 watch(wholeChat, async () => {
-  // Not working properly without await
+  // the autoScrollToBottom is not working properly without this await
   await newMessages.value++;
   autoScrollToBottom();
 });
