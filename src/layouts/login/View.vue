@@ -17,9 +17,9 @@
               </p> -->
               <h3 class="mb-3">&#128525; Hello traveler in the COMMUNICATOR</h3>
               <p>
-                This web app is for group chatting with other users. Host a room
-                and invite your friends for some nice chatting. You can use the
-                app as a guest user, but for the best experience, it is
+                This web app is for group chatting with other people. Host a
+                room and invite your friends for some nice chatting. You can use
+                the app with a guest account, but for the best experience, it is
                 recommended to create a user account.
               </p>
             </v-card>

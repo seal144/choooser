@@ -1,3 +1,4 @@
+import AppInfoDialog from "./AppInfoDialog.vue";
 import Button from "./Button.vue";
 import ButtonIcon from "./ButtonIcon.vue";
 import ButtonScrollToBottom from "./ButtonScrollToBottom.vue";
@@ -17,6 +18,7 @@ import TextField from "./TextField.vue";
 import PersonCard from "./PersonCard.vue";
 
 export {
+  AppInfoDialog,
   Button,
   ButtonIcon,
   ButtonScrollToBottom,

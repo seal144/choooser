@@ -1,10 +1,10 @@
 <template>
   <v-dialog
     v-model="dialogs.isOpen[props.identification]"
-    :width="small ? '370' : '500'"
+    :width="dialogWidth"
     transition="dialog-top-transition"
     class="default-dialog"
-    :class="{ small }"
+    :class="{ small: size === 'small' }"
   >
     <template v-slot:activator>
       <div @click="openDialog" class="activator-container">
@@ -21,7 +21,7 @@
         <v-card-text :class="{ xs: xs }">
           <slot name="content"></slot>
         </v-card-text>
-        <v-card-actions :class="{ xs: xs }">
+        <v-card-actions :class="{ xs, 'actions-bordered': actionsWithBorder }">
           <Button @click="closeDialog" v-if="closeLabel">{{
             closeLabel
           }}</Button>
@@ -33,7 +33,7 @@
 </template>
 
 <script lang="ts" setup>
-import { watchEffect, PropType } from "vue";
+import { computed, watchEffect, PropType } from "vue";
 import { useDisplay } from "vuetify";
 
 import { useDialogsStore } from "@/store/dialogs";
@@ -55,7 +55,11 @@ const props = defineProps({
     type: String,
     required: false,
   },
-  small: {
+  size: {
+    type: String as PropType<"small" | "large">,
+    required: false,
+  },
+  actionsWithBorder: {
     type: Boolean,
     default: false,
   },
@@ -64,6 +68,17 @@ const props = defineProps({
 const emit = defineEmits(["close"]);
 
 const dialogs = useDialogsStore();
+
+const dialogWidth = computed(() => {
+  switch (props.size) {
+    case "small":
+      return 370;
+    case "large":
+      return 800;
+    default:
+      return 500;
+  }
+});
 
 const openDialog = () => {
   dialogs.isOpen[props.identification] = true;
@@ -81,6 +96,11 @@ watchEffect(() => {
 </script>
 
 <style lang="scss">
+@import "../styles/settings.scss";
+
+$vertical-actions-padding: 1rem;
+$vertical-actions-padding-xs: 0.5rem;
+
 .default-dialog {
   .activator-container {
     width: fit-content;
@@ -96,6 +116,8 @@ watchEffect(() => {
 
   .v-card-text {
     padding: 2rem !important;
+    max-height: 90vh;
+    overflow: auto;
 
     &.xs {
       padding: 1.5rem 0.5rem 1.5rem !important;
@@ -103,13 +125,22 @@ watchEffect(() => {
   }
 
   .v-card-actions {
-    padding: 0 2rem 1.5rem;
+    padding: 0 2rem $vertical-actions-padding;
     gap: 1.875rem;
     min-height: unset;
 
     &.xs {
       gap: 0.5rem;
-      padding: 0 0.5rem 0.5rem;
+      padding: 0 0.5rem $vertical-actions-padding-xs;
+    }
+
+    &.actions-bordered {
+      border-top: $border-style;
+      padding-top: $vertical-actions-padding;
+
+      &.xs {
+        padding-top: $vertical-actions-padding-xs;
+      }
     }
 
     & .v-btn {
