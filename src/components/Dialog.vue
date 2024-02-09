@@ -74,7 +74,7 @@ const dialogWidth = computed(() => {
     case "small":
       return 370;
     case "large":
-      return 900;
+      return 800;
     default:
       return 500;
   }

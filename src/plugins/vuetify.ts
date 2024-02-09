@@ -89,6 +89,14 @@ const vuetify = createVuetify({
     VNavigationDrawer: {
       style: `${borderStyle}`,
     },
+    VExpansionPanel: {
+      rounded: "0",
+      style: `${borderStyle}`,
+    },
+    VExpansionPanelTitle: {
+      style:
+        "background: rgb(var(--v-theme-primary)); color: rgb(var(--v-theme-on-primary))",
+    },
   },
   theme: {
     defaultTheme: defaultTheme.value,
