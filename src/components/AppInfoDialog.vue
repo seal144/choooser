@@ -21,13 +21,12 @@
         <ExtensionPanelSingle title="HOW TO USE">
           <ul class="description list" :class="{ xs }">
             <li>
-              To use the app you have to create a room or join to already
-              created room.
+              To use the app, you can either create a room or join an existing
+              one
             </li>
             <li>
-              To share a room with other people you have to pass them a room
-              name and password (if exists) or the room URL and password (if
-              exists).
+              To invite others to a room, share its name and password (if
+              exists), or simply the room URL.
             </li>
             <li>
               In rooms, there are two roles: host and guest. The host is a
@@ -40,7 +39,8 @@
         <ExtensionPanelSingle title="NOTES">
           <ul class="description list" :class="{ xs }">
             <li>
-              The rooms are for temporary usage, after 14 days they are erased.
+              Rooms are temporary and will be automatically deleted after 14
+              days.
             </li>
             <li>
               {{
@@ -50,12 +50,12 @@
               }}
             </li>
             <li>
-              You can use a guest account. But the app would recognize you only
-              in a specific browser where you have created it, so in another
-              browser you can not use it. It is not possible to logout from a
-              guest account, you have to delete it in settings, to be able to
-              create a regular user account (there are plans to create a process
-              of transitioning guest accounts into regular user accounts). For a
+              You can use a guest account, but it is tied to the specific
+              browser where it was created. Therefore, it cannot be accessed
+              from another browser. It is not possible to logout from a guest
+              account, you have to delete it in settings, to be able to create a
+              regular user account (there are plans to create a process of
+              transitioning guest accounts into regular user accounts). For a
               better user experience, it is recommended to use other forms of
               authentication than a guest account.
             </li>
