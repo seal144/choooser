@@ -2,11 +2,10 @@
   <router-view />
 </template>
 
-<script lang="ts" setup>
-</script>
+<script lang="ts" setup></script>
 
 <style lang="scss">
-  * {
-    font-family: 'Roboto Mono', monospace;
-  }
+* {
+  font-family: "Roboto Mono", monospace;
+}
 </style>
