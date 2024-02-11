@@ -1,9 +1,10 @@
 <template>
   <v-container>
     <Logo big />
+    <CookieBanner />
   </v-container>
 </template>
 
 <script lang="ts" setup>
-import { Logo } from "@/components";
+import { CookieBanner, Logo } from "@/components";
 </script>

@@ -4,6 +4,7 @@ import ButtonIcon from "./ButtonIcon.vue";
 import ButtonScrollToBottom from "./ButtonScrollToBottom.vue";
 import ConfirmDeleteAbandonRoom from "./ConfirmDeleteAbandonRoom.vue";
 import ConfirmDialog from "./ConfirmDialog.vue";
+import CookieBanner from "./CookieBanner.vue";
 import Dialog from "./Dialog.vue";
 import FormError from "./FormError.vue";
 import HeaderCard from "./HeaderCard.vue";
@@ -24,6 +25,7 @@ export {
   ButtonScrollToBottom,
   ConfirmDeleteAbandonRoom,
   ConfirmDialog,
+  CookieBanner,
   Dialog,
   FormError,
   HeaderCard,

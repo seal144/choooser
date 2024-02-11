@@ -19,16 +19,16 @@ const LightPalette = {
   primary: "#3b3d4a",
   background: "#fff",
   surface: "#ededf5",
-  surface2: "#ccdddd",
-  surface3: "#fffffd",
+  surfaceVariant: "#ccdddd",
+  surfaceVariant2: "#fffffd",
 };
 
 const DarkPalette = {
   primary: "#74b0ab",
   background: "#3b3d4a",
   surface: "#3f404a",
-  surface2: "#455550",
-  surface3: "#606060",
+  surfaceVariant: "#455550",
+  surfaceVariant2: "#606060",
 };
 
 export const lineThickness = "3";
@@ -110,8 +110,9 @@ const vuetify = createVuetify({
           "on-background": LightPalette.primary,
           surface: LightPalette.surface,
           "on-surface": LightPalette.primary,
-          surface2: LightPalette.surface2,
-          surface3: LightPalette.surface3,
+          "surface-variant": LightPalette.surfaceVariant,
+          "on-surface-variant": LightPalette.primary,
+          "surface-variant2": LightPalette.surfaceVariant2,
         },
       },
       dark: {
@@ -123,8 +124,9 @@ const vuetify = createVuetify({
           "on-background": DarkPalette.primary,
           surface: DarkPalette.surface,
           "on-surface": DarkPalette.primary,
-          surface2: DarkPalette.surface2,
-          surface3: DarkPalette.surface3,
+          "surface-variant": DarkPalette.surfaceVariant,
+          "on-surface-variant": DarkPalette.primary,
+          "surface-variant2": DarkPalette.surfaceVariant2,
         },
       },
     },
