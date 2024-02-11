@@ -24,6 +24,7 @@
         <AppInfoDialog />
       </div>
     </v-container>
+    <CookieBanner />
   </v-app-bar>
 </template>
 
@@ -35,7 +36,13 @@ import { signOut } from "firebase/auth";
 
 import { useDialogsStore } from "@/store/dialogs";
 import { auth } from "@/firebase/config";
-import { AppInfoDialog, Button, Logo, SettingsDialog } from "@/components";
+import {
+  AppInfoDialog,
+  Button,
+  CookieBanner,
+  Logo,
+  SettingsDialog,
+} from "@/components";
 import getUser from "@/composables/getUser";
 import { RoutesNames } from "@/router";
 import { Dialogs } from "@/types";

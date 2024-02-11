@@ -73,7 +73,7 @@ const formattedTime = computed(() => {
   }
   .message-body {
     position: relative;
-    background: rgb(var(--v-theme-surface2));
+    background: rgb(var(--v-theme-surface-variant));
     padding: 0.5rem 1rem;
     width: fit-content;
 
@@ -84,8 +84,8 @@ const formattedTime = computed(() => {
       left: -0.9rem;
       border-width: 0.5rem;
       border-style: solid;
-      border-color: transparent rgb(var(--v-theme-surface2))
-        rgb(var(--v-theme-surface2)) transparent;
+      border-color: transparent rgb(var(--v-theme-surface-variant))
+        rgb(var(--v-theme-surface-variant)) transparent;
     }
   }
   &.loggedUser {
@@ -94,13 +94,14 @@ const formattedTime = computed(() => {
     margin-left: 3rem;
 
     & .message-body {
-      background: rgb(var(--v-theme-surface3));
+      background: rgb(var(--v-theme-surface-variant2));
 
       &::after {
         left: unset;
         right: -0.9rem;
-        border-color: transparent transparent rgb(var(--v-theme-surface3))
-          rgb(var(--v-theme-surface3));
+        border-color: transparent transparent
+          rgb(var(--v-theme-surface-variant2))
+          rgb(var(--v-theme-surface-variant2));
       }
     }
   }
