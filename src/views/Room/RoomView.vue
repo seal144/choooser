@@ -12,7 +12,7 @@
       <HeaderCard class="content-title" :class="{ xs }">{{
         room.name
       }}</HeaderCard>
-      <div class="chat-container">
+      <div class="chat-container" :class="{ xs }">
         <Chat :room="room" />
       </div>
     </div>
@@ -79,5 +79,9 @@ const drawer = ref(false);
 .chat-container {
   height: calc(100vh - 180px);
   min-height: 400px;
+
+  &.xs {
+    height: calc(100vh - 230px);
+  }
 }
 </style>
