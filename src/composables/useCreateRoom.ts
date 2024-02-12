@@ -35,7 +35,7 @@ const createRoom = async (roomFormData: RoomFormData) => {
     const groupId = roomFormData.password
       ? CryptoJS.AES.encrypt(
           roomFormData.password,
-          import.meta.env.VITE_CRYPTO_JS_SECRET_KEY
+          import.meta.env.VITE_CJS_K
         ).toString()
       : "";
 

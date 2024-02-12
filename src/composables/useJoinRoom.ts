@@ -36,7 +36,7 @@ const validateRoom = (roomGroupId: string, passedGroupId: string) => {
   }
   const parsedRoomGroupId = CryptoJS.AES.decrypt(
     roomGroupId,
-    import.meta.env.VITE_CRYPTO_JS_SECRET_KEY
+    import.meta.env.VITE_CJS_K
   ).toString(CryptoJS.enc.Utf8);
 
   if (parsedRoomGroupId !== passedGroupId) {
