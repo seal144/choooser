@@ -32,7 +32,7 @@ const login = async () => {
       const userRef = doc(db, Collection.Users, auth.currentUser.uid);
       const snapshot = await getDoc(userRef);
 
-      if (!snapshot.exists) {
+      if (!snapshot.exists()) {
         await initDisplayName();
       }
     }
