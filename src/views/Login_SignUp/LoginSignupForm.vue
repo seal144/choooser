@@ -126,6 +126,13 @@ const onSubmit = computed(() => {
   return props.variant === "login" ? submitLogin : submitSignup;
 });
 
+const resetErrors = () => {
+  errorSignup.value = null;
+  errorLogin.value = null;
+  errorAnonymous. value = null;
+  errorGoogle.value = null;
+}
+
 const submitLogin = async () => {
   if (!form.value) return;
 
@@ -133,6 +140,7 @@ const submitLogin = async () => {
 
   if (!errorLogin.value) {
     router.push({ name: "Home" });
+    resetErrors();
   }
 };
 
@@ -143,6 +151,7 @@ const submitSignup = async () => {
 
   if (!errorSignup.value) {
     router.push({ name: "Home" });
+    resetErrors();
   }
 };
 
@@ -151,6 +160,7 @@ const handleContinueAsGuest = async () => {
 
   if (!errorAnonymous.value) {
     router.push({ name: "Home" });
+    resetErrors();
   }
 };
 
@@ -159,6 +169,7 @@ const handleUseGoogle = async () => {
 
   if (!errorGoogle.value) {
     router.push({ name: "Home" });
+    resetErrors();
   }
 };
 </script>
