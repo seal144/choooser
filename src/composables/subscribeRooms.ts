@@ -4,6 +4,7 @@ import {
   Timestamp,
   collection,
   onSnapshot,
+  orderBy,
   query as queryFirestore,
   where,
 } from "firebase/firestore";
@@ -32,11 +33,13 @@ const subscribeRooms = (roomRole: RoomRole) => {
             `${RoomField.Owner}.${UserField.Id}`,
             "==",
             auth.currentUser?.uid
-          )
+          ),
+          orderBy(RoomField.CreateTime, "desc")
         )
       : queryFirestore(
           collectionRef,
-          where(RoomField.GuestsIds, "array-contains", auth.currentUser?.uid)
+          where(RoomField.GuestsIds, "array-contains", auth.currentUser?.uid),
+          orderBy(RoomField.CreateTime, "desc")
         );
 
   const unsubscribe = onSnapshot(query, (snapshot) => {
