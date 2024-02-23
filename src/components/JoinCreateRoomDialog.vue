@@ -50,6 +50,7 @@
 
 <script lang="ts" setup>
 import { computed, ref, PropType } from "vue";
+import { useRouter } from "vue-router";
 
 import { useDialogsStore } from "@/store/dialogs";
 import { Button, Dialog, TextField } from "@/components";
@@ -73,6 +74,8 @@ const props = defineProps({
     required: false,
   },
 });
+
+const router = useRouter();
 
 const DialogData = computed(() => {
   switch (props.variant) {
@@ -153,10 +156,14 @@ const onSubmit = async () => {
   // if (!form.value) return;
   if (!isNameValid || !isPasswordValid) return;
 
-  await submitAction({ name: name.value, password: password.value });
+  const newRoomId = await submitAction({
+    name: name.value,
+    password: password.value,
+  });
 
   if (!error.value) {
     dialogs.isOpen[identification] = false;
+    router.push(`/room/${newRoomId}`);
   }
 };
 </script>

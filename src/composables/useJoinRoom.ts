@@ -97,6 +97,8 @@ const joinRoom = async (roomFormData: RoomFormData) => {
     await updateDoc(docRef, updates);
 
     loading.value = false;
+
+    return roomId;
   } catch (err) {
     const { message } = err as Error;
     console.error(message);

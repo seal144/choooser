@@ -64,6 +64,8 @@ const createRoom = async (roomFormData: RoomFormData) => {
     await setDoc(chatRef, { chat: [] });
 
     loading.value = false;
+
+    return response.id;
   } catch (err) {
     const { message } = err as Error;
     console.error(message);
