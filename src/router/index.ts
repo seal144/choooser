@@ -79,7 +79,7 @@ const routes = [
     beforeEnter: requireNoAuth,
   },
   {
-    path: "/Signup",
+    path: "/signup",
     component: () => import("@/layouts/login/Layout.vue"),
     children: [
       {
