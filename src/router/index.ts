@@ -90,6 +90,7 @@ const routes = [
     ],
     beforeEnter: requireNoAuth,
   },
+  { path: "/:pathMatch(.*)*", redirect: "/" },
 ];
 
 const router = createRouter({
