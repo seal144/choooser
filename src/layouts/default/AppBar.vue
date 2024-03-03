@@ -2,26 +2,33 @@
   <v-app-bar>
     <v-container class="default-app-bar">
       <v-app-bar-title> <Logo :collapse="smAndDown" /> </v-app-bar-title>
-      <div v-if="isRoom" class="action-container">
-        <router-link :to="{ name: RoutesNames.Home }">
-          <Button :icon="!smAndUp">
-            <v-icon icon="mdi-close-thick" size="large" /><span v-if="smAndUp">
-              Leave
-            </span>
-          </Button>
-        </router-link>
-      </div>
-      <div v-else class="action-container">
-        <Button @click="openAppInfoDialog" icon
-          ><v-icon icon="mdi-information" size="large"
-        /></Button>
-        <SettingsDialog />
-        <Button @click="handleLogout" :icon="!smAndUp" v-if="!user?.isAnonymous"
-          ><v-icon icon="mdi-logout" size="large" /><span v-if="smAndUp"
-            >Logout</span
-          ></Button
-        >
-        <AppInfoDialog />
+      <div v-if="!!user">
+        <div v-if="isRoom" class="action-container">
+          <router-link :to="{ name: RoutesNames.Home }">
+            <Button :icon="!smAndUp">
+              <v-icon icon="mdi-close-thick" size="large" /><span
+                v-if="smAndUp"
+              >
+                Leave
+              </span>
+            </Button>
+          </router-link>
+        </div>
+        <div v-else class="action-container">
+          <Button @click="openAppInfoDialog" icon
+            ><v-icon icon="mdi-information" size="large"
+          /></Button>
+          <SettingsDialog />
+          <Button
+            @click="handleLogout"
+            :icon="!smAndUp"
+            v-if="!user?.isAnonymous"
+            ><v-icon icon="mdi-logout" size="large" /><span v-if="smAndUp"
+              >Logout</span
+            ></Button
+          >
+          <AppInfoDialog />
+        </div>
       </div>
     </v-container>
     <CookieBanner />
