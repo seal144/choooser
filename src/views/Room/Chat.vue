@@ -49,7 +49,7 @@
         <Textarea
           :rules="[...messageValidation]"
           v-model="message"
-          placeholder="Write some nice 😉"
+          placeholder="Write something nice 😉"
           @keypress.enter.exact.prevent="submitMessage"
           :error-messages="errorSendMessage ? errorSendMessage : []"
         />
