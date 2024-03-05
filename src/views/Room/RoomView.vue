@@ -1,5 +1,5 @@
 <template>
-  <SideDrawer :room="room" v-model="drawer" @close="drawer = false" />
+  <SideDrawer v-model="drawer" @close="drawer = false" />
   <div class="content-container">
     <ButtonIcon
       icon="mdi-menu-open"
@@ -10,30 +10,29 @@
     />
     <div class="content" :class="{ mdAndDown }">
       <HeaderCard class="content-title" :class="{ xs }">{{
-        room.name
+        room ? room.name : ""
       }}</HeaderCard>
       <div class="chat-container" :class="{ xs }">
-        <Chat :room="room" />
+        <Chat
+          v-if="room"
+          :roomId="room.id"
+          :participantsList="[...room.guests, ...room.pastGuests, room.owner]"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { PropType, ref } from "vue";
+import { ref, toRef } from "vue";
 import { useDisplay } from "vuetify";
 
+import { useRoomStore } from "@/store/roomStore";
 import SideDrawer from "./SideDrawer.vue";
 import Chat from "./Chat.vue";
 import { ButtonIcon, HeaderCard } from "@/components";
-import { RoomDetailsData } from "@/types";
 
-const props = defineProps({
-  room: {
-    type: Object as PropType<RoomDetailsData>,
-    required: true,
-  },
-});
+const room = toRef(useRoomStore(), "room");
 
 const { xs, mdAndDown } = useDisplay();
 
