@@ -4,15 +4,7 @@
       <v-app-bar-title> <Logo :collapse="smAndDown" /> </v-app-bar-title>
       <div v-if="!!user">
         <div v-if="isRoom" class="action-container">
-          <router-link :to="{ name: RoutesNames.Home }">
-            <Button :icon="!smAndUp">
-              <v-icon icon="mdi-close-thick" size="large" /><span
-                v-if="smAndUp"
-              >
-                Leave
-              </span>
-            </Button>
-          </router-link>
+          <ActionButtonsRoom />
         </div>
         <div v-else class="action-container">
           <Button @click="openAppInfoDialog" icon
@@ -36,8 +28,8 @@
 </template>
 
 <script lang="ts" setup>
-import { watchEffect } from "vue";
-import { useRouter } from "vue-router";
+import { computed, watchEffect } from "vue";
+import { useRouter, useRoute } from "vue-router";
 import { useDisplay } from "vuetify";
 import { signOut } from "firebase/auth";
 
@@ -50,15 +42,17 @@ import {
   Logo,
   SettingsDialog,
 } from "@/components";
+import ActionButtonsRoom from "./ActionButtonsRoom.vue";
 import getUser from "@/composables/getUser";
 import { RoutesNames } from "@/router";
 import { Dialogs } from "@/types";
 
-const props = defineProps({
-  isRoom: {
-    type: Boolean,
-    default: false,
-  },
+const route = useRoute();
+
+const isRoom = computed(() => {
+  if (route.name === RoutesNames.Room || route.name === RoutesNames.RoomChat)
+    return true;
+  return false;
 });
 
 const dialogs = useDialogsStore();
@@ -67,7 +61,7 @@ const router = useRouter();
 const { smAndDown, smAndUp } = useDisplay();
 
 watchEffect(() => {
-  if (!user.value && !props.isRoom) {
+  if (!user.value && !isRoom.value) {
     router.push({ name: "Login" });
   }
 });

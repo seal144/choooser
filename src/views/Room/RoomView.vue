@@ -12,7 +12,11 @@
       <HeaderCard class="content-title" :class="{ xs }">{{
         room ? room.name : ""
       }}</HeaderCard>
-      <div class="chat-container" :class="{ xs }">
+      <div
+        v-if="route.name === RoutesNames.RoomChat"
+        class="chat-container"
+        :class="{ xs }"
+      >
         <Chat
           v-if="room"
           :roomId="room.id"
@@ -26,14 +30,16 @@
 <script setup lang="ts">
 import { ref, toRef } from "vue";
 import { useDisplay } from "vuetify";
+import { useRoute } from "vue-router";
 
 import { useRoomStore } from "@/store/roomStore";
 import SideDrawer from "./SideDrawer.vue";
 import Chat from "./Chat.vue";
 import { ButtonIcon, HeaderCard } from "@/components";
+import { RoutesNames } from "@/router";
 
 const room = toRef(useRoomStore(), "room");
-
+const route = useRoute();
 const { xs, mdAndDown } = useDisplay();
 
 const drawer = ref(false);
