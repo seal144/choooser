@@ -17,7 +17,7 @@ const roomStore = useRoomStore();
 
 const useSubscribeRoom = (roomId: string) => {
   const error = ref<string | null>(null);
-  let unsubscribe: Unsubscribe;
+  let unsubscribe: Unsubscribe = () => {};
 
   const unsubscribeRoom = () => {
     unsubscribe();
