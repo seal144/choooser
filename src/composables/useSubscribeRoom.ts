@@ -55,14 +55,15 @@ const useSubscribeRoom = (roomId: string) => {
 
       unsubscribe = onSnapshot(docRef, async (snapshot) => {
         roomStore.room = {
-          id: snapshot.id,
-          createTime: snapshot.get(RoomField.CreateTime),
-          parsedGroupId: snapshot.get(RoomField.GroupId) ? 1 : 0,
-          name: snapshot.get(RoomField.Name),
-          owner: snapshot.get(RoomField.Owner),
-          guestsIds: snapshot.get(RoomField.GuestsIds),
-          guests: snapshot.get(RoomField.Guests),
-          pastGuests: snapshot.get(RoomField.PastGuests),
+          [RoomField.Id]: snapshot.id,
+          [RoomField.CreateTime]: snapshot.get(RoomField.CreateTime),
+          [RoomField.ParsedGroupId]: snapshot.get(RoomField.GroupId) ? 1 : 0,
+          [RoomField.Name]: snapshot.get(RoomField.Name),
+          [RoomField.Owner]: snapshot.get(RoomField.Owner),
+          [RoomField.GuestsIds]: snapshot.get(RoomField.GuestsIds),
+          [RoomField.Guests]: snapshot.get(RoomField.Guests),
+          [RoomField.PastGuests]: snapshot.get(RoomField.PastGuests),
+          [RoomField.Phase]: snapshot.get(RoomField.Phase),
         };
       });
 

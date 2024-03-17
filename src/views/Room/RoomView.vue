@@ -23,12 +23,17 @@
           :participantsList="[...room.guests, ...room.pastGuests, room.owner]"
         />
       </div>
+      <div v-else class="choosing-container">
+        <HeaderCard>
+          {{ phaseDescription }}
+        </HeaderCard>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, toRef } from "vue";
+import { computed, ref, toRef } from "vue";
 import { useDisplay } from "vuetify";
 import { useRoute } from "vue-router";
 
@@ -36,13 +41,35 @@ import { useRoomStore } from "@/store/roomStore";
 import SideDrawer from "./SideDrawer.vue";
 import Chat from "./Chat.vue";
 import { ButtonIcon, HeaderCard } from "@/components";
+import getUser from "@/composables/getUser";
 import { RoutesNames } from "@/router";
+import { Phase } from "@/types";
 
 const room = toRef(useRoomStore(), "room");
 const route = useRoute();
 const { xs, mdAndDown } = useDisplay();
+const { user } = getUser();
 
 const drawer = ref(false);
+const isOwner = computed(() => {
+  return room.value?.owner.id === user.value?.uid;
+});
+
+const phaseDescription = computed(() => {
+  if (room.value) {
+    switch (room.value.phase) {
+      case Phase.SettingOptions:
+        if (isOwner.value) {
+          return "Firstly, as the room host, provide options for choosing.";
+        } else return "Wait for the room host to provide options for choosing";
+      case Phase.Choosing:
+        return "Please, rank the options from best to worst according to your personal preferences and confirm.";
+      case Phase.Results:
+        return "The choosing is done. These are the results.";
+    }
+  }
+  return "Oops, the unexpected error has occurred! There is no room data please try again later.";
+});
 </script>
 
 <style lang="scss" scoped>
@@ -88,5 +115,10 @@ const drawer = ref(false);
   &.xs {
     height: calc(100vh - 230px);
   }
+}
+
+.choosing-container {
+  max-width: 600px;
+  margin: 0 auto;
 }
 </style>
