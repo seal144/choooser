@@ -24,9 +24,10 @@
         />
       </div>
       <div v-else class="choosing-container">
-        <HeaderCard>
+        <HeaderCard class="phase-description">
           {{ phaseDescription }}
         </HeaderCard>
+        <AddOptionsForm />
       </div>
     </div>
   </div>
@@ -40,7 +41,7 @@ import { useRoute } from "vue-router";
 import { useRoomStore } from "@/store/roomStore";
 import SideDrawer from "./SideDrawer.vue";
 import Chat from "./Chat.vue";
-import { ButtonIcon, HeaderCard } from "@/components";
+import { AddOptionsForm, ButtonIcon, HeaderCard } from "@/components";
 import getUser from "@/composables/getUser";
 import { RoutesNames } from "@/router";
 import { Phase } from "@/types";
@@ -120,5 +121,9 @@ const phaseDescription = computed(() => {
 .choosing-container {
   max-width: 600px;
   margin: 0 auto;
+
+  .phase-description {
+    margin-bottom: 1rem;
+  }
 }
 </style>
