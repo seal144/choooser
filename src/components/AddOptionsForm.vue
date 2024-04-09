@@ -4,16 +4,13 @@
       v-model="formOption"
       class="form-option"
       @submit.prevent="onSubmitOption"
-      validate-on="blur lazy"
+      validate-on="submit lazy"
     >
       <TextField
         v-model.trim="option"
         label="Option"
-        :rules="[
-          ...optionValidation,
-          maxOptionsValidation,
-          duplicatesValidation,
-        ]"
+        keydown.enter="submit"
+        :rules="optionInputValidation"
       />
       <ButtonIcon type="submit" icon="mdi-plus" />
     </v-form>
@@ -37,8 +34,17 @@ const maxOptionsValidation = () =>
 const duplicatesValidation = (value: string) =>
   !options.value.includes(value) || "No duplicates allowed";
 
+const optionInputValidation = [
+  ...optionValidation,
+  maxOptionsValidation,
+  duplicatesValidation,
+];
+
 const onSubmitOption = () => {
-  if (!formOption.value || option.value === "") return;
+  const isValid = optionInputValidation.every((validation) => {
+    return validation(option.value) === true;
+  });
+  if (!isValid || option.value === "") return;
   options.value.push(option.value);
   option.value = "";
 };
