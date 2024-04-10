@@ -14,13 +14,13 @@
       />
       <ButtonIcon type="submit" icon="mdi-plus" />
     </v-form>
-    {{ options }}
+    <OptionsList v-if="options.length" :options="options" />
   </v-form>
 </template>
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { ButtonIcon, TextField } from "@/components";
+import { ButtonIcon, OptionsList, TextField } from "@/components";
 import { maxOptionsInRoom, optionValidation } from "@/utils/validation";
 
 const formOption = ref(false);

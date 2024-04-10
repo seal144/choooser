@@ -119,7 +119,7 @@ const phaseDescription = computed(() => {
 }
 
 .choosing-container {
-  max-width: 600px;
+  max-width: 700px;
   margin: 0 auto;
 
   .phase-description {

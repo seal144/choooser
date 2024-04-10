@@ -12,6 +12,7 @@ import HeaderCard from "./HeaderCard.vue";
 import InfoDialog from "./InfoDialog.vue";
 import JoinCreateRoomDialog from "./JoinCreateRoomDialog.vue";
 import Logo from "./Logo.vue";
+import OptionsList from "./OptionsList.vue";
 import RoomButtonSubMenu from "./RoomButtonSubMenu.vue";
 import SettingsDialog from "./SettingsDialog.vue";
 import Snackbar from "./Snackbar.vue";
@@ -34,6 +35,7 @@ export {
   InfoDialog,
   JoinCreateRoomDialog,
   Logo,
+  OptionsList,
   RoomButtonSubMenu,
   SettingsDialog,
   Snackbar,
