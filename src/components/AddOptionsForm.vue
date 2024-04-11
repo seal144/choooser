@@ -14,7 +14,11 @@
       />
       <ButtonIcon type="submit" icon="mdi-plus" />
     </v-form>
-    <OptionsList v-if="options.length" :options="options" />
+    <OptionsList
+      v-if="options.length"
+      :options="options"
+      @updateOptions="updateOption"
+    />
   </v-form>
 </template>
 
@@ -39,6 +43,10 @@ const optionInputValidation = [
   maxOptionsValidation,
   duplicatesValidation,
 ];
+
+const updateOption = (newOptions: string[]) => {
+  options.value = newOptions;
+};
 
 const onSubmitOption = () => {
   const isValid = optionInputValidation.every((validation) => {

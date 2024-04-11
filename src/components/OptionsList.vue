@@ -1,47 +1,92 @@
 <template>
-  <p class="header">Options:</p>
-  <v-card v-for="option in options" :key="option">
-    <div class="card-container" :class="{ xs: xs }">
-      <div class="text-container">
-        <div><v-icon icon="mdi-star" size="20" /></div>
-        <div>
-          {{ option }}
+  <div>
+    <p class="header">Options:</p>
+    <div
+      v-for="option in options"
+      :key="option"
+      class="card-wrapper"
+      draggable="true"
+      @dragstart="startDrag($event, option)"
+      @drop="onDrop($event, option)"
+      @dragover="
+        (event) => {
+          event.preventDefault();
+        }
+      "
+    >
+      <v-card>
+        <div class="card-content" :class="{ xs: xs }">
+          <div class="text-container">
+            <div><v-icon icon="mdi-star" size="20" /></div>
+            <div>
+              {{ option }}
+            </div>
+          </div>
+          <div class="actions-wrapper">
+            <ButtonIcon icon="mdi-pencil" size="small" @click="deleteOption" />
+            <ButtonIcon
+              icon="mdi-arrow-up"
+              size="small"
+              @click="deleteOption"
+            />
+            <ButtonIcon
+              icon="mdi-arrow-down"
+              size="small"
+              @click="deleteOption"
+            />
+            <ButtonIcon
+              icon="mdi-arrow-collapse-up"
+              size="small"
+              @click="deleteOption"
+            />
+            <ButtonIcon
+              icon="mdi-arrow-collapse-down"
+              size="small"
+              @click="deleteOption"
+            />
+            <ButtonIcon
+              icon="mdi-trash-can-outline"
+              size="small"
+              @click="deleteOption"
+            />
+          </div>
         </div>
-      </div>
-      <div class="actions-wrapper">
-        <ButtonIcon icon="mdi-pencil" size="small" @click="deleteOption" />
-        <ButtonIcon icon="mdi-arrow-up" size="small" @click="deleteOption" />
-        <ButtonIcon icon="mdi-arrow-down" size="small" @click="deleteOption" />
-        <ButtonIcon
-          icon="mdi-arrow-collapse-up"
-          size="small"
-          @click="deleteOption"
-        />
-        <ButtonIcon
-          icon="mdi-arrow-collapse-down"
-          size="small"
-          @click="deleteOption"
-        />
-        <ButtonIcon
-          icon="mdi-trash-can-outline"
-          size="small"
-          @click="deleteOption"
-        />
-      </div>
+      </v-card>
     </div>
-  </v-card>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { PropType } from "vue";
+import { PropType, ref } from "vue";
 import { useDisplay } from "vuetify";
 import { ButtonIcon } from "@/components";
 
-defineProps({
+const props = defineProps({
   options: Array as PropType<string[]>,
+  default: [],
 });
+const emit = defineEmits(["updateOptions"]);
 
 const { xs } = useDisplay();
+
+const draggedOption = ref("");
+
+const startDrag = (_event: DragEvent, option: string) => {
+  draggedOption.value = option;
+};
+
+const onDrop = (_event: Event, droppedOnOption: string) => {
+  const newArray = [...(props.options as string[])];
+  const draggedIndex = newArray.findIndex(
+    (item) => item === draggedOption.value
+  );
+  const droppedOnIndex = newArray.findIndex((item) => item === droppedOnOption);
+
+  newArray.splice(draggedIndex, 1);
+  newArray.splice(droppedOnIndex, 0, draggedOption.value);
+
+  emit("updateOptions", newArray);
+};
 
 const deleteOption = () => {
   console.log("delete");
@@ -53,16 +98,18 @@ const deleteOption = () => {
   margin: 0.5rem 0;
 }
 
-.v-card {
-  margin-bottom: 1rem;
+.card-wrapper {
+  padding-bottom: 1rem;
 }
-.card-container {
+
+.card-content {
   padding: 3.6px 0.25rem;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   gap: 0.5rem;
+  cursor: grab;
 
   &.xs {
     flex-direction: column;
