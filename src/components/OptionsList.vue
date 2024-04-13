@@ -23,31 +23,27 @@
             </div>
           </div>
           <div class="actions-wrapper">
-            <ButtonIcon icon="mdi-pencil" size="small" @click="deleteOption" />
-            <ButtonIcon
-              icon="mdi-arrow-up"
-              size="small"
-              @click="deleteOption"
-            />
+            <ButtonIcon icon="mdi-pencil" size="small" @click="editOption" />
+            <ButtonIcon icon="mdi-arrow-up" size="small" @click="editOption" />
             <ButtonIcon
               icon="mdi-arrow-down"
               size="small"
-              @click="deleteOption"
+              @click="editOption"
             />
             <ButtonIcon
               icon="mdi-arrow-collapse-up"
               size="small"
-              @click="deleteOption"
+              @click="editOption"
             />
             <ButtonIcon
               icon="mdi-arrow-collapse-down"
               size="small"
-              @click="deleteOption"
+              @click="editOption"
             />
             <ButtonIcon
               icon="mdi-trash-can-outline"
               size="small"
-              @click="deleteOption"
+              @click="deleteOption(option)"
             />
           </div>
         </div>
@@ -88,8 +84,16 @@ const onDrop = (_event: Event, droppedOnOption: string) => {
   emit("updateOptions", newArray);
 };
 
-const deleteOption = () => {
-  console.log("delete");
+const editOption = () => {
+  console.log("edit");
+};
+
+const deleteOption = (deletedOption: string) => {
+  const newArray = [...(props.options as string[])].filter(
+    (option) => option !== deletedOption
+  );
+
+  emit("updateOptions", newArray);
 };
 </script>
 
