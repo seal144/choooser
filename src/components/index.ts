@@ -1,4 +1,4 @@
-import AddOptionsForm from "./AddOptionsForm.vue";
+import CreateOptionsList from "./CreateOptionsList.vue";
 import AppInfoDialog from "./AppInfoDialog.vue";
 import Button from "./Button.vue";
 import ButtonIcon from "./ButtonIcon.vue";
@@ -21,7 +21,7 @@ import TextField from "./TextField.vue";
 import PersonCard from "./PersonCard.vue";
 
 export {
-  AddOptionsForm,
+  CreateOptionsList,
   AppInfoDialog,
   Button,
   ButtonIcon,

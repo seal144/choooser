@@ -27,7 +27,7 @@
         <HeaderCard class="phase-description">
           {{ phaseDescription }}
         </HeaderCard>
-        <AddOptionsForm />
+        <CreateOptionsList />
       </div>
     </div>
   </div>
@@ -41,7 +41,7 @@ import { useRoute } from "vue-router";
 import { useRoomStore } from "@/store/roomStore";
 import SideDrawer from "./SideDrawer.vue";
 import Chat from "./Chat.vue";
-import { AddOptionsForm, ButtonIcon, HeaderCard } from "@/components";
+import { CreateOptionsList, ButtonIcon, HeaderCard } from "@/components";
 import getUser from "@/composables/getUser";
 import { RoutesNames } from "@/router";
 import { Phase } from "@/types";
