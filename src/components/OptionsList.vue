@@ -5,7 +5,8 @@
       v-for="option in options"
       :key="option"
       class="card-wrapper"
-      draggable="true"
+      :class="{ draggable: option !== optionInEditMode }"
+      :draggable="option !== optionInEditMode"
       @dragstart="startDrag($event, option)"
       @drop="onDrop($event, option)"
       @dragover="
@@ -15,30 +16,45 @@
       "
     >
       <v-card>
-        <div class="card-content" :class="{ xs: xs }">
+        <div
+          class="card-content"
+          :class="{ xs: xs, editMode: option === optionInEditMode }"
+        >
           <div class="text-container">
             <div><v-icon icon="mdi-star" size="20" /></div>
-            <div>
+            <AppendTextForm
+              v-if="option === optionInEditMode"
+              editMode
+              :defaultValue="option"
+              :textList="
+                options.filter((option) => option !== optionInEditMode)
+              "
+              :maxListLength="maxOptionsInRoom"
+              :maxTextLength="maxOptionLength"
+              @appendText="editOptionName"
+              @cancelEdit="cancelEditOptionName"
+            />
+            <div v-else>
               {{ option }}
             </div>
           </div>
-          <div class="actions-wrapper">
-            <ButtonIcon icon="mdi-pencil" size="small" @click="editOption" />
-            <ButtonIcon icon="mdi-arrow-up" size="small" @click="editOption" />
+          <div class="actions-wrapper" v-if="option !== optionInEditMode">
             <ButtonIcon
-              icon="mdi-arrow-down"
+              icon="mdi-pencil"
               size="small"
-              @click="editOption"
+              @click="setOptionInEditMode(option)"
             />
+            <ButtonIcon icon="mdi-arrow-up" size="small" @click="() => {}" />
+            <ButtonIcon icon="mdi-arrow-down" size="small" @click="() => {}" />
             <ButtonIcon
               icon="mdi-arrow-collapse-up"
               size="small"
-              @click="editOption"
+              @click="() => {}"
             />
             <ButtonIcon
               icon="mdi-arrow-collapse-down"
               size="small"
-              @click="editOption"
+              @click="() => {}"
             />
             <ButtonIcon
               icon="mdi-trash-can-outline"
@@ -55,7 +71,9 @@
 <script setup lang="ts">
 import { PropType, ref } from "vue";
 import { useDisplay } from "vuetify";
-import { ButtonIcon } from "@/components";
+
+import { AppendTextForm, ButtonIcon } from "@/components";
+import { maxOptionsInRoom, maxOptionLength } from "@/utils/validation";
 
 const props = defineProps({
   options: {
@@ -68,6 +86,7 @@ const emit = defineEmits(["updateOptions"]);
 const { xs } = useDisplay();
 
 const draggedOption = ref("");
+const optionInEditMode = ref("");
 
 const startDrag = (_event: DragEvent, option: string) => {
   draggedOption.value = option;
@@ -86,8 +105,23 @@ const onDrop = (_event: Event, droppedOnOption: string) => {
   emit("updateOptions", newArray);
 };
 
-const editOption = () => {
-  console.log("edit");
+const setOptionInEditMode = (option: string) => {
+  optionInEditMode.value = option;
+};
+
+const editOptionName = (newName: string) => {
+  const index = props.options.findIndex(
+    (option) => option === optionInEditMode.value
+  );
+  const newArray = [...props.options];
+  newArray.splice(index, 1, newName);
+
+  emit("updateOptions", newArray);
+  optionInEditMode.value = "";
+};
+
+const cancelEditOptionName = () => {
+  optionInEditMode.value = "";
 };
 
 const deleteOption = (deletedOption: string) => {
@@ -106,6 +140,10 @@ const deleteOption = (deletedOption: string) => {
 
 .card-wrapper {
   padding-bottom: 1rem;
+
+  &.draggable {
+    cursor: grab;
+  }
 }
 
 .card-content {
@@ -115,11 +153,14 @@ const deleteOption = (deletedOption: string) => {
   justify-content: center;
   align-items: center;
   gap: 0.5rem;
-  cursor: grab;
 
   &.xs {
     flex-direction: column;
     align-items: flex-start;
+
+    &.editMode {
+      flex-direction: unset;
+    }
   }
 
   .text-container {

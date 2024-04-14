@@ -1,21 +1,18 @@
 <template>
   <v-form
-    v-model="form"
     class="form-wrapper"
     @submit.prevent="onSubmit"
     validate-on="input lazy"
+    v-click-outside="cancelEdit"
   >
     <TextField
       v-model.trim="text"
       :label="label"
-      keydown.enter="submit"
-      :rules="[
-        maxChars(props.maxTextLength),
-        maxOptionsValidation,
-        duplicatesValidation,
-      ]"
+      @keydown.enter="onSubmit"
+      @keydown.esc="cancelEdit"
+      :rules="validation"
     />
-    <ButtonIcon type="submit" icon="mdi-plus" />
+    <ButtonIcon type="submit" :icon="buttonIcon" />
   </v-form>
 </template>
 
@@ -25,6 +22,14 @@ import { ButtonIcon, TextField } from "@/components";
 import { maxChars } from "@/utils/validation";
 
 const props = defineProps({
+  defaultValue: {
+    type: String,
+    default: "",
+  },
+  editMode: {
+    type: Boolean,
+    default: false,
+  },
   textList: {
     type: Array as PropType<string[]>,
     default: () => [],
@@ -43,10 +48,10 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["appendText"]);
+const emit = defineEmits(["appendText", "cancelEdit"]);
 
-const form = ref(false);
-const text = ref("");
+const text = ref(props.defaultValue);
+const buttonIcon = props.editMode ? "mdi-check-bold" : "mdi-plus-thick";
 
 const maxOptionsValidation = () =>
   props.textList.length < props.maxListLength ||
@@ -55,8 +60,23 @@ const maxOptionsValidation = () =>
 const duplicatesValidation = (value: string) =>
   !props.textList.includes(value) || "No duplicates allowed";
 
+const validation = [
+  maxChars(props.maxTextLength),
+  maxOptionsValidation,
+  duplicatesValidation,
+];
+
+const cancelEdit = () => {
+  if (props.editMode) {
+    emit("cancelEdit");
+  }
+};
+
 const onSubmit = () => {
-  if (!form.value || text.value === "") return;
+  const isValid = validation.every((rule) => {
+    return rule(text.value) === true;
+  });
+  if (!isValid || text.value === "") return;
   emit("appendText", text.value);
   text.value = "";
 };
@@ -64,7 +84,8 @@ const onSubmit = () => {
 
 <style scoped lang="scss">
 .form-wrapper {
+  width: 100%;
   display: flex;
-  gap: 1rem;
+  gap: 0.5rem;
 }
 </style>
