@@ -6,11 +6,12 @@ const minChars = (minChars: number) => (value: string) =>
   Number(value.length) >= minChars ||
   Number(value.length) === 0 ||
   `min ${minChars} characters`;
-const maxChars = (maxChars: number) => (value: string) =>
+export const maxChars = (maxChars: number) => (value: string) =>
   Number(value.length) <= maxChars || `max ${maxChars} characters`;
 
 export const maxGuestsInRoom = 9;
 export const maxOptionsInRoom = 20;
+export const maxOptionLength = 50;
 export const maxDisplayNameLength = 18;
 
 export const emailValidation = [required, emailFormat];
@@ -22,4 +23,3 @@ export const displayNameValidation = [
 export const authPasswordValidation = [required, minChars(6), maxChars(30)];
 export const roomPasswordValidation = [minChars(3), maxChars(30)];
 export const messageValidation = [maxChars(2000)];
-export const optionValidation = [maxChars(50)];

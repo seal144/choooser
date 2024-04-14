@@ -58,8 +58,10 @@ import { useDisplay } from "vuetify";
 import { ButtonIcon } from "@/components";
 
 const props = defineProps({
-  options: Array as PropType<string[]>,
-  default: [],
+  options: {
+    type: Array as PropType<string[]>,
+    default: () => [],
+  },
 });
 const emit = defineEmits(["updateOptions"]);
 
@@ -72,7 +74,7 @@ const startDrag = (_event: DragEvent, option: string) => {
 };
 
 const onDrop = (_event: Event, droppedOnOption: string) => {
-  const newArray = [...(props.options as string[])];
+  const newArray = [...props.options];
   const draggedIndex = newArray.findIndex(
     (item) => item === draggedOption.value
   );
@@ -89,7 +91,7 @@ const editOption = () => {
 };
 
 const deleteOption = (deletedOption: string) => {
-  const newArray = [...(props.options as string[])].filter(
+  const newArray = [...props.options].filter(
     (option) => option !== deletedOption
   );
 

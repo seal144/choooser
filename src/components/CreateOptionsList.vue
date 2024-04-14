@@ -1,60 +1,33 @@
 <template>
-  <v-form @submit.prevent="onSubmit" validate-on="blur lazy">
-    <v-form
-      v-model="formOption"
-      class="form-option"
-      @submit.prevent="onSubmitOption"
-      validate-on="submit lazy"
-    >
-      <TextField
-        v-model.trim="option"
-        label="Option"
-        keydown.enter="submit"
-        :rules="optionInputValidation"
-      />
-      <ButtonIcon type="submit" icon="mdi-plus" />
-    </v-form>
+  <v-form @submit.prevent="onSubmit">
+    <AppendTextForm
+      :textList="options"
+      label="Option"
+      :maxListLength="maxOptionsInRoom"
+      :maxTextLength="maxOptionLength"
+      @appendText="appendOption"
+    />
     <OptionsList
       v-if="options.length"
       :options="options"
-      @updateOptions="updateOption"
+      @updateOptions="updateOptions"
     />
   </v-form>
 </template>
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { ButtonIcon, OptionsList, TextField } from "@/components";
-import { maxOptionsInRoom, optionValidation } from "@/utils/validation";
+import { AppendTextForm, OptionsList } from "@/components";
+import { maxOptionsInRoom, maxOptionLength } from "@/utils/validation";
 
-const formOption = ref(false);
-const option = ref("");
 const options = ref<string[]>([]);
 
-const maxOptionsValidation = () =>
-  options.value.length < maxOptionsInRoom ||
-  option.value === "" ||
-  `Max ${maxOptionsInRoom} options`;
-const duplicatesValidation = (value: string) =>
-  !options.value.includes(value) || "No duplicates allowed";
-
-const optionInputValidation = [
-  ...optionValidation,
-  maxOptionsValidation,
-  duplicatesValidation,
-];
-
-const updateOption = (newOptions: string[]) => {
-  options.value = newOptions;
+const appendOption = (newOption: string) => {
+  options.value.push(newOption);
 };
 
-const onSubmitOption = () => {
-  const isValid = optionInputValidation.every((validation) => {
-    return validation(option.value) === true;
-  });
-  if (!isValid || option.value === "") return;
-  options.value.push(option.value);
-  option.value = "";
+const updateOptions = (newOptions: string[]) => {
+  options.value = newOptions;
 };
 
 const onSubmit = () => {

@@ -1,4 +1,4 @@
-import CreateOptionsList from "./CreateOptionsList.vue";
+import AppendTextForm from "./AppendTextForm.vue";
 import AppInfoDialog from "./AppInfoDialog.vue";
 import Button from "./Button.vue";
 import ButtonIcon from "./ButtonIcon.vue";
@@ -6,6 +6,7 @@ import ButtonScrollToBottom from "./ButtonScrollToBottom.vue";
 import ConfirmDeleteAbandonRoom from "./ConfirmDeleteAbandonRoom.vue";
 import ConfirmDialog from "./ConfirmDialog.vue";
 import CookieBanner from "./CookieBanner.vue";
+import CreateOptionsList from "./CreateOptionsList.vue";
 import Dialog from "./Dialog.vue";
 import FormError from "./FormError.vue";
 import HeaderCard from "./HeaderCard.vue";
@@ -21,7 +22,7 @@ import TextField from "./TextField.vue";
 import PersonCard from "./PersonCard.vue";
 
 export {
-  CreateOptionsList,
+  AppendTextForm,
   AppInfoDialog,
   Button,
   ButtonIcon,
@@ -29,6 +30,7 @@ export {
   ConfirmDeleteAbandonRoom,
   ConfirmDialog,
   CookieBanner,
+  CreateOptionsList,
   Dialog,
   FormError,
   HeaderCard,
