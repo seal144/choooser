@@ -44,17 +44,25 @@
               size="small"
               @click="setOptionInEditMode(option)"
             />
-            <ButtonIcon icon="mdi-arrow-up" size="small" @click="() => {}" />
-            <ButtonIcon icon="mdi-arrow-down" size="small" @click="() => {}" />
+            <ButtonIcon
+              icon="mdi-arrow-up"
+              size="small"
+              @click="changeOptionPosition('up', option)"
+            />
+            <ButtonIcon
+              icon="mdi-arrow-down"
+              size="small"
+              @click="changeOptionPosition('down', option)"
+            />
             <ButtonIcon
               icon="mdi-arrow-collapse-up"
               size="small"
-              @click="() => {}"
+              @click="changeOptionPosition('top', option)"
             />
             <ButtonIcon
               icon="mdi-arrow-collapse-down"
               size="small"
-              @click="() => {}"
+              @click="changeOptionPosition('bottom', option)"
             />
             <ButtonIcon
               icon="mdi-trash-can-outline"
@@ -109,10 +117,12 @@ const setOptionInEditMode = (option: string) => {
   optionInEditMode.value = option;
 };
 
+const getOptionIndex = (option: string) => {
+  return props.options.findIndex((item) => item === option);
+};
+
 const editOptionName = (newName: string) => {
-  const index = props.options.findIndex(
-    (option) => option === optionInEditMode.value
-  );
+  const index = getOptionIndex(optionInEditMode.value);
   const newArray = [...props.options];
   newArray.splice(index, 1, newName);
 
@@ -122,6 +132,53 @@ const editOptionName = (newName: string) => {
 
 const cancelEditOptionName = () => {
   optionInEditMode.value = "";
+};
+
+const changeOptionPosition = (
+  type: "up" | "down" | "top" | "bottom",
+  option: string
+) => {
+  const optionIndex = getOptionIndex(option);
+  const optionsLastIndex = props.options.length - 1;
+
+  if (optionIndex === 0 && (type === "up" || type === "top")) return;
+  if (
+    optionIndex === optionsLastIndex &&
+    (type === "down" || type === "bottom")
+  )
+    return;
+
+  const newArray = [...props.options];
+
+  if (type === "up") {
+    newArray.splice(
+      optionIndex - 1,
+      2,
+      newArray[optionIndex],
+      newArray[optionIndex - 1]
+    );
+  }
+
+  if (type === "down") {
+    newArray.splice(
+      optionIndex,
+      2,
+      newArray[optionIndex + 1],
+      newArray[optionIndex]
+    );
+  }
+
+  if (type === "top") {
+    newArray.splice(optionIndex, 1);
+    newArray.splice(0, 0, props.options[optionIndex]);
+  }
+
+  if (type === "bottom") {
+    newArray.splice(optionIndex, 1);
+    newArray.splice(optionsLastIndex, 0, props.options[optionIndex]);
+  }
+
+  emit("updateOptions", newArray);
 };
 
 const deleteOption = (deletedOption: string) => {
