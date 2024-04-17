@@ -27,7 +27,7 @@
         <HeaderCard class="phase-description">
           {{ phaseDescription }}
         </HeaderCard>
-        <CreateOptionsList />
+        <CreateOptionsList v-if="isOwner" />
       </div>
     </div>
   </div>

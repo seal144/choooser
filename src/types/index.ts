@@ -67,16 +67,6 @@ export enum Phase {
   Results,
 }
 
-enum OptionField {
-  Id = "id",
-  Name = "name",
-}
-
-interface Option {
-  [OptionField.Id]: string;
-  [OptionField.Name]: string;
-}
-
 enum ResultField {
   UserId = "userId",
   Ranking = "ranking",
@@ -113,7 +103,7 @@ export interface Room {
   [RoomField.Guests]: User[];
   [RoomField.PastGuests]: User[];
   [RoomField.Phase]: Phase;
-  [RoomField.Options]: Option[];
+  [RoomField.Options]: string[];
   [RoomField.Choices]: Choice[];
 }
 
@@ -134,6 +124,7 @@ export type RoomDetailsData = Pick<
   | RoomField.Guests
   | RoomField.PastGuests
   | RoomField.Phase
+  | RoomField.Options
 >;
 
 export enum RoomRole {
