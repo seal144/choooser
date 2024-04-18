@@ -16,8 +16,15 @@
           <HeaderCard>{{ formattedTime }}</HeaderCard>
         </div>
         <div class="prop-container">
+          <p>Status:</p>
+          <HeaderCard>{{ phaseDescription }}</HeaderCard>
+        </div>
+        <div class="prop-container">
           <p>Host:</p>
-          <PersonCard :name="room.owner.displayName" />
+          <PersonCard
+            :name="room.owner.displayName"
+            :isPending="room.phase === Phase.SettingOptions"
+          />
         </div>
         <p v-if="room.guests.length">Guests:</p>
         <div class="prop-container guests-container">
@@ -105,7 +112,7 @@ import useDeleteRoom from "@/composables/useDeleteRoom";
 import useAbandonRoom from "@/composables/useAbandonRoom";
 import getUser from "@/composables/getUser";
 import { RoutesNames } from "@/router";
-import { Dialogs, User } from "@/types";
+import { Dialogs, Phase, User } from "@/types";
 
 const emit = defineEmits(["close"]);
 
@@ -134,11 +141,19 @@ const drawerWidth = computed(() => {
   return "280";
 });
 
-const isOwner = computed(() => {
-  if (room.value && room.value.owner.id === user.value?.uid) {
-    return true;
+const isOwner = room.value?.owner.id === user.value?.uid ? true : false;
+
+const phaseDescription = computed(() => {
+  switch (room.value?.phase) {
+    case Phase.SettingOptions:
+      return "Phase 1 - setting the options";
+    case Phase.Choosing:
+      return "Phase 2 - ranking the options";
+    case Phase.Results:
+      return "Phase 3 - results";
+    default:
+      return "Phase unset";
   }
-  return false;
 });
 
 const formattedTime = room.value
