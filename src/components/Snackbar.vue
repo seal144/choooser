@@ -12,7 +12,7 @@
 defineProps({
   title: {
     type: String,
-    required: true,
+    default: "Something went wrong",
   },
   text: {
     type: String,

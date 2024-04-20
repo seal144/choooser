@@ -140,4 +140,5 @@ export enum CommonErrors {
   TheDocumentNotFound = "The document not found.",
   TheRoomIsFull = "The room is full.",
   DisplayNameInUse = "Display name already in use.",
+  DefaultSuffix = "failed. Please, try again later.",
 }

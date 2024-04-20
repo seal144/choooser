@@ -72,13 +72,11 @@
       />
       <Snackbar
         v-model="snackbarDeleteError"
-        title="Something went wrong"
-        text="Deleting room failed. Please, try again later."
+        :text="`Deleting room ${CommonErrors.DefaultSuffix}`"
       />
       <Snackbar
         v-model="snackbarAbandonError"
-        title="Something went wrong"
-        text="Abandoning room failed. Please, try again later."
+        :text="`Abandoning room ${CommonErrors.DefaultSuffix}`"
       />
     </template>
   </div>
@@ -103,7 +101,7 @@ import useAbandonRoom from "@/composables/useAbandonRoom";
 import { useUserStore } from "@/store/userStore";
 import { useDialogsStore } from "@/store/dialogs";
 import { lineThickness } from "@/plugins/vuetify";
-import { Dialogs, RoomRole } from "@/types";
+import { Dialogs, RoomRole, CommonErrors } from "@/types";
 
 const displayName = toRef(useUserStore(), "displayName");
 const { rooms: ownedRooms } = subscribeRooms(RoomRole.Owner);

@@ -82,13 +82,11 @@
   />
   <Snackbar
     v-model="snackbarDeleteError"
-    title="Something went wrong"
-    text="Deleting room failed. Please, try again later."
+    :text="`Deleting room ${CommonErrors.DefaultSuffix}`"
   />
   <Snackbar
     v-model="snackbarAbandonError"
-    title="Something went wrong"
-    text="Abandoning room failed. Please, try again later."
+    :text="`Abandoning room ${CommonErrors.DefaultSuffix}`"
   />
 </template>
 
@@ -112,7 +110,7 @@ import useDeleteRoom from "@/composables/useDeleteRoom";
 import useAbandonRoom from "@/composables/useAbandonRoom";
 import getUser from "@/composables/getUser";
 import { RoutesNames } from "@/router";
-import { Dialogs, Phase, User } from "@/types";
+import { CommonErrors, Dialogs, Phase, User } from "@/types";
 
 const emit = defineEmits(["close"]);
 

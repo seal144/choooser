@@ -2,7 +2,7 @@
   <HeaderCard class="phase-description">
     {{ phaseDescription }}
   </HeaderCard>
-  <CreateOptionsList v-if="isOwner" />
+  <CreateOptionsList v-if="room?.phase === Phase.SettingOptions && isOwner" />
 </template>
 
 <script setup lang="ts">

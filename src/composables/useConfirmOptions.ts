@@ -1,10 +1,13 @@
+import { ref } from "vue";
 import { doc, updateDoc } from "firebase/firestore";
 
 import { useRoomStore } from "@/store/roomStore";
 import { db } from "@/firebase/config";
-import { Collection, RoomField } from "@/types";
+import { Collection, Phase, RoomField } from "@/types";
 
 const useConfirmOptions = () => {
+  const error = ref<string | null>(null);
+  const loading = ref(false);
   const { room } = useRoomStore();
 
   const saveOptions = async (options: string[]) => {
@@ -17,8 +20,32 @@ const useConfirmOptions = () => {
     }
   };
 
+  const confirmOptions = async (options: string[]) => {
+    if (room) {
+      loading.value = true;
+      error.value = null;
+
+      try {
+        await saveOptions(options);
+
+        const docRef = doc(db, Collection.Rooms, room.id);
+        await updateDoc(docRef, { [RoomField.Phase]: Phase.Choosing });
+
+        loading.value = false;
+      } catch (err) {
+        const { message } = err as Error;
+        console.error(message);
+        loading.value = false;
+        error.value = message;
+      }
+    }
+  };
+
   return {
+    confirmOptions,
     saveOptions,
+    loading,
+    error,
   };
 };
 

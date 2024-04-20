@@ -34,8 +34,7 @@
     />
     <Snackbar
       v-model="snackbarJoinRoomError"
-      title="Something went wrong"
-      text="Joining room failed. Please, try again later."
+      :text="`Joining room ${CommonErrors.DefaultSuffix}`"
     />
   </div>
 </template>
