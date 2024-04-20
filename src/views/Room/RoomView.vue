@@ -24,53 +24,29 @@
         />
       </div>
       <div v-else class="choosing-container">
-        <HeaderCard class="phase-description">
-          {{ phaseDescription }}
-        </HeaderCard>
-        <CreateOptionsList v-if="isOwner" />
+        <PhaseView />
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref, toRef } from "vue";
+import { ref, toRef } from "vue";
 import { useDisplay } from "vuetify";
 import { useRoute } from "vue-router";
 
 import { useRoomStore } from "@/store/roomStore";
 import SideDrawer from "./SideDrawer.vue";
 import Chat from "./Chat.vue";
-import { CreateOptionsList, ButtonIcon, HeaderCard } from "@/components";
-import getUser from "@/composables/getUser";
+import PhaseView from "./PhaseView.vue";
+import { ButtonIcon, HeaderCard } from "@/components";
 import { RoutesNames } from "@/router";
-import { Phase } from "@/types";
 
 const room = toRef(useRoomStore(), "room");
 const route = useRoute();
 const { xs, mdAndDown } = useDisplay();
-const { user } = getUser();
 
 const drawer = ref(false);
-const isOwner = computed(() => {
-  return room.value?.owner.id === user.value?.uid;
-});
-
-const phaseDescription = computed(() => {
-  if (room.value) {
-    switch (room.value.phase) {
-      case Phase.SettingOptions:
-        if (isOwner.value) {
-          return "Firstly, as the room host, provide options for choosing.";
-        } else return "Wait for the room host to provide options for choosing";
-      case Phase.Choosing:
-        return "Please, rank the options from best to worst according to your personal preferences and confirm.";
-      case Phase.Results:
-        return "The choosing is done. These are the results.";
-    }
-  }
-  return "Oops, the unexpected error has occurred! There is no room data please try again later.";
-});
 </script>
 
 <style lang="scss" scoped>
@@ -121,9 +97,5 @@ const phaseDescription = computed(() => {
 .choosing-container {
   max-width: 700px;
   margin: 0 auto;
-
-  .phase-description {
-    margin-bottom: 1rem;
-  }
 }
 </style>
