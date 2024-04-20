@@ -9,7 +9,8 @@
 import { computed, toRef } from "vue";
 
 import { useRoomStore } from "@/store/roomStore";
-import { HeaderCard, CreateOptionsList } from "@/components";
+import CreateOptionsList from "./CreateOptionsList.vue";
+import { HeaderCard } from "@/components";
 import getUser from "@/composables/getUser";
 import { Phase } from "@/types";
 
