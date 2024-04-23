@@ -43,7 +43,7 @@
       </div>
       <div class="drawer-actions">
         <Button
-          v-if="isOwner"
+          v-if="isOwner && room?.phase !== Phase.SettingOptions"
           @click="openDialog(Dialogs.ConfirmPrevPhase)"
           class="drawer-button"
         >
@@ -98,7 +98,7 @@
     confirmLabel="Go back"
     confirmIcon="mdi-restore"
     :confirmAction="handleGoToPrevPhase"
-    :loading="false"
+    :loading="loadingPrevPhase"
   />
   <Snackbar
     v-model="snackbarDeleteError"
@@ -107,6 +107,10 @@
   <Snackbar
     v-model="snackbarAbandonError"
     :text="`Abandoning room ${CommonErrors.DefaultSuffix}`"
+  />
+  <Snackbar
+    v-model="snackbarPrevPhaseError"
+    :text="`Changing phase ${CommonErrors.DefaultSuffix}`"
   />
 </template>
 
@@ -130,6 +134,7 @@ import {
 import useDeleteRoom from "@/composables/useDeleteRoom";
 import useAbandonRoom from "@/composables/useAbandonRoom";
 import getUser from "@/composables/getUser";
+import useGoToPrevPhase from "@/composables/useGoToPrevPhase";
 import { RoutesNames } from "@/router";
 import { CommonErrors, Dialogs, Phase, User } from "@/types";
 
@@ -150,9 +155,15 @@ const {
   loading: loadingAbandonRoom,
   error: errorAbandonRoom,
 } = useAbandonRoom();
+const {
+  goToPrevPhase,
+  loading: loadingPrevPhase,
+  error: errorPrevPhase,
+} = useGoToPrevPhase();
 
 const snackbarDeleteError = ref(false);
 const snackbarAbandonError = ref(false);
+const snackbarPrevPhaseError = ref(false);
 const selectedUserForAction = ref<User | null>(null);
 
 const drawerWidth = computed(() => {
@@ -192,8 +203,13 @@ const openDialog = (dialog: Dialogs) => {
   dialogs.isOpen[dialog] = true;
 };
 
-const handleGoToPrevPhase = () => {
-  console.log("handleGoToPrevPhase");
+const handleGoToPrevPhase = async () => {
+  await goToPrevPhase();
+  if (errorPrevPhase.value) {
+    snackbarPrevPhaseError.value = true;
+  } else {
+    dialogs.isOpen[Dialogs.ConfirmPrevPhase] = false;
+  }
 };
 
 const handleKickUser = async () => {

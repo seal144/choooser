@@ -126,6 +126,7 @@ export type RoomDetailsData = Pick<
   | RoomField.PastGuests
   | RoomField.Phase
   | RoomField.Options
+  | RoomField.Choices
 >;
 
 export enum RoomRole {

@@ -65,6 +65,7 @@ const useSubscribeRoom = (roomId: string) => {
           [RoomField.PastGuests]: snapshot.get(RoomField.PastGuests),
           [RoomField.Phase]: snapshot.get(RoomField.Phase),
           [RoomField.Options]: snapshot.get(RoomField.Options),
+          [RoomField.Choices]: snapshot.get(RoomField.Choices),
         };
       });
 
