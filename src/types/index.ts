@@ -14,6 +14,7 @@ export enum Dialogs {
   RoomInfoIsFull = "RoomInfoIsFull",
   JoinRoomFromURL = "joinRoomFromURL",
   AppInfo = "appInfo",
+  ConfirmPrevPhase = "confirmPrevPhase",
 }
 
 export enum Collection {

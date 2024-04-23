@@ -32,19 +32,15 @@
             :dialogIdentification="Dialogs.ConfirmDeleteAccount"
             title="Are you sure?"
             text="Do you want to delete your account? This action is irreversible."
+            confirmLabel="delete"
+            confirmIcon="mdi-exclamation-thick"
+            :confirmAction="deleteAccount"
+            :loading="loadingDeleteUser"
+            danger
           >
             <template v-slot:activatorButton>
               <Button size="small" danger
                 ><v-icon icon="mdi-exclamation-thick" />delete account</Button
-              >
-            </template>
-            <template v-slot:confirmButton>
-              <Button danger @click="deleteAccount" :loading="loadingDeleteUser"
-                ><v-icon
-                  icon="mdi-exclamation-thick"
-                  size="large"
-                  v-if="smAndUp"
-                />delete</Button
               >
             </template>
           </ConfirmDialog>

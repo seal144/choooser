@@ -44,13 +44,24 @@
       <div class="drawer-actions">
         <Button
           v-if="isOwner"
-          @click="openConfirmDeleteDialog"
+          @click="openDialog(Dialogs.ConfirmPrevPhase)"
+          class="drawer-button"
+        >
+          <v-icon icon="mdi-restore" size="large" />
+          Go to previous phase
+        </Button>
+        <Button
+          v-if="isOwner"
+          @click="openDialog(Dialogs.ConfirmDeleteRoomInside)"
           class="drawer-button"
           danger
           ><v-icon icon="mdi-trash-can-outline" size="large" />Delete
           room</Button
         >
-        <Button v-else @click="openConfirmAbandonDialog" class="drawer-button"
+        <Button
+          v-else
+          @click="openDialog(Dialogs.ConfirmAbandonRoomInside)"
+          class="drawer-button"
           ><v-icon icon="mdi-exit-run" size="large" />Abandon room</Button
         >
       </div>
@@ -80,6 +91,15 @@
     :loading="loadingAbandonRoom"
     @close="onCloseKickDialog"
   />
+  <ConfirmDialog
+    :dialogIdentification="Dialogs.ConfirmPrevPhase"
+    title="Are you sure?"
+    text="Do you want to go back to the previous phase? The current state will be lost."
+    confirmLabel="Go back"
+    confirmIcon="mdi-restore"
+    :confirmAction="handleGoToPrevPhase"
+    :loading="false"
+  />
   <Snackbar
     v-model="snackbarDeleteError"
     :text="`Deleting room ${CommonErrors.DefaultSuffix}`"
@@ -102,6 +122,7 @@ import {
   Button,
   ButtonIcon,
   ConfirmDeleteAbandonRoom,
+  ConfirmDialog,
   HeaderCard,
   PersonCard,
   Snackbar,
@@ -167,12 +188,12 @@ const onCloseKickDialog = () => {
   selectedUserForAction.value = null;
 };
 
-const openConfirmDeleteDialog = () => {
-  dialogs.isOpen[Dialogs.ConfirmDeleteRoomInside] = true;
+const openDialog = (dialog: Dialogs) => {
+  dialogs.isOpen[dialog] = true;
 };
 
-const openConfirmAbandonDialog = () => {
-  dialogs.isOpen[Dialogs.ConfirmAbandonRoomInside] = true;
+const handleGoToPrevPhase = () => {
+  console.log("handleGoToPrevPhase");
 };
 
 const handleKickUser = async () => {
