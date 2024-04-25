@@ -11,6 +11,8 @@
       v-if="options.length"
       :options="options"
       @updateOptions="updateOptions"
+      createListMode
+      className="options-list"
     />
     <Button v-if="options.length >= 2" type="submit" block :loading="loading"
       >Confirm options</Button
@@ -63,5 +65,8 @@ const onSubmit = async () => {
 .form-option {
   display: flex;
   gap: 1rem;
+}
+.options-list {
+  margin-top: 0.5rem;
 }
 </style>

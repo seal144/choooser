@@ -1,8 +1,7 @@
 <template>
   <div>
-    <p class="header">Options:</p>
     <div
-      v-for="option in options"
+      v-for="(option, index) in options"
       :key="option"
       class="card-wrapper"
       :class="{ draggable: option !== optionInEditMode }"
@@ -15,7 +14,10 @@
         }
       "
     >
-      <v-card>
+      <v-card class="order-card" v-if="!createListMode">
+        {{ index + 1 }}
+      </v-card>
+      <v-card class="option-card">
         <div
           class="card-content"
           :class="{ xs: xs, editMode: option === optionInEditMode }"
@@ -40,6 +42,7 @@
           </div>
           <div class="actions-wrapper" v-if="option !== optionInEditMode">
             <ButtonIcon
+              v-if="createListMode"
               icon="mdi-pencil"
               size="small"
               @click="setOptionInEditMode(option)"
@@ -65,6 +68,7 @@
               @click="changeOptionPosition('bottom', option)"
             />
             <ButtonIcon
+              v-if="createListMode"
               icon="mdi-trash-can-outline"
               size="small"
               @click="deleteOption(option)"
@@ -87,6 +91,10 @@ const props = defineProps({
   options: {
     type: Array as PropType<string[]>,
     default: () => [],
+  },
+  createListMode: {
+    type: Boolean,
+    default: false,
   },
 });
 const emit = defineEmits(["updateOptions"]);
@@ -191,12 +199,21 @@ const deleteOption = (deletedOption: string) => {
 </script>
 
 <style scoped lang="scss">
-.header {
-  margin: 0.5rem 0;
-}
-
 .card-wrapper {
   padding-bottom: 1rem;
+  display: flex;
+  gap: 0.5rem;
+
+  .order-card {
+    width: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .option-card {
+    flex: 1;
+  }
 
   &.draggable {
     cursor: grab;
