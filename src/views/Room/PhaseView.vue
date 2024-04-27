@@ -2,7 +2,7 @@
   <HeaderCard class="phase-description">
     {{ phaseDescription }}
   </HeaderCard>
-  <CreateOptionsList v-if="room?.phase === Phase.SettingOptions && isOwner" />
+  <PhaseSettingOptions v-if="room?.phase === Phase.SettingOptions && isOwner" />
   <PhaseChoosing v-else-if="room?.phase === Phase.Choosing" />
 </template>
 
@@ -10,7 +10,7 @@
 import { computed, toRef } from "vue";
 
 import { useRoomStore } from "@/store/roomStore";
-import CreateOptionsList from "./CreateOptionsList.vue";
+import PhaseSettingOptions from "./PhaseSettingOptions.vue";
 import PhaseChoosing from "./PhaseChoosing.vue";
 import { HeaderCard } from "@/components";
 import getUser from "@/composables/getUser";
