@@ -209,6 +209,7 @@ const handleGoToPrevPhase = async () => {
     snackbarPrevPhaseError.value = true;
   } else {
     dialogs.isOpen[Dialogs.ConfirmPrevPhase] = false;
+    emit("close");
   }
 };
 
