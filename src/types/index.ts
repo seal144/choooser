@@ -68,14 +68,16 @@ export enum Phase {
   Results,
 }
 
-enum ResultField {
+export enum ChoiceField {
   UserId = "userId",
+  Confirmed = "confirmed",
   Ranking = "ranking",
 }
 
-interface Choice {
-  [ResultField.UserId]: string;
-  [ResultField.Ranking]: string[];
+export interface Choice {
+  [ChoiceField.UserId]: string;
+  [ChoiceField.Confirmed]: boolean;
+  [ChoiceField.Ranking]: string[];
 }
 
 export enum RoomField {

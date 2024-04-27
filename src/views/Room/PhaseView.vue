@@ -3,27 +3,20 @@
     {{ phaseDescription }}
   </HeaderCard>
   <CreateOptionsList v-if="room?.phase === Phase.SettingOptions && isOwner" />
-  <div v-else-if="options.length && room?.phase === Phase.Choosing">
-    <OptionsList :options="options" @updateOptions="updateOptions" />
-    <Button v-if="options.length >= 2" type="submit" block :loading="false"
-      >Confirm choice</Button
-    >
-  </div>
+  <PhaseChoosing v-else-if="room?.phase === Phase.Choosing" />
 </template>
 
 <script setup lang="ts">
-import { computed, ref, toRef } from "vue";
+import { computed, toRef } from "vue";
 
 import { useRoomStore } from "@/store/roomStore";
 import CreateOptionsList from "./CreateOptionsList.vue";
-import { Button, HeaderCard, OptionsList } from "@/components";
+import PhaseChoosing from "./PhaseChoosing.vue";
+import { HeaderCard } from "@/components";
 import getUser from "@/composables/getUser";
 import { Phase } from "@/types";
 
 const room = toRef(useRoomStore(), "room");
-//TO DO - handle situation when admin reverse the phase and edit some options
-const options = ref<string[]>(room.value ? room.value.options : []);
-
 const { user } = getUser();
 
 const isOwner = room.value?.owner.id === user.value?.uid;
@@ -43,10 +36,6 @@ const phaseDescription = computed(() => {
   }
   return "Oops, the unexpected error has occurred! There is no room data please try again later.";
 });
-
-const updateOptions = (newOptions: string[]) => {
-  options.value = newOptions;
-};
 </script>
 
 <style scoped lang="scss">
