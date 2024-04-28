@@ -4,8 +4,8 @@
       v-for="(option, index) in options"
       :key="option"
       class="card-wrapper"
-      :class="{ draggable: option !== optionInEditMode }"
-      :draggable="option !== optionInEditMode"
+      :class="{ draggable: option !== optionInEditMode && !readOnlyMode }"
+      :draggable="option !== optionInEditMode && !readOnlyMode"
       @dragstart="startDrag($event, option)"
       @drop="onDrop($event, option)"
       @dragover="
@@ -40,7 +40,10 @@
               {{ option }}
             </div>
           </div>
-          <div class="actions-wrapper" v-if="option !== optionInEditMode">
+          <div
+            class="actions-wrapper"
+            v-if="option !== optionInEditMode && !readOnlyMode"
+          >
             <ButtonIcon
               v-if="createListMode"
               icon="mdi-pencil"
@@ -96,6 +99,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  readOnlyMode: {
+    type: Boolean,
+    default: false,
+  },
 });
 const emit = defineEmits(["updateOptions"]);
 
@@ -105,10 +112,16 @@ const draggedOption = ref("");
 const optionInEditMode = ref("");
 
 const startDrag = (_event: DragEvent, option: string) => {
+  if (props.readOnlyMode) {
+    return;
+  }
   draggedOption.value = option;
 };
 
 const onDrop = (_event: Event, droppedOnOption: string) => {
+  if (props.readOnlyMode) {
+    return;
+  }
   const newArray = [...props.options];
   const draggedIndex = newArray.findIndex(
     (item) => item === draggedOption.value

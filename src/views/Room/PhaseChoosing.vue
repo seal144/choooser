@@ -1,20 +1,44 @@
 <template>
   <div>
-    <OptionsList :options="options" @updateOptions="updateOptions" />
-    <Button v-if="options.length >= 2" type="submit" block :loading="loading"
-      >Confirm choice</Button
-    >
+    <OptionsList
+      :options="options"
+      @updateOptions="updateOptions"
+      :readOnlyMode="isChoiceConfirmed"
+    />
+    <div v-if="options.length >= 2">
+      <Button
+        v-if="!isChoiceConfirmed"
+        @click="handleConfirmChoice"
+        block
+        :loading="loading"
+        >Confirm choice</Button
+      >
+      <Button v-else @click="() => {}" block :loading="false">
+        Correct choice
+      </Button>
+    </div>
   </div>
+  <Snackbar
+    v-model="snackbarConfirmError"
+    :text="`Confirming choice ${CommonErrors.DefaultSuffix}`"
+  />
 </template>
 
 <script setup lang="ts">
-import { onUnmounted, ref, toRef } from "vue";
+import { onUnmounted, ref, PropType, toRef } from "vue";
 
 import { useRoomStore } from "@/store/roomStore";
 import getUser from "@/composables/getUser";
 import useConfirmChoice from "@/composables/useConfirmChoice";
-import { Button, OptionsList } from "@/components";
-import { Phase } from "@/types";
+import { Button, OptionsList, Snackbar } from "@/components";
+import { CommonErrors, Phase } from "@/types";
+
+defineProps({
+  isChoiceConfirmed: {
+    type: Boolean as PropType<boolean | undefined>,
+    required: false,
+  },
+});
 
 const room = toRef(useRoomStore(), "room");
 const { user } = getUser();
@@ -33,9 +57,18 @@ const setInitialOptions = () => {
 };
 
 const options = ref(setInitialOptions());
+const snackbarConfirmError = ref(false);
 
 const updateOptions = (newOptions: string[]) => {
   options.value = newOptions;
+};
+
+const handleConfirmChoice = async () => {
+  await confirmChoice(options.value);
+
+  if (error.value) {
+    snackbarConfirmError.value = true;
+  }
 };
 
 onUnmounted(() => {

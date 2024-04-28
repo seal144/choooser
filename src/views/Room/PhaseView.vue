@@ -3,7 +3,10 @@
     {{ phaseDescription }}
   </HeaderCard>
   <PhaseSettingOptions v-if="room?.phase === Phase.SettingOptions && isOwner" />
-  <PhaseChoosing v-else-if="room?.phase === Phase.Choosing" />
+  <PhaseChoosing
+    v-else-if="room?.phase === Phase.Choosing"
+    :isChoiceConfirmed="isUserConfirmedChoice"
+  />
 </template>
 
 <script setup lang="ts">
@@ -20,6 +23,10 @@ const room = toRef(useRoomStore(), "room");
 const { user } = getUser();
 
 const isOwner = room.value?.owner.id === user.value?.uid;
+const isUserConfirmedChoice = computed(() => {
+  return room.value?.choices.find((choice) => choice.userId === user.value?.uid)
+    ?.confirmed;
+});
 
 const phaseDescription = computed(() => {
   if (room.value) {
@@ -29,7 +36,9 @@ const phaseDescription = computed(() => {
           return "Firstly, as the room host, provide options for choosing.";
         } else return "Wait for the room host to provide options for choosing";
       case Phase.Choosing:
-        return "Please, rank the options from best to worst according to your personal preferences and confirm.";
+        if (!isUserConfirmedChoice.value) {
+          return "Please, rank the options from best to worst according to your personal preferences and confirm.";
+        } else return "Your choice is saved. Now wait for other participants.";
       case Phase.Results:
         return "The choosing is done. These are the results.";
     }
