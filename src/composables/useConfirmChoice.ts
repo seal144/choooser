@@ -46,12 +46,12 @@ const useConfirmChoice = () => {
     }
   };
 
-  const confirmChoice = async (ranking: string[]) => {
+  const confirmChoice = async (ranking: string[], confirm: boolean) => {
     loading.value = true;
     error.value = null;
 
     try {
-      await saveChoice(ranking, true);
+      await saveChoice(ranking, confirm);
 
       loading.value = false;
     } catch (err) {

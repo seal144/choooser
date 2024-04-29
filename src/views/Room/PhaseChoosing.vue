@@ -8,19 +8,19 @@
     <div v-if="options.length >= 2">
       <Button
         v-if="!isChoiceConfirmed"
-        @click="handleConfirmChoice"
+        @click="handleConfirmChoice(true)"
         block
         :loading="loading"
         >Confirm choice</Button
       >
-      <Button v-else @click="() => {}" block :loading="false">
+      <Button v-else @click="handleConfirmChoice(false)" block :loading="false">
         Correct choice
       </Button>
     </div>
   </div>
   <Snackbar
     v-model="snackbarConfirmError"
-    :text="`Confirming choice ${CommonErrors.DefaultSuffix}`"
+    :text="`Saving choice ${CommonErrors.DefaultSuffix}`"
   />
 </template>
 
@@ -63,8 +63,8 @@ const updateOptions = (newOptions: string[]) => {
   options.value = newOptions;
 };
 
-const handleConfirmChoice = async () => {
-  await confirmChoice(options.value);
+const handleConfirmChoice = async (confirm: boolean) => {
+  await confirmChoice(options.value, confirm);
 
   if (error.value) {
     snackbarConfirmError.value = true;
