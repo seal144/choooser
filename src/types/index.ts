@@ -93,6 +93,8 @@ export enum RoomField {
   Phase = "phase",
   Options = "options",
   Choices = "choices",
+  CurrentParticipants = "currentParticipants",
+  ParticipantsIdsStillChoosing = "participantsIdsStillChoosing",
 }
 
 export interface Room {
@@ -108,28 +110,23 @@ export interface Room {
   [RoomField.Phase]: Phase;
   [RoomField.Options]: string[];
   [RoomField.Choices]: Choice[];
+  [RoomField.CurrentParticipants]: User[];
+  [RoomField.ParticipantsIdsStillChoosing]: string[];
 }
 
-export type RoomDataDB = Omit<Room, RoomField.Id | RoomField.ParsedGroupId>;
+export type RoomDataDB = Omit<
+  Room,
+  | RoomField.Id
+  | RoomField.ParsedGroupId
+  | RoomField.CurrentParticipants
+  | RoomField.ParticipantsIdsStillChoosing
+>;
 
 export type RoomDataDBPartial = Partial<RoomDataDB>;
 
 export type RoomBasicData = Pick<Room, RoomField.Id | RoomField.Name>;
 
-export type RoomDetailsData = Pick<
-  Room,
-  | RoomField.Id
-  | RoomField.CreateTime
-  | RoomField.ParsedGroupId
-  | RoomField.Name
-  | RoomField.Owner
-  | RoomField.GuestsIds
-  | RoomField.Guests
-  | RoomField.PastGuests
-  | RoomField.Phase
-  | RoomField.Options
-  | RoomField.Choices
->;
+export type RoomDetailsData = Omit<Room, RoomField.GroupId>;
 
 export enum RoomRole {
   Owner,

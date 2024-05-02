@@ -49,6 +49,6 @@ const phaseDescription = computed(() => {
 
 <style scoped lang="scss">
 .phase-description {
-  margin-bottom: 1rem;
+  margin-bottom: 3rem;
 }
 </style>

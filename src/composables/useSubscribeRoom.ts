@@ -5,13 +5,16 @@ import { auth, db } from "@/firebase/config";
 import { useRoomStore } from "@/store/roomStore";
 import { maxGuestsInRoom } from "@/utils/validation";
 import {
+  Choice,
   Collection,
   CommonErrors,
+  Phase,
   RoomDataDB,
   RoomField,
   User,
   UserField,
 } from "@/types";
+import getParticipantsIdsStillChoosing from "@/utils/getParticipantsStillChoosing";
 
 const roomStore = useRoomStore();
 
@@ -54,6 +57,23 @@ const useSubscribeRoom = (roomId: string) => {
       }
 
       unsubscribe = onSnapshot(docRef, async (snapshot) => {
+        const phase: Phase = snapshot.get(RoomField.Phase);
+
+        const CurrentParticipants: User[] = [
+          snapshot.get(RoomField.Owner),
+          ...snapshot.get(RoomField.Guests),
+        ];
+
+        const choices: Choice[] = snapshot.get(RoomField.Choices);
+
+        const ParticipantsIdsStillChoosing =
+          phase === Phase.Choosing
+            ? getParticipantsIdsStillChoosing(
+                CurrentParticipants.map((user) => user.id),
+                choices
+              )
+            : [];
+
         roomStore.room = {
           [RoomField.Id]: snapshot.id,
           [RoomField.CreateTime]: snapshot.get(RoomField.CreateTime),
@@ -63,9 +83,12 @@ const useSubscribeRoom = (roomId: string) => {
           [RoomField.GuestsIds]: snapshot.get(RoomField.GuestsIds),
           [RoomField.Guests]: snapshot.get(RoomField.Guests),
           [RoomField.PastGuests]: snapshot.get(RoomField.PastGuests),
-          [RoomField.Phase]: snapshot.get(RoomField.Phase),
+          [RoomField.Phase]: phase,
           [RoomField.Options]: snapshot.get(RoomField.Options),
-          [RoomField.Choices]: snapshot.get(RoomField.Choices),
+          [RoomField.Choices]: choices,
+          [RoomField.CurrentParticipants]: CurrentParticipants,
+          [RoomField.ParticipantsIdsStillChoosing]:
+            ParticipantsIdsStillChoosing,
         };
       });
 

@@ -17,6 +17,18 @@
         Correct choice
       </Button>
     </div>
+    <div v-if="room && isChoiceConfirmed">
+      <HeaderCard class="mt-12 mb-4">Participants still choosing:</HeaderCard>
+      <PersonCard
+        v-for="participant in room.currentParticipants.filter((participant) =>
+          room?.participantsIdsStillChoosing.includes(participant.id)
+        )"
+        :key="participant.id"
+        :name="participant.displayName"
+        :isPending="true"
+        class="mb-4"
+      />
+    </div>
   </div>
   <Snackbar
     v-model="snackbarConfirmError"
@@ -30,10 +42,16 @@ import { onUnmounted, ref, PropType, toRef } from "vue";
 import { useRoomStore } from "@/store/roomStore";
 import getUser from "@/composables/getUser";
 import useConfirmChoice from "@/composables/useConfirmChoice";
-import { Button, OptionsList, Snackbar } from "@/components";
+import {
+  Button,
+  HeaderCard,
+  OptionsList,
+  PersonCard,
+  Snackbar,
+} from "@/components";
 import { CommonErrors, Phase } from "@/types";
 
-defineProps({
+const props = defineProps({
   isChoiceConfirmed: {
     type: Boolean as PropType<boolean | undefined>,
     required: false,
@@ -74,7 +92,8 @@ const handleConfirmChoice = async (confirm: boolean) => {
 onUnmounted(() => {
   if (
     room.value?.phase === Phase.SettingOptions ||
-    room.value?.phase === Phase.Results
+    room.value?.phase === Phase.Results ||
+    props.isChoiceConfirmed
   ) {
     return;
   }
