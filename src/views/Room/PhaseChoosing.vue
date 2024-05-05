@@ -14,11 +14,23 @@
         >Confirm choice</Button
       >
       <Button v-else @click="handleConfirmChoice(false)" block :loading="false">
-        Correct choice
+        <v-icon icon="mdi-pencil" size="large" />Correct choice
       </Button>
     </div>
     <div v-if="room && isChoiceConfirmed">
-      <HeaderCard class="mt-12 mb-4">Participants still choosing:</HeaderCard>
+      <HeaderCard
+        v-if="room.participantsIdsStillChoosing.length"
+        class="mt-12 mb-4"
+        >Participants still choosing:</HeaderCard
+      >
+      <HeaderCard v-else class="mt-12 mb-4"
+        >All of the participants have made their choices.
+        {{
+          isOwner
+            ? "To continue proceed to the result."
+            : "Wait for the host to proceed to the result."
+        }}</HeaderCard
+      >
       <PersonCard
         v-for="participant in room.currentParticipants.filter((participant) =>
           room?.participantsIdsStillChoosing.includes(participant.id)
@@ -28,6 +40,9 @@
         :isPending="true"
         class="mb-4"
       />
+      <Button v-if="isOwner" block
+        >Proceed to result<v-icon icon="mdi-forward" size="large"
+      /></Button>
     </div>
   </div>
   <Snackbar
@@ -55,6 +70,10 @@ const props = defineProps({
   isChoiceConfirmed: {
     type: Boolean as PropType<boolean | undefined>,
     required: false,
+  },
+  isOwner: {
+    type: Boolean,
+    required: true,
   },
 });
 

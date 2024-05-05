@@ -23,7 +23,8 @@
           <p>Host:</p>
           <PersonCard
             :name="room.owner.displayName"
-            :isPending="room.phase === Phase.SettingOptions"
+            :isPending="isOwnerPending"
+            :check="room.phase === Phase.Choosing && !isOwnerPending"
           />
         </div>
         <p v-if="room.guests.length">Guests:</p>
@@ -33,6 +34,14 @@
             :key="guest.id"
             :name="guest.displayName"
             :kickButton="isOwner"
+            :isPending="
+              room.phase === Phase.Choosing &&
+              room.participantsIdsStillChoosing.includes(guest.id)
+            "
+            :check="
+              room.phase === Phase.Choosing &&
+              !room.participantsIdsStillChoosing.includes(guest.id)
+            "
             :kickCallback="
               () => {
                 openKickUserDialog(guest);
@@ -184,6 +193,19 @@ const phaseDescription = computed(() => {
     default:
       return "Phase unset";
   }
+});
+
+const isOwnerPending = computed(() => {
+  if (room.value?.phase === Phase.SettingOptions) {
+    return true;
+  }
+  if (
+    room.value?.phase === Phase.Choosing &&
+    room.value.participantsIdsStillChoosing.includes(room.value.owner.id)
+  ) {
+    return true;
+  }
+  return false;
 });
 
 const formattedTime = room.value

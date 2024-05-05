@@ -3,6 +3,7 @@
     <div class="card-content">
       <div><v-icon icon="mdi-account" size="20" />{{ name }}</div>
       <div class="actions">
+        <v-icon v-if="check" icon="mdi-check-bold" size="20" />
         <v-progress-circular
           v-if="isPending"
           indeterminate
@@ -38,6 +39,10 @@ defineProps({
     default: () => {},
   },
   isPending: {
+    type: Boolean,
+    default: false,
+  },
+  check: {
     type: Boolean,
     default: false,
   },

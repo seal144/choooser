@@ -6,6 +6,7 @@
   <PhaseChoosing
     v-else-if="room?.phase === Phase.Choosing"
     :isChoiceConfirmed="isUserConfirmedChoice"
+    :isOwner="isOwner"
   />
 </template>
 
