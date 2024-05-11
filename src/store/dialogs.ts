@@ -18,6 +18,7 @@ export const useDialogsStore = defineStore("dialogs", {
       [Dialogs.JoinRoomFromURL]: false,
       [Dialogs.AppInfo]: false,
       [Dialogs.ConfirmPrevPhase]: false,
+      [Dialogs.ConfirmProceedToResult]: false,
     },
   }),
 });

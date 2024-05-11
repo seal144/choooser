@@ -1,29 +1,23 @@
-import { ref, toRef } from "vue";
+import { ref } from "vue";
 import { doc, updateDoc } from "firebase/firestore";
 
 import { useRoomStore } from "@/store/roomStore";
 import { db } from "@/firebase/config";
 import { Collection, Phase, RoomField } from "@/types";
 
-const useGoToPrevPhase = () => {
+const useProceedToResult = () => {
   const error = ref<string | null>(null);
   const loading = ref(false);
-  const room = toRef(useRoomStore(), "room");
+  const { room } = useRoomStore();
 
-  const goToPrevPhase = async () => {
-    if (room.value) {
-      if (room.value.phase === Phase.SettingOptions) {
-        return;
-      }
+  const proceedToResult = async () => {
+    if (room) {
       loading.value = true;
       error.value = null;
 
       try {
-        const docRef = doc(db, Collection.Rooms, room.value.id);
-        await updateDoc(docRef, {
-          [RoomField.Phase]: room.value.phase - 1,
-          [RoomField.Choices]: [],
-        });
+        const docRef = doc(db, Collection.Rooms, room.id);
+        await updateDoc(docRef, { [RoomField.Phase]: Phase.Result });
 
         loading.value = false;
       } catch (err) {
@@ -36,10 +30,10 @@ const useGoToPrevPhase = () => {
   };
 
   return {
-    goToPrevPhase,
+    proceedToResult,
     loading,
     error,
   };
 };
 
-export default useGoToPrevPhase;
+export default useProceedToResult;

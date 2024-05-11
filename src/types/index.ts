@@ -15,6 +15,7 @@ export enum Dialogs {
   JoinRoomFromURL = "joinRoomFromURL",
   AppInfo = "appInfo",
   ConfirmPrevPhase = "confirmPrevPhase",
+  ConfirmProceedToResult = "confirmProceedToResult",
 }
 
 export enum Collection {
@@ -65,7 +66,7 @@ export type ChatDataDBPartial = Partial<ChatDataDB>;
 export enum Phase {
   SettingOptions,
   Choosing,
-  Results,
+  Result,
 }
 
 export enum ChoiceField {

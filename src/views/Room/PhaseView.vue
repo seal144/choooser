@@ -40,8 +40,8 @@ const phaseDescription = computed(() => {
         if (!isUserConfirmedChoice.value) {
           return "Please, rank the options from best to worst according to your personal preferences and confirm.";
         } else return "Your choice is saved. Now wait for other participants.";
-      case Phase.Results:
-        return "The choosing is done. These are the results.";
+      case Phase.Result:
+        return "The choosing is done 🙌 This is the result.";
     }
   }
   return "Oops, the unexpected error has occurred! There is no room data please try again later.";

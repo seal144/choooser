@@ -188,8 +188,8 @@ const phaseDescription = computed(() => {
       return "Phase 1 - setting the options";
     case Phase.Choosing:
       return "Phase 2 - ranking the options";
-    case Phase.Results:
-      return "Phase 3 - results";
+    case Phase.Result:
+      return "Phase 3 - result";
     default:
       return "Phase unset";
   }
@@ -227,6 +227,7 @@ const openDialog = (dialog: Dialogs) => {
 
 const handleGoToPrevPhase = async () => {
   await goToPrevPhase();
+
   if (errorPrevPhase.value) {
     snackbarPrevPhaseError.value = true;
   } else {

@@ -72,7 +72,7 @@ const dialogs = useDialogsStore();
 const dialogWidth = computed(() => {
   switch (props.size) {
     case "small":
-      return 370;
+      return 380;
     case "large":
       return 800;
     default:
