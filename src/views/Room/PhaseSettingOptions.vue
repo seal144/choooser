@@ -32,14 +32,14 @@
 </template>
 
 <script setup lang="ts">
-import { onUnmounted, ref } from "vue";
+import { onUnmounted, ref, toRef } from "vue";
 
 import { defaultCircularProgressSize, lineThickness } from "@/plugins/vuetify";
 import { useRoomStore } from "@/store/roomStore";
 import { AppendTextForm, Button, OptionsList, Snackbar } from "@/components";
 import useConfirmOptions from "@/composables/useConfirmOptions";
 import { maxOptionsInRoom, maxOptionLength } from "@/utils/validation";
-import { CommonErrors } from "@/types";
+import { CommonErrors, Phase } from "@/types";
 
 defineProps({
   isOwner: {
@@ -48,14 +48,20 @@ defineProps({
   },
 });
 
-const { room } = useRoomStore();
+const room = toRef(useRoomStore(), "room");
 
 const { saveOptions, confirmOptions, loading, error } = useConfirmOptions();
 
-const options = ref<string[]>(room ? room.options : []);
+const options = ref<string[]>(room.value ? room.value.options : []);
 const snackbarSubmitError = ref(false);
 
 onUnmounted(() => {
+  if (
+    room.value?.phase === Phase.Choosing ||
+    room.value?.phase === Phase.Result
+  ) {
+    return;
+  }
   saveOptions(options.value);
 });
 
