@@ -2,7 +2,10 @@
   <HeaderCard class="phase-description">
     {{ phaseDescription }}
   </HeaderCard>
-  <PhaseSettingOptions v-if="room?.phase === Phase.SettingOptions && isOwner" />
+  <PhaseSettingOptions
+    v-if="room?.phase === Phase.SettingOptions"
+    :isOwner="isOwner"
+  />
   <PhaseChoosing
     v-else-if="room?.phase === Phase.Choosing"
     :isChoiceConfirmed="isUserConfirmedChoice"

@@ -1,5 +1,5 @@
 <template>
-  <v-form @submit.prevent="onSubmit">
+  <v-form v-if="isOwner" @submit.prevent="onSubmit">
     <AppendTextForm
       :textList="options"
       label="Option"
@@ -17,21 +17,36 @@
     <Button v-if="options.length >= 2" type="submit" block :loading="loading"
       >Confirm options</Button
     >
+    <Snackbar
+      v-model="snackbarSubmitError"
+      :text="`Confirming options ${CommonErrors.DefaultSuffix}`"
+    />
   </v-form>
-  <Snackbar
-    v-model="snackbarSubmitError"
-    :text="`Confirming options ${CommonErrors.DefaultSuffix}`"
-  />
+  <div class="loading" v-else>
+    <v-progress-circular
+      indeterminate
+      :size="defaultCircularProgressSize"
+      :width="lineThickness"
+    ></v-progress-circular>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { onUnmounted, ref } from "vue";
 
+import { defaultCircularProgressSize, lineThickness } from "@/plugins/vuetify";
 import { useRoomStore } from "@/store/roomStore";
 import { AppendTextForm, Button, OptionsList, Snackbar } from "@/components";
 import useConfirmOptions from "@/composables/useConfirmOptions";
 import { maxOptionsInRoom, maxOptionLength } from "@/utils/validation";
 import { CommonErrors } from "@/types";
+
+defineProps({
+  isOwner: {
+    type: Boolean,
+    required: true,
+  },
+});
 
 const { room } = useRoomStore();
 
@@ -68,5 +83,9 @@ const onSubmit = async () => {
 }
 .options-list {
   margin-top: 0.5rem;
+}
+.loading {
+  width: fit-content;
+  margin: 0 auto;
 }
 </style>

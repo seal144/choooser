@@ -6,7 +6,7 @@
     <v-progress-circular
       v-if="showProgress"
       indeterminate
-      size="36"
+      :size="defaultCircularProgressSize"
       :width="lineThickness"
     ></v-progress-circular>
     <template v-else>
@@ -100,7 +100,7 @@ import useDeleteRoom from "@/composables/useDeleteRoom";
 import useAbandonRoom from "@/composables/useAbandonRoom";
 import { useUserStore } from "@/store/userStore";
 import { useDialogsStore } from "@/store/dialogs";
-import { lineThickness } from "@/plugins/vuetify";
+import { defaultCircularProgressSize, lineThickness } from "@/plugins/vuetify";
 import { Dialogs, RoomRole, CommonErrors } from "@/types";
 
 const displayName = toRef(useUserStore(), "displayName");

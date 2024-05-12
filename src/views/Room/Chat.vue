@@ -15,7 +15,7 @@
         class="chat-loading"
         v-else-if="wholeChat === null"
         indeterminate
-        size="48"
+        :size="defaultCircularProgressSize"
         :width="lineThickness"
       ></v-progress-circular>
       <div v-else>
@@ -71,7 +71,7 @@
 import { computed, ref, PropType, watch } from "vue";
 import { useDisplay } from "vuetify";
 
-import { lineThickness } from "@/plugins/vuetify";
+import { defaultCircularProgressSize, lineThickness } from "@/plugins/vuetify";
 import { ButtonIcon, ButtonScrollToBottom, Textarea } from "@/components";
 import Message from "./Message.vue";
 import LazyMessagesChunk from "./LazyMessagesChunk.vue";

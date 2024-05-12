@@ -3,7 +3,7 @@
     <v-progress-circular
       v-if="loading"
       indeterminate
-      size="48"
+      :size="defaultCircularProgressSize"
       :width="lineThickness"
     ></v-progress-circular>
     <template v-else-if="error === CommonErrors.TheDocumentNotFound">
@@ -43,7 +43,7 @@
 import { computed, onBeforeUnmount, watchEffect, ref, toRef } from "vue";
 import { useRouter, useRoute } from "vue-router";
 
-import { lineThickness } from "@/plugins/vuetify";
+import { defaultCircularProgressSize, lineThickness } from "@/plugins/vuetify";
 import { RoutesNames } from "@/router";
 import { useRoomStore } from "@/store/roomStore";
 import { useDialogsStore } from "@/store/dialogs";
