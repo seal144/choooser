@@ -140,6 +140,7 @@ export enum CommonErrors {
   LoginAsAValidUser = "Login as a valid user.",
   CouldNotLogin = "Could not login.",
   TheDocumentNotFound = "The document not found.",
+  TheUserNotFound = "The user not found.",
   TheRoomIsFull = "The room is full.",
   DisplayNameInUse = "Display name already in use.",
   DefaultSuffix = "failed. Please, try again later.",

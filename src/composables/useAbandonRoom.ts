@@ -34,23 +34,18 @@ const abandonRoom = async (roomId: string, userId?: string) => {
     );
 
     const userAbandoningId = userId ? userId : auth.currentUser?.uid;
-    const userAbandoningDisplayName = currentGuests.find(
-      (guest) => guest.id === userAbandoningId
-    )?.displayName;
-
-    const newGuests = currentGuests.filter(
-      (guest) => guest.id !== userAbandoningId
+    const abandoningUser = currentGuests.find(
+      (user) => user.id === userAbandoningId
     );
+
+    if (!abandoningUser) {
+      throw new Error(CommonErrors.TheUserNotFound);
+    }
 
     await updateDoc(docRef, {
       [RoomField.GuestsIds]: arrayRemove(userAbandoningId),
-      [RoomField.Guests]: [...newGuests],
-      [RoomField.PastGuests]: arrayUnion({
-        [UserField.Id]: userAbandoningId,
-        [UserField.DisplayName]: userAbandoningDisplayName
-          ? userAbandoningDisplayName
-          : "Unknown User",
-      }),
+      [RoomField.Guests]: arrayRemove(abandoningUser),
+      [RoomField.PastGuests]: arrayUnion(abandoningUser),
     });
 
     loading.value = false;
