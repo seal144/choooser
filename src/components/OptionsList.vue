@@ -77,6 +77,12 @@
               @click="deleteOption(option)"
             />
           </div>
+          <div
+            v-if="option !== optionInEditMode && readOnlyMode"
+            class="ml-auto"
+          >
+            {{ getPoints(index, options.length) }}
+          </div>
         </div>
       </v-card>
     </div>
@@ -89,6 +95,7 @@ import { useDisplay } from "vuetify";
 
 import { AppendTextForm, ButtonIcon } from "@/components";
 import { maxOptionsInRoom, maxOptionLength } from "@/utils/validation";
+import getPoints from "@/utils/getPoints";
 
 const props = defineProps({
   options: {
