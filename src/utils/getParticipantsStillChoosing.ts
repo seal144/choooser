@@ -7,7 +7,7 @@ const getParticipantsIdsStillChoosing = (
   const participantsWithConfirmedChoices = choices
     .filter(
       (choice) =>
-        // For double check also filtering out choices of potential guest which abandoned the room.
+        // For double check also filter out choices of potential guests who abandoned the room or were kicked. This situation shouldn't have a place because during abandoning the room, the choice of abandoning user is erased. Left to double-check.
         choice.confirmed && participantsIds.includes(choice.userId)
     )
     .map((choice) => choice.userId);

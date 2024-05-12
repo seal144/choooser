@@ -167,7 +167,8 @@ onUnmounted(() => {
   if (
     room.value?.phase === Phase.SettingOptions ||
     room.value?.phase === Phase.Result ||
-    props.isChoiceConfirmed
+    props.isChoiceConfirmed ||
+    !room.value?.guestsIds.includes(user.value?.uid ? user.value?.uid : "")
   ) {
     return;
   }

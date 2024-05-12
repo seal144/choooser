@@ -29,11 +29,10 @@ const abandonRoom = async (roomId: string, userId?: string) => {
       throw new Error(CommonErrors.TheDocumentNotFound);
     }
 
+    const userAbandoningId = userId ? userId : auth.currentUser?.uid;
     const currentGuests: Room[RoomField.Guests] = snapshot.get(
       RoomField.Guests
     );
-
-    const userAbandoningId = userId ? userId : auth.currentUser?.uid;
     const abandoningUser = currentGuests.find(
       (user) => user.id === userAbandoningId
     );
@@ -42,11 +41,25 @@ const abandonRoom = async (roomId: string, userId?: string) => {
       throw new Error(CommonErrors.TheUserNotFound);
     }
 
-    await updateDoc(docRef, {
-      [RoomField.GuestsIds]: arrayRemove(userAbandoningId),
-      [RoomField.Guests]: arrayRemove(abandoningUser),
-      [RoomField.PastGuests]: arrayUnion(abandoningUser),
-    });
+    const choices: Room[RoomField.Choices] = snapshot.get(RoomField.Choices);
+    const abandoningUserChoice = choices.find(
+      (choice) => choice.userId === userAbandoningId
+    );
+
+    if (abandoningUserChoice) {
+      await updateDoc(docRef, {
+        [RoomField.GuestsIds]: arrayRemove(userAbandoningId),
+        [RoomField.Guests]: arrayRemove(abandoningUser),
+        [RoomField.PastGuests]: arrayUnion(abandoningUser),
+        [RoomField.Choices]: arrayRemove(abandoningUserChoice),
+      });
+    } else {
+      await updateDoc(docRef, {
+        [RoomField.GuestsIds]: arrayRemove(userAbandoningId),
+        [RoomField.Guests]: arrayRemove(abandoningUser),
+        [RoomField.PastGuests]: arrayUnion(abandoningUser),
+      });
+    }
 
     loading.value = false;
   } catch (err) {
