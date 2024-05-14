@@ -4,7 +4,7 @@
     <ButtonIcon
       icon="mdi-menu-open"
       class="open-menu-button"
-      :class="{ hide: drawer }"
+      :class="{ hide: drawer, lgAndUp }"
       @click="drawer = true"
       rotate
     />
@@ -44,7 +44,7 @@ import { RoutesNames } from "@/router";
 
 const room = toRef(useRoomStore(), "room");
 const route = useRoute();
-const { xs, mdAndDown } = useDisplay();
+const { xs, mdAndDown, lgAndUp } = useDisplay();
 
 const drawer = ref(false);
 </script>
@@ -77,9 +77,13 @@ const drawer = ref(false);
 }
 
 .open-menu-button {
-  position: sticky;
-  top: 5.2rem;
   z-index: 100;
+
+  &.lgAndUp {
+    position: sticky;
+    top: 5.2rem;
+  }
+
   &.hide {
     transform: translateX(-600px);
   }
