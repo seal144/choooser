@@ -61,6 +61,7 @@ const createRoom = async (roomFormData: RoomFormData) => {
       [RoomField.Phase]: Phase.SettingOptions,
       [RoomField.Options]: [],
       [RoomField.Choices]: [],
+      [RoomField.Result]: null,
     };
 
     const response = await addDoc(collection(db, Collection.Rooms), room);

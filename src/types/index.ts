@@ -81,6 +81,18 @@ export interface Choice {
   [ChoiceField.Ranking]: string[];
 }
 
+export type ResultChoice = Omit<Choice, ChoiceField.Confirmed>;
+
+export interface ResultOption {
+  option: string;
+  points: number;
+}
+
+export interface Result {
+  ranking: ResultOption[];
+  confirmedChoices: ResultChoice[];
+}
+
 export enum RoomField {
   Id = "id",
   CreateTime = "createTime",
@@ -94,6 +106,7 @@ export enum RoomField {
   Phase = "phase",
   Options = "options",
   Choices = "choices",
+  Result = "result",
   CurrentParticipants = "currentParticipants",
   ParticipantsIdsStillChoosing = "participantsIdsStillChoosing",
 }
@@ -111,6 +124,7 @@ export interface Room {
   [RoomField.Phase]: Phase;
   [RoomField.Options]: string[];
   [RoomField.Choices]: Choice[];
+  [RoomField.Result]: Result | null;
   [RoomField.CurrentParticipants]: User[];
   [RoomField.ParticipantsIdsStillChoosing]: string[];
 }

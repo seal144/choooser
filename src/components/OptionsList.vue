@@ -81,7 +81,7 @@
             v-if="option !== optionInEditMode && readOnlyMode"
             class="ml-auto"
           >
-            {{ getPoints(index, options.length) }}
+            {{ getPointsText(index, options.length) }}
           </div>
         </div>
       </v-card>
@@ -95,7 +95,7 @@ import { useDisplay } from "vuetify";
 
 import { AppendTextForm, ButtonIcon } from "@/components";
 import { maxOptionsInRoom, maxOptionLength } from "@/utils/validation";
-import getPoints from "@/utils/getPoints";
+import { getPointsText } from "@/utils/getPoints";
 
 const props = defineProps({
   options: {

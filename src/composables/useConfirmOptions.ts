@@ -8,9 +8,10 @@ import { Collection, Phase, RoomField } from "@/types";
 const useConfirmOptions = () => {
   const error = ref<string | null>(null);
   const loading = ref(false);
-  const { room } = useRoomStore();
 
   const saveOptions = async (options: string[]) => {
+    const { room } = useRoomStore();
+
     if (room) {
       const docRef = doc(db, Collection.Rooms, room.id);
       // double-check so as not to have duplicate options
@@ -21,6 +22,8 @@ const useConfirmOptions = () => {
   };
 
   const confirmOptions = async (options: string[]) => {
+    const { room } = useRoomStore();
+
     if (room) {
       loading.value = true;
       error.value = null;

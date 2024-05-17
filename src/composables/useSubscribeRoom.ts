@@ -86,6 +86,7 @@ const useSubscribeRoom = (roomId: string) => {
           [RoomField.Phase]: phase,
           [RoomField.Options]: snapshot.get(RoomField.Options),
           [RoomField.Choices]: choices,
+          [RoomField.Result]: snapshot.get(RoomField.Result),
           [RoomField.CurrentParticipants]: CurrentParticipants,
           [RoomField.ParticipantsIdsStillChoosing]:
             ParticipantsIdsStillChoosing,

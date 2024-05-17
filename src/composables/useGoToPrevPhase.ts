@@ -1,4 +1,4 @@
-import { ref, toRef } from "vue";
+import { ref } from "vue";
 import { doc, updateDoc } from "firebase/firestore";
 
 import { useRoomStore } from "@/store/roomStore";
@@ -8,21 +8,23 @@ import { Collection, Phase, RoomField } from "@/types";
 const useGoToPrevPhase = () => {
   const error = ref<string | null>(null);
   const loading = ref(false);
-  const room = toRef(useRoomStore(), "room");
 
   const goToPrevPhase = async () => {
-    if (room.value) {
-      if (room.value.phase === Phase.SettingOptions) {
+    const { room } = useRoomStore();
+
+    if (room) {
+      if (room.phase === Phase.SettingOptions) {
         return;
       }
       loading.value = true;
       error.value = null;
 
       try {
-        const docRef = doc(db, Collection.Rooms, room.value.id);
+        const docRef = doc(db, Collection.Rooms, room.id);
         await updateDoc(docRef, {
-          [RoomField.Phase]: room.value.phase - 1,
+          [RoomField.Phase]: room.phase - 1,
           [RoomField.Choices]: [],
+          [RoomField.Result]: null,
         });
 
         loading.value = false;
