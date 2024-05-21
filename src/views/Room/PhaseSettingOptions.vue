@@ -12,7 +12,7 @@
       :options="options"
       @updateOptions="updateOptions"
       createListMode
-      className="options-list"
+      class="options-list"
     />
     <Button v-if="options.length >= 2" type="submit" block :loading="loading"
       >Confirm options</Button

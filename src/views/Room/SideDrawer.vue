@@ -7,7 +7,7 @@
   >
     <div class="drawer-content">
       <div v-if="room" class="drawer-info">
-        <div className="drawer-header">
+        <div class="drawer-header">
           <HeaderCard class="drawer-header-text">{{ room.name }}</HeaderCard>
           <ButtonIcon icon="mdi-menu-open" @click="emit('close')" />
         </div>
