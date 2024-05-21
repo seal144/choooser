@@ -1,9 +1,8 @@
 <template>
   <div>
-    <div
+    <OptionCard
       v-for="(option, index) in options"
       :key="option"
-      class="card-wrapper"
       :class="{ draggable: option !== optionInEditMode && !readOnlyMode }"
       :draggable="option !== optionInEditMode && !readOnlyMode"
       @dragstart="startDrag($event, option)"
@@ -13,87 +12,74 @@
           event.preventDefault();
         }
       "
+      :ordinalNumber="createListMode ? undefined : index + 1"
+      :oneColumn="option === optionInEditMode"
     >
-      <v-card class="order-card" v-if="!createListMode">
-        {{ index + 1 }}
-      </v-card>
-      <v-card class="option-card">
-        <div
-          class="card-content"
-          :class="{ xs: xs, editMode: option === optionInEditMode }"
-        >
-          <div class="text-container">
-            <div><v-icon icon="mdi-star" size="20" /></div>
-            <AppendTextForm
-              v-if="option === optionInEditMode"
-              editMode
-              :defaultValue="option"
-              :textList="
-                options.filter((option) => option !== optionInEditMode)
-              "
-              :maxListLength="maxOptionsInRoom"
-              :maxTextLength="maxOptionLength"
-              @appendText="editOptionName"
-              @cancelEdit="cancelEditOptionName"
-            />
-            <div v-else>
-              {{ option }}
-            </div>
-          </div>
-          <div
-            class="actions-wrapper"
-            v-if="option !== optionInEditMode && !readOnlyMode"
-          >
-            <ButtonIcon
-              v-if="createListMode"
-              icon="mdi-pencil"
-              size="small"
-              @click="setOptionInEditMode(option)"
-            />
-            <ButtonIcon
-              icon="mdi-arrow-up"
-              size="small"
-              @click="changeOptionPosition('up', option)"
-            />
-            <ButtonIcon
-              icon="mdi-arrow-down"
-              size="small"
-              @click="changeOptionPosition('down', option)"
-            />
-            <ButtonIcon
-              icon="mdi-arrow-collapse-up"
-              size="small"
-              @click="changeOptionPosition('top', option)"
-            />
-            <ButtonIcon
-              icon="mdi-arrow-collapse-down"
-              size="small"
-              @click="changeOptionPosition('bottom', option)"
-            />
-            <ButtonIcon
-              v-if="createListMode"
-              icon="mdi-trash-can-outline"
-              size="small"
-              @click="deleteOption(option)"
-            />
-          </div>
-          <div
-            v-if="option !== optionInEditMode && readOnlyMode"
-            class="ml-auto"
-          >
-            {{ getPointsText(index, options.length) }}
-          </div>
+      <template v-slot:leftColumn>
+        <AppendTextForm
+          v-if="option === optionInEditMode"
+          editMode
+          :defaultValue="option"
+          :textList="options.filter((option) => option !== optionInEditMode)"
+          :maxListLength="maxOptionsInRoom"
+          :maxTextLength="maxOptionLength"
+          @appendText="editOptionName"
+          @cancelEdit="cancelEditOptionName"
+        />
+        <div v-else>
+          {{ option }}
         </div>
-      </v-card>
-    </div>
+      </template>
+      <template v-slot:rightColumn>
+        <div
+          class="actions-wrapper"
+          v-if="option !== optionInEditMode && !readOnlyMode"
+        >
+          <ButtonIcon
+            v-if="createListMode"
+            icon="mdi-pencil"
+            size="small"
+            @click="setOptionInEditMode(option)"
+          />
+          <ButtonIcon
+            icon="mdi-arrow-up"
+            size="small"
+            @click="changeOptionPosition('up', option)"
+          />
+          <ButtonIcon
+            icon="mdi-arrow-down"
+            size="small"
+            @click="changeOptionPosition('down', option)"
+          />
+          <ButtonIcon
+            icon="mdi-arrow-collapse-up"
+            size="small"
+            @click="changeOptionPosition('top', option)"
+          />
+          <ButtonIcon
+            icon="mdi-arrow-collapse-down"
+            size="small"
+            @click="changeOptionPosition('bottom', option)"
+          />
+          <ButtonIcon
+            v-if="createListMode"
+            icon="mdi-trash-can-outline"
+            size="small"
+            @click="deleteOption(option)"
+          />
+        </div>
+        <div v-if="option !== optionInEditMode && readOnlyMode">
+          {{ getPointsText(index, options.length) }}
+        </div>
+      </template>
+    </OptionCard>
   </div>
 </template>
 
 <script setup lang="ts">
 import { PropType, ref } from "vue";
-import { useDisplay } from "vuetify";
 
-import { AppendTextForm, ButtonIcon } from "@/components";
+import { AppendTextForm, ButtonIcon, OptionCard } from "@/components";
 import { maxOptionsInRoom, maxOptionLength } from "@/utils/validation";
 import { getPointsText } from "@/utils/getPoints";
 
@@ -112,8 +98,6 @@ const props = defineProps({
   },
 });
 const emit = defineEmits(["updateOptions"]);
-
-const { xs } = useDisplay();
 
 const draggedOption = ref("");
 const optionInEditMode = ref("");
@@ -219,55 +203,13 @@ const deleteOption = (deletedOption: string) => {
 </script>
 
 <style scoped lang="scss">
-.card-wrapper {
-  padding-bottom: 1rem;
-  display: flex;
-  gap: 0.5rem;
-
-  .order-card {
-    width: 2rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .option-card {
-    flex: 1;
-  }
-
-  &.draggable {
-    cursor: grab;
-  }
+.draggable {
+  cursor: grab;
 }
 
-.card-content {
-  padding: 3.6px 0.25rem;
+.actions-wrapper {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
   gap: 0.5rem;
-
-  &.xs {
-    flex-direction: column;
-    align-items: flex-start;
-
-    &.editMode {
-      flex-direction: unset;
-    }
-  }
-
-  .text-container {
-    display: flex;
-    gap: 0.5rem;
-    flex: 1;
-  }
-
-  .actions-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-left: auto;
-  }
 }
 </style>
