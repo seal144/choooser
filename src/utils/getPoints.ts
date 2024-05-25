@@ -5,5 +5,5 @@ export const getPoints = (index: number, optionLength: number) => {
 export const getPointsText = (index: number, optionLength: number) => {
   const points = getPoints(index, optionLength);
 
-  return points === 1 ? `(${points} point)` : `(${points} points)`;
+  return points === 1 ? `${points} point` : `${points} points`;
 };

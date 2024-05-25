@@ -1,12 +1,19 @@
 <template>
-  <div class="card-wrapper">
-    <v-card class="order-card" v-if="ordinalNumber !== undefined">
+  <div class="card-wrapper" :class="{ big }">
+    <v-card
+      class="order-card"
+      :class="{ big }"
+      v-if="ordinalNumber !== undefined"
+    >
       {{ ordinalNumber }}
     </v-card>
     <v-card class="option-card">
-      <div class="card-content" :class="{ xs, 'one-column': oneColumn }">
+      <div class="card-content" :class="{ xs, 'one-column': oneColumn, big }">
         <div class="left-column">
-          <div><v-icon icon="mdi-star" size="20" /></div>
+          <div>
+            <span v-if="big">&#127942;</span
+            ><v-icon v-else icon="mdi-star" size="20" />
+          </div>
           <slot name="leftColumn"></slot>
         </div>
         <div class="right-column">
@@ -29,6 +36,10 @@ defineProps({
     type: Boolean,
     default: false,
   },
+  big: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const { xs } = useDisplay();
@@ -40,11 +51,19 @@ const { xs } = useDisplay();
   display: flex;
   gap: 0.5rem;
 
+  &.big {
+    font-size: 24px;
+    font-weight: 700;
+  }
+
   .order-card {
     width: 2rem;
     display: flex;
     justify-content: center;
     align-items: center;
+    &.big {
+      display: none;
+    }
   }
 
   .option-card {
@@ -59,6 +78,10 @@ const { xs } = useDisplay();
   justify-content: center;
   align-items: center;
   gap: 0.5rem;
+
+  &.big {
+    padding: 0.5rem;
+  }
 
   &.xs {
     flex-direction: column;

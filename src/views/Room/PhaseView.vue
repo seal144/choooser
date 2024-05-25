@@ -11,14 +11,16 @@
     :isChoiceConfirmed="isUserConfirmedChoice"
     :isOwner="isOwner"
   />
+  <PhaseResult v-else-if="room?.phase === Phase.Result" />
 </template>
 
 <script setup lang="ts">
 import { computed, toRef } from "vue";
 
 import { useRoomStore } from "@/store/roomStore";
-import PhaseSettingOptions from "./PhaseSettingOptions.vue";
 import PhaseChoosing from "./PhaseChoosing.vue";
+import PhaseResult from "./PhaseResult.vue";
+import PhaseSettingOptions from "./PhaseSettingOptions.vue";
 import { HeaderCard } from "@/components";
 import getUser from "@/composables/getUser";
 import { Phase } from "@/types";

@@ -14,6 +14,7 @@ import JoinCreateRoomDialog from "./JoinCreateRoomDialog.vue";
 import Logo from "./Logo.vue";
 import OptionCard from "./OptionCard.vue";
 import OptionsList from "./OptionsList.vue";
+import OptionsResult from "./OptionsResult.vue";
 import RoomButtonSubMenu from "./RoomButtonSubMenu.vue";
 import SettingsDialog from "./SettingsDialog.vue";
 import Snackbar from "./Snackbar.vue";
@@ -38,6 +39,7 @@ export {
   Logo,
   OptionCard,
   OptionsList,
+  OptionsResult,
   RoomButtonSubMenu,
   SettingsDialog,
   Snackbar,
