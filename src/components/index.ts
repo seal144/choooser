@@ -15,12 +15,13 @@ import Logo from "./Logo.vue";
 import OptionCard from "./OptionCard.vue";
 import OptionsList from "./OptionsList.vue";
 import OptionsResult from "./OptionsResult.vue";
+import PersonCard from "./PersonCard.vue";
+import ResultDetailsDialog from "./ResultDetailsDialog.vue";
 import RoomButtonSubMenu from "./RoomButtonSubMenu.vue";
 import SettingsDialog from "./SettingsDialog.vue";
 import Snackbar from "./Snackbar.vue";
 import Textarea from "./Textarea.vue";
 import TextField from "./TextField.vue";
-import PersonCard from "./PersonCard.vue";
 
 export {
   AppendTextForm,
@@ -40,10 +41,11 @@ export {
   OptionCard,
   OptionsList,
   OptionsResult,
+  PersonCard,
+  ResultDetailsDialog,
   RoomButtonSubMenu,
   SettingsDialog,
   Snackbar,
   Textarea,
   TextField,
-  PersonCard,
 };

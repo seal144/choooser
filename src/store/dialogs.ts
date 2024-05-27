@@ -19,6 +19,7 @@ export const useDialogsStore = defineStore("dialogs", {
       [Dialogs.AppInfo]: false,
       [Dialogs.ConfirmPrevPhase]: false,
       [Dialogs.ConfirmProceedToResult]: false,
+      [Dialogs.ResultDetails]: false,
     },
   }),
 });

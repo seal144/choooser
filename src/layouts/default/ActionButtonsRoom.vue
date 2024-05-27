@@ -1,4 +1,13 @@
 <template>
+  <Button
+    v-if="route.name === RoutesNames.Room && room?.phase === Phase.Result"
+    :icon="!smAndUp"
+    @click="openResultDetailsDialog"
+  >
+    <v-icon icon="mdi-format-list-bulleted" size="large" /><span v-if="smAndUp">
+      Details
+    </span>
+  </Button>
   <router-link
     v-if="route.name === RoutesNames.Room"
     :to="{ name: RoutesNames.RoomChat }"
@@ -24,15 +33,26 @@
       </span>
     </Button>
   </router-link>
+  <ResultDetailsDialog />
 </template>
 
 <script lang="ts" setup>
+import { toRef } from "vue";
 import { useRoute } from "vue-router";
 import { useDisplay } from "vuetify";
 
 import { RoutesNames } from "@/router";
-import { Button } from "@/components";
+import { Button, ResultDetailsDialog } from "@/components";
+import { useRoomStore } from "@/store/roomStore";
+import { useDialogsStore } from "@/store/dialogs";
+import { Dialogs, Phase } from "@/types";
 
 const route = useRoute();
 const { smAndUp } = useDisplay();
+const room = toRef(useRoomStore(), "room");
+const dialogs = useDialogsStore();
+
+const openResultDetailsDialog = () => {
+  dialogs.isOpen[Dialogs.ResultDetails] = true;
+};
 </script>
