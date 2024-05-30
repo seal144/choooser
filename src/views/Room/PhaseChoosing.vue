@@ -11,13 +11,15 @@
         @click="handleConfirmChoice(true)"
         block
         :loading="loadingConfirmChoice"
-        >Confirm choice</Button
+        class="mt-4"
+        ><v-icon icon="mdi-check-bold" size="large" />Confirm choice</Button
       >
       <Button
         v-else
         @click="handleConfirmChoice(false)"
         block
         :loading="loadingConfirmChoice"
+        class="mt-4"
       >
         <v-icon icon="mdi-pencil" size="large" />Correct choice
       </Button>

@@ -51,6 +51,10 @@ const { xs } = useDisplay();
   display: flex;
   gap: 0.5rem;
 
+  &:last-child {
+    padding-bottom: 0;
+  }
+
   &.big {
     font-size: 24px;
     font-weight: 700;

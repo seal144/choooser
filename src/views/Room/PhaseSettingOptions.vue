@@ -14,7 +14,12 @@
       createListMode
       class="options-list"
     />
-    <Button v-if="options.length >= 2" type="submit" block :loading="loading"
+    <Button
+      v-if="options.length >= 2"
+      type="submit"
+      block
+      :loading="loading"
+      class="mt-4"
       >Confirm options</Button
     >
     <Snackbar
