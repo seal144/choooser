@@ -7,6 +7,7 @@ import ConfirmDeleteAbandonRoom from "./ConfirmDeleteAbandonRoom.vue";
 import ConfirmDialog from "./ConfirmDialog.vue";
 import CookieBanner from "./CookieBanner.vue";
 import Dialog from "./Dialog.vue";
+import ExtensionPanelSingle from "./ExtensionPanelSingle.vue";
 import FormError from "./FormError.vue";
 import HeaderCard from "./HeaderCard.vue";
 import InfoDialog from "./InfoDialog.vue";
@@ -33,6 +34,7 @@ export {
   ConfirmDialog,
   CookieBanner,
   Dialog,
+  ExtensionPanelSingle,
   FormError,
   HeaderCard,
   InfoDialog,

@@ -33,7 +33,9 @@
       </span>
     </Button>
   </router-link>
-  <ResultDetailsDialog />
+  <ResultDetailsDialog
+    v-if="route.name === RoutesNames.Room && room?.phase === Phase.Result"
+  />
 </template>
 
 <script lang="ts" setup>
