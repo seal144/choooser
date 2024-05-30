@@ -15,7 +15,9 @@
           :title="getUserDisplayName(choice.userId)"
           small
         >
-          <OptionsList :options="choice.ranking" readOnlyMode />
+          <div class="options-list-wrapper">
+            <OptionsList :options="choice.ranking" readOnlyMode />
+          </div>
         </ExtensionPanelSingle>
       </div>
     </template>
@@ -58,5 +60,9 @@ const getUserDisplayName = (userId: string): string => {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+}
+
+.options-list-wrapper {
+  margin: 0 -1rem -0.5rem;
 }
 </style>
