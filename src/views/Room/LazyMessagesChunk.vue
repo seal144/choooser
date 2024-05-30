@@ -9,7 +9,7 @@
         v-for="(message, index) in messagesChunk"
         :key="index"
         :message="message"
-        :participantsList="participantsList"
+        :allParticipants="allParticipants"
       />
     </div>
   </v-lazy>
@@ -26,7 +26,7 @@ defineProps({
     type: Array as PropType<IMessage[]>,
     required: true,
   },
-  participantsList: {
+  allParticipants: {
     type: Array as PropType<User[]>,
     required: true,
   },

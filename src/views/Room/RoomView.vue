@@ -17,11 +17,7 @@
         class="chat-container"
         :class="{ xs }"
       >
-        <Chat
-          v-if="room"
-          :roomId="room.id"
-          :participantsList="[...room.guests, ...room.pastGuests, room.owner]"
-        />
+        <Chat v-if="room" :roomId="room.id" />
       </div>
       <div v-else class="choosing-container">
         <PhaseView />

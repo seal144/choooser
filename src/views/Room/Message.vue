@@ -24,7 +24,7 @@ const props = defineProps({
     type: Object as PropType<Message>,
     required: true,
   },
-  participantsList: {
+  allParticipants: {
     type: Array as PropType<User[]>,
     required: true,
   },
@@ -40,7 +40,7 @@ const paragraphs = computed(() => {
 });
 
 const displayName = computed(() => {
-  return props.participantsList.find(
+  return props.allParticipants.find(
     (participant) => participant.id === props.message.authorId
   )?.displayName;
 });

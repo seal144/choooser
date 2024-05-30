@@ -20,28 +20,33 @@
       ></v-progress-circular>
       <div v-else>
         <LazyMessagesChunk
+          v-if="room"
           :isMounted="isOldestChatMounted"
           :messagesChunk="oldestChat"
-          :participantsList="participantsList"
+          :allParticipants="room.allParticipants"
         />
         <LazyMessagesChunk
+          v-if="room"
           :isMounted="isOlderChatMounted"
           @updated="isOldestChatMounted = true"
           :messagesChunk="olderChat"
-          :participantsList="participantsList"
+          :allParticipants="room.allParticipants"
         />
         <LazyMessagesChunk
+          v-if="room"
           :isMounted="isOldChatMounted"
           @updated="isOlderChatMounted = true"
           :messagesChunk="oldChat"
-          :participantsList="participantsList"
+          :allParticipants="room.allParticipants"
         />
-        <Message
-          v-for="(message, index) in latestChat"
-          :key="index"
-          :message="message"
-          :participantsList="participantsList"
-        />
+        <div v-if="room">
+          <Message
+            v-for="(message, index) in latestChat"
+            :key="index"
+            :message="message"
+            :allParticipants="room.allParticipants"
+          />
+        </div>
       </div>
     </div>
     <div class="bottom-row">
@@ -68,7 +73,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, PropType, watch } from "vue";
+import { computed, ref, toRef, watch } from "vue";
 import { useDisplay } from "vuetify";
 
 import { defaultCircularProgressSize, lineThickness } from "@/plugins/vuetify";
@@ -78,18 +83,16 @@ import LazyMessagesChunk from "./LazyMessagesChunk.vue";
 import useSendMessage from "@/composables/useSendMessage";
 import subscribeChat from "@/composables/subscribeChat";
 import { messageValidation } from "@/utils/validation";
-import { User } from "@/types";
+import { useRoomStore } from "@/store/roomStore";
 
 const props = defineProps({
   roomId: {
     type: String,
     required: true,
   },
-  participantsList: {
-    type: Object as PropType<User[]>,
-    required: true,
-  },
 });
+
+const room = toRef(useRoomStore(), "room");
 
 const { smAndDown } = useDisplay();
 const { sendMessage, error: errorSendMessage } = useSendMessage();

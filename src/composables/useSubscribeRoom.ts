@@ -59,17 +59,22 @@ const useSubscribeRoom = (roomId: string) => {
       unsubscribe = onSnapshot(docRef, async (snapshot) => {
         const phase: Phase = snapshot.get(RoomField.Phase);
 
-        const CurrentParticipants: User[] = [
+        const currentParticipants: User[] = [
           snapshot.get(RoomField.Owner),
           ...snapshot.get(RoomField.Guests),
         ];
 
+        const allParticipants: User[] = [
+          ...currentParticipants,
+          ...snapshot.get(RoomField.PastGuests),
+        ];
+
         const choices: Choice[] = snapshot.get(RoomField.Choices);
 
-        const ParticipantsIdsStillChoosing =
+        const participantsIdsStillChoosing =
           phase === Phase.Choosing
             ? getParticipantsIdsStillChoosing(
-                CurrentParticipants.map((user) => user.id),
+                currentParticipants.map((user) => user.id),
                 choices
               )
             : [];
@@ -87,9 +92,10 @@ const useSubscribeRoom = (roomId: string) => {
           [RoomField.Options]: snapshot.get(RoomField.Options),
           [RoomField.Choices]: choices,
           [RoomField.Result]: snapshot.get(RoomField.Result),
-          [RoomField.CurrentParticipants]: CurrentParticipants,
+          [RoomField.CurrentParticipants]: currentParticipants,
+          [RoomField.AllParticipants]: allParticipants,
           [RoomField.ParticipantsIdsStillChoosing]:
-            ParticipantsIdsStillChoosing,
+            participantsIdsStillChoosing,
         };
       });
 

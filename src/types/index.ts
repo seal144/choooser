@@ -109,6 +109,7 @@ export enum RoomField {
   Choices = "choices",
   Result = "result",
   CurrentParticipants = "currentParticipants",
+  AllParticipants = "allParticipants",
   ParticipantsIdsStillChoosing = "participantsIdsStillChoosing",
 }
 
@@ -127,6 +128,7 @@ export interface Room {
   [RoomField.Choices]: Choice[];
   [RoomField.Result]: Result | null;
   [RoomField.CurrentParticipants]: User[];
+  [RoomField.AllParticipants]: User[];
   [RoomField.ParticipantsIdsStillChoosing]: string[];
 }
 
@@ -135,6 +137,7 @@ export type RoomDataDB = Omit<
   | RoomField.Id
   | RoomField.ParsedGroupId
   | RoomField.CurrentParticipants
+  | RoomField.AllParticipants
   | RoomField.ParticipantsIdsStillChoosing
 >;
 
