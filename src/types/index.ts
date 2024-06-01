@@ -111,6 +111,8 @@ export enum RoomField {
   CurrentParticipants = "currentParticipants",
   AllParticipants = "allParticipants",
   ParticipantsIdsStillChoosing = "participantsIdsStillChoosing",
+  EnhancementFirst = "enhancementFirst",
+  WeakeningLast = "weakeningLast",
 }
 
 export interface Room {
@@ -130,6 +132,9 @@ export interface Room {
   [RoomField.CurrentParticipants]: User[];
   [RoomField.AllParticipants]: User[];
   [RoomField.ParticipantsIdsStillChoosing]: string[];
+  //NOTE this two fields are not used right now there are for future development
+  [RoomField.EnhancementFirst]: boolean;
+  [RoomField.WeakeningLast]: boolean;
 }
 
 export type RoomDataDB = Omit<

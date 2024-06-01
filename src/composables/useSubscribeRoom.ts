@@ -96,6 +96,10 @@ const useSubscribeRoom = (roomId: string) => {
           [RoomField.AllParticipants]: allParticipants,
           [RoomField.ParticipantsIdsStillChoosing]:
             participantsIdsStillChoosing,
+          [RoomField.EnhancementFirst]: snapshot.get(
+            RoomField.EnhancementFirst
+          ),
+          [RoomField.WeakeningLast]: snapshot.get(RoomField.WeakeningLast),
         };
       });
 

@@ -62,6 +62,9 @@ const createRoom = async (roomFormData: RoomFormData) => {
       [RoomField.Options]: [],
       [RoomField.Choices]: [],
       [RoomField.Result]: null,
+      //NOTE this two fields are not used right now there are for future development
+      [RoomField.EnhancementFirst]: false,
+      [RoomField.WeakeningLast]: false,
     };
 
     const response = await addDoc(collection(db, Collection.Rooms), room);
