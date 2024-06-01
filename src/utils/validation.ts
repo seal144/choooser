@@ -1,4 +1,4 @@
-const required = (value: string) => !!value || "Required";
+export const required = (value: string) => !!value || "Required";
 const emailFormat = (value: string) =>
   Boolean(value.match(/^[\w-.]+@([\w-]+\.)[\w]{2,4}$/)) ||
   "incorrect email format";

@@ -17,6 +17,7 @@ export enum Dialogs {
   ConfirmPrevPhase = "confirmPrevPhase",
   ConfirmProceedToResult = "confirmProceedToResult",
   ResultDetails = "resultDetails",
+  ConfirmDeleteUser = "ConfirmDeleteUser",
 }
 
 export enum Collection {
