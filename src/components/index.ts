@@ -1,3 +1,4 @@
+import AdminPanel from "./AdminPanel.vue";
 import AppendTextForm from "./AppendTextForm.vue";
 import AppInfoDialog from "./AppInfoDialog.vue";
 import Button from "./Button.vue";
@@ -25,6 +26,7 @@ import Textarea from "./Textarea.vue";
 import TextField from "./TextField.vue";
 
 export {
+  AdminPanel,
   AppendTextForm,
   AppInfoDialog,
   Button,

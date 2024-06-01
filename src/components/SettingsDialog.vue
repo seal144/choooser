@@ -47,6 +47,7 @@
           <div>Danger zone</div>
         </div>
       </v-form>
+      <AdminPanel v-if="isAdmin" />
       <FormError
         extends-layout
         align-right
@@ -72,6 +73,7 @@ import { useDisplay, useTheme } from "vuetify";
 import { useDialogsStore } from "@/store/dialogs";
 import { useUserStore } from "@/store/userStore";
 import {
+  AdminPanel,
   Button,
   ConfirmDialog,
   Dialog,
@@ -79,6 +81,7 @@ import {
   TextField,
 } from "@/components";
 import useUser from "@/composables/useUser";
+import getUser from "@/composables/getUser";
 import useDefaultTheme from "@/composables/useDefaultTheme";
 import { displayNameValidation } from "@/utils/validation";
 import { CommonErrors, Dialogs } from "@/types";
@@ -95,7 +98,10 @@ const {
   loadingUpdateDisplayName,
   loadingDeleteUser,
 } = useUser();
+const { user } = getUser();
 const theme = useTheme();
+
+const isAdmin = user.value?.uid === import.meta.env.VITE_ADMIN_UID;
 
 const formError = computed(() => {
   if (error.value && error.value !== CommonErrors.DisplayNameInUse) {
