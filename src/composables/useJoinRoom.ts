@@ -12,10 +12,6 @@ type RoomFormData = {
   password: string;
 };
 
-export enum ErrorJoinRoom {
-  InvalidPassword = "Invalid Password",
-}
-
 const loading = ref(false);
 const error = ref<string | null>(null);
 
@@ -40,7 +36,7 @@ const validateRoom = (roomGroupId: string, passedGroupId: string) => {
   ).toString(CryptoJS.enc.Utf8);
 
   if (parsedRoomGroupId !== passedGroupId) {
-    throw new Error(ErrorJoinRoom.InvalidPassword);
+    throw new Error(CommonErrors.InvalidPassword);
   }
 };
 

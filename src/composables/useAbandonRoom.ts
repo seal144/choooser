@@ -7,7 +7,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { auth, db } from "@/firebase/config";
-import { CommonErrors, Room, RoomField, Collection, UserField } from "@/types";
+import { CommonErrors, Room, RoomField, Collection } from "@/types";
 
 const loading = ref(false);
 const error = ref<string | null>(null);

@@ -24,6 +24,7 @@ export enum Collection {
   Rooms = "rooms",
   Users = "users",
   Chats = "chats",
+  AdminPassword = "adminPassword",
 }
 
 export enum UserField {
@@ -168,4 +169,5 @@ export enum CommonErrors {
   TheRoomIsFull = "The room is full.",
   DisplayNameInUse = "Display name already in use.",
   DefaultSuffix = "failed. Please, try again later.",
+  InvalidPassword = "Invalid Password",
 }
