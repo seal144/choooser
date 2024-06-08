@@ -83,6 +83,7 @@ import {
 import useUser from "@/composables/useUser";
 import getUser from "@/composables/getUser";
 import useDefaultTheme from "@/composables/useDefaultTheme";
+import useAdmin from "@/composables/useAdmin";
 import { displayNameValidation } from "@/utils/validation";
 import { CommonErrors, Dialogs } from "@/types";
 
@@ -94,12 +95,13 @@ const {
   updateDisplayName,
   deleteUser,
   error,
-  resetError,
+  resetError: userResetError,
   loadingUpdateDisplayName,
   loadingDeleteUser,
 } = useUser();
 const { user } = getUser();
 const theme = useTheme();
+const { resetError: adminPanelResetError } = useAdmin();
 
 const isAdmin = user.value?.uid === import.meta.env.VITE_ADMIN_UID;
 
@@ -144,7 +146,8 @@ const resetValues = () => {
 
 const onClose = () => {
   resetValues();
-  resetError();
+  userResetError();
+  adminPanelResetError();
 };
 
 const deleteAccount = async () => {

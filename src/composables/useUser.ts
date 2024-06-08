@@ -73,25 +73,35 @@ const updateDisplayName = async (displayName: string) => {
   }
 };
 
+const deleteUserData = async (userId?: string) => {
+  if (auth?.currentUser) {
+    const userRef = doc(
+      db,
+      Collection.Users,
+      userId ? userId : auth.currentUser.uid
+    );
+    await deleteDoc(userRef);
+
+    const userRoomsAsOwner = await getUserOwnedRooms(userId);
+    const userRoomsAsGuest = await getUserJoinedRooms(userId);
+
+    userRoomsAsOwner.forEach(async (roomId) => {
+      await deleteRoom(roomId);
+    });
+
+    userRoomsAsGuest.forEach(async (room) => {
+      await abandonRoom(room.id, userId);
+    });
+  }
+};
+
 const deleteUser = async () => {
   error.value = null;
   loadingDeleteUser.value = true;
 
   if (auth.currentUser) {
     try {
-      const docRef = doc(db, Collection.Users, auth.currentUser.uid);
-      await deleteDoc(docRef);
-
-      const userRoomsAsOwner = await getUserOwnedRooms();
-      const userRoomsAsGuest = await getUserJoinedRooms();
-
-      userRoomsAsOwner.forEach(async (roomId) => {
-        await deleteRoom(roomId);
-      });
-
-      userRoomsAsGuest.forEach(async (room) => {
-        await abandonRoom(room.id);
-      });
+      await deleteUserData();
 
       await deleteUserFirebase(auth.currentUser);
 
@@ -113,6 +123,7 @@ const useUser = () => ({
   updateDisplayName,
   loadingUpdateDisplayName,
   deleteUser,
+  deleteUserData,
   loadingDeleteUser,
   error,
   resetError,

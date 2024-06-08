@@ -2,11 +2,11 @@ import { auth } from "@/firebase/config";
 import { getDocs } from "@/firebase/docs";
 import { Collection, RoomField, UserField, Room } from "@/types";
 
-export const getUserOwnedRooms = async () => {
+export const getUserOwnedRooms = async (userId?: string) => {
   const snapshot = await getDocs(Collection.Rooms, [
     `${RoomField.Owner}.${UserField.Id}`,
     "==",
-    auth.currentUser?.uid,
+    userId ? userId : auth.currentUser?.uid,
   ]);
 
   return snapshot.docs.map((doc) => {
@@ -14,11 +14,11 @@ export const getUserOwnedRooms = async () => {
   });
 };
 
-export const getUserJoinedRooms = async () => {
+export const getUserJoinedRooms = async (userId?: string) => {
   const snapshot = await getDocs(Collection.Rooms, [
     `${RoomField.GuestsIds}`,
     "array-contains",
-    auth.currentUser?.uid,
+    userId ? userId : auth.currentUser?.uid,
   ]);
 
   return snapshot.docs.map((doc) => {
