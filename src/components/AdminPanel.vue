@@ -1,6 +1,6 @@
 <template>
   <HeaderCard class="mt-4">Admin panel</HeaderCard>
-  <v-form v-model="form" @submit.prevent="onSubmit" class="form">
+  <v-form ref="form" v-model="isValid" @submit.prevent="onSubmit" class="form">
     <TextField
       v-model.trim="userId"
       label="User id to delete data"
@@ -51,7 +51,8 @@ const dialogs = useDialogsStore();
 const { prepareUserToDelete, loading, error, successMessage, resetError } =
   useAdmin();
 
-const form = ref(false);
+const form = ref<HTMLFormElement | null>(null);
+const isValid = ref(false);
 const userId = ref("");
 const password = ref("");
 const showPassword = ref(false);
@@ -63,9 +64,7 @@ watch([userId, password], () => {
 });
 
 const onSubmit = () => {
-  const isUserIdValid = required(userId.value) === true;
-  const isPasswordValid = required(password.value) === true;
-  if (!isUserIdValid || !isPasswordValid) return;
+  if (!isValid.value) return;
   dialogs.isOpen[Dialogs.ConfirmDeleteUser] = true;
 };
 
@@ -74,9 +73,8 @@ const deleteUserData = async () => {
 
   await prepareUserToDelete(userId.value, password.value);
 
-  if (!error.value) {
-    userId.value = "";
-    password.value = "";
+  if (!error.value && form.value) {
+    form.value.reset();
   }
 };
 </script>
