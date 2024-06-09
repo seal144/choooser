@@ -36,12 +36,22 @@
     :loading="loading"
     danger
   />
+  <Snackbar
+    v-model="snackbarDeleteUserDataError"
+    :text="`Deleting user data ${CommonErrors.DefaultSuffix}`"
+  />
+  <Snackbar
+    type="success"
+    v-if="successMessage"
+    v-model="successMessage"
+    :text="successMessage"
+  />
 </template>
 
 <script setup lang="ts">
 import { ref, watch } from "vue";
 
-import { Button, ConfirmDialog, HeaderCard, TextField } from "./";
+import { Button, ConfirmDialog, HeaderCard, TextField, Snackbar } from "./";
 import { useDialogsStore } from "@/store/dialogs";
 import useAdmin from "@/composables/useAdmin";
 import { required } from "@/utils/validation";
@@ -56,6 +66,7 @@ const isValid = ref(false);
 const userId = ref("");
 const password = ref("");
 const showPassword = ref(false);
+const snackbarDeleteUserDataError = ref(false);
 
 watch([userId, password], () => {
   if (error.value) {
@@ -75,6 +86,13 @@ const deleteUserData = async () => {
 
   if (!error.value && form.value) {
     form.value.reset();
+  }
+  if (
+    error.value &&
+    error.value !== CommonErrors.InvalidPassword &&
+    error.value !== CommonErrors.TheUserNotFound
+  ) {
+    snackbarDeleteUserDataError.value = true;
   }
 };
 </script>
