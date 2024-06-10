@@ -1,9 +1,23 @@
 <template>
-  <v-snackbar v-model="cookieBannerOpen" timeout="-1" rounded="0">
+  <v-snackbar
+    class="cookie-banner"
+    v-model="cookieBannerOpen"
+    timeout="-1"
+    rounded="0"
+  >
     <div class="cookie-banner-content">
-      This web app uses cookies to ensure you get the best experience. By
-      continuing to use this web app, you consent to the use of cookies.
-      <Button @click="grantCookieConsent" elevation="1"> Agree </Button>
+      <div>
+        This web app uses cookies to ensure you get the best experience. By
+        continuing to use this web app, you consent to the use of cookies.
+      </div>
+      <Button
+        class="confirm-button"
+        size="small"
+        @click="grantCookieConsent"
+        elevation="1"
+      >
+        Agree
+      </Button>
     </div>
   </v-snackbar>
 </template>
@@ -29,15 +43,19 @@ const grantCookieConsent = () => {
 };
 </script>
 
-<style>
-.v-snackbar__wrapper {
+<style lang="scss">
+div.v-snackbar__wrapper {
   border: 1px solid rgb(var(--v-theme-primary));
+  min-width: 250px;
 }
 
 .cookie-banner-content {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-right: -0.5rem;
+  flex-direction: column;
+
+  .confirm-button {
+    width: fit-content;
+    margin-left: auto;
+  }
 }
 </style>

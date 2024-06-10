@@ -29,6 +29,7 @@ const props = defineProps({
 const defaultTitle =
   props.type === "error" ? "Something went wrong" : "Success";
 </script>
+
 <style lang="scss">
 .snackbar {
   .v-snackbar__content {
