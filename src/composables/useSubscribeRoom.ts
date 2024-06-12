@@ -57,50 +57,60 @@ const useSubscribeRoom = (roomId: string) => {
       }
 
       unsubscribe = onSnapshot(docRef, async (snapshot) => {
-        const phase: Phase = snapshot.get(RoomField.Phase);
+        try {
+          if (!snapshot.exists()) {
+            throw new Error(CommonErrors.TheDocumentNotFound);
+          }
 
-        const currentParticipants: User[] = [
-          snapshot.get(RoomField.Owner),
-          ...snapshot.get(RoomField.Guests),
-        ];
+          const phase: Phase = snapshot.get(RoomField.Phase);
 
-        const allParticipants: User[] = [
-          ...currentParticipants,
-          ...snapshot.get(RoomField.PastGuests),
-        ];
+          const currentParticipants: User[] = [
+            snapshot.get(RoomField.Owner),
+            ...snapshot.get(RoomField.Guests),
+          ];
 
-        const choices: Choice[] = snapshot.get(RoomField.Choices);
+          const allParticipants: User[] = [
+            ...currentParticipants,
+            ...snapshot.get(RoomField.PastGuests),
+          ];
 
-        const participantsIdsStillChoosing =
-          phase === Phase.Choosing
-            ? getParticipantsIdsStillChoosing(
-                currentParticipants.map((user) => user.id),
-                choices
-              )
-            : [];
+          const choices: Choice[] = snapshot.get(RoomField.Choices);
 
-        roomStore.room = {
-          [RoomField.Id]: snapshot.id,
-          [RoomField.CreateTime]: snapshot.get(RoomField.CreateTime),
-          [RoomField.ParsedGroupId]: snapshot.get(RoomField.GroupId) ? 1 : 0,
-          [RoomField.Name]: snapshot.get(RoomField.Name),
-          [RoomField.Owner]: snapshot.get(RoomField.Owner),
-          [RoomField.GuestsIds]: snapshot.get(RoomField.GuestsIds),
-          [RoomField.Guests]: snapshot.get(RoomField.Guests),
-          [RoomField.PastGuests]: snapshot.get(RoomField.PastGuests),
-          [RoomField.Phase]: phase,
-          [RoomField.Options]: snapshot.get(RoomField.Options),
-          [RoomField.Choices]: choices,
-          [RoomField.Result]: snapshot.get(RoomField.Result),
-          [RoomField.CurrentParticipants]: currentParticipants,
-          [RoomField.AllParticipants]: allParticipants,
-          [RoomField.ParticipantsIdsStillChoosing]:
-            participantsIdsStillChoosing,
-          [RoomField.EnhancementFirst]: snapshot.get(
-            RoomField.EnhancementFirst
-          ),
-          [RoomField.WeakeningLast]: snapshot.get(RoomField.WeakeningLast),
-        };
+          const participantsIdsStillChoosing =
+            phase === Phase.Choosing
+              ? getParticipantsIdsStillChoosing(
+                  currentParticipants.map((user) => user.id),
+                  choices
+                )
+              : [];
+
+          roomStore.room = {
+            [RoomField.Id]: snapshot.id,
+            [RoomField.CreateTime]: snapshot.get(RoomField.CreateTime),
+            [RoomField.ParsedGroupId]: snapshot.get(RoomField.GroupId) ? 1 : 0,
+            [RoomField.Name]: snapshot.get(RoomField.Name),
+            [RoomField.Owner]: snapshot.get(RoomField.Owner),
+            [RoomField.GuestsIds]: snapshot.get(RoomField.GuestsIds),
+            [RoomField.Guests]: snapshot.get(RoomField.Guests),
+            [RoomField.PastGuests]: snapshot.get(RoomField.PastGuests),
+            [RoomField.Phase]: phase,
+            [RoomField.Options]: snapshot.get(RoomField.Options),
+            [RoomField.Choices]: choices,
+            [RoomField.Result]: snapshot.get(RoomField.Result),
+            [RoomField.CurrentParticipants]: currentParticipants,
+            [RoomField.AllParticipants]: allParticipants,
+            [RoomField.ParticipantsIdsStillChoosing]:
+              participantsIdsStillChoosing,
+            [RoomField.EnhancementFirst]: snapshot.get(
+              RoomField.EnhancementFirst
+            ),
+            [RoomField.WeakeningLast]: snapshot.get(RoomField.WeakeningLast),
+          };
+        } catch (err) {
+          const { message } = err as Error;
+          console.error(message);
+          error.value = message;
+        }
       });
 
       watchEffect((onInvalidate) => {
