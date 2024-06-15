@@ -6,8 +6,7 @@
 </template>
 
 <script lang="ts" setup>
-// const appName = "CHOOSER";
-const appName = "COMMUNICATOR";
+const appName = "CHOOOSER";
 
 const props = defineProps({
   collapse: {

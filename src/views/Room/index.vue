@@ -3,14 +3,14 @@
     <v-progress-circular
       v-if="loading"
       indeterminate
-      size="48"
+      :size="defaultCircularProgressSize"
       :width="lineThickness"
     ></v-progress-circular>
     <template v-else-if="error === CommonErrors.TheDocumentNotFound">
       <RoomNotExist />
     </template>
     <template v-else>
-      <RoomView v-if="room" :room="room" />
+      <RoomView v-if="room" />
     </template>
     <InfoDialog
       @close="redirectLoginDialog"
@@ -34,18 +34,18 @@
     />
     <Snackbar
       v-model="snackbarJoinRoomError"
-      title="Something went wrong"
-      text="Joining room failed. Please, try again later."
+      :text="`Joining room ${CommonErrors.DefaultSuffix}`"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, watchEffect, ref } from "vue";
+import { computed, onBeforeUnmount, watchEffect, ref, toRef } from "vue";
 import { useRouter, useRoute } from "vue-router";
 
-import { lineThickness } from "@/plugins/vuetify";
+import { defaultCircularProgressSize, lineThickness } from "@/plugins/vuetify";
 import { RoutesNames } from "@/router";
+import { useRoomStore } from "@/store/roomStore";
 import { useDialogsStore } from "@/store/dialogs";
 import { InfoDialog, JoinCreateRoomDialog, Snackbar } from "@/components";
 import RoomView from "./RoomView.vue";
@@ -63,9 +63,10 @@ const { user } = getUser();
 const dialogs = useDialogsStore();
 const userInitValidation = ref(true);
 const snackbarJoinRoomError = ref(false);
-const { room, subscribeRoom, error } = useSubscribeRoom(
+const { subscribeRoom, unsubscribeRoom, error } = useSubscribeRoom(
   route.params.id as string
 );
+const room = toRef(useRoomStore(), "room");
 const { joinRoom, error: errorJoinRoom } = useJoinRoom();
 
 let delayedKick: NodeJS.Timeout;
@@ -81,6 +82,7 @@ watchEffect(() => {
 
 onBeforeUnmount(() => {
   clearTimeout(delayedKick);
+  unsubscribeRoom();
 });
 
 watchEffect(() => {

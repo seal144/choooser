@@ -15,33 +15,38 @@
         class="chat-loading"
         v-else-if="wholeChat === null"
         indeterminate
-        size="48"
+        :size="defaultCircularProgressSize"
         :width="lineThickness"
       ></v-progress-circular>
       <div v-else>
         <LazyMessagesChunk
+          v-if="room"
           :isMounted="isOldestChatMounted"
           :messagesChunk="oldestChat"
-          :participantsList="participantsList"
+          :allParticipants="room.allParticipants"
         />
         <LazyMessagesChunk
+          v-if="room"
           :isMounted="isOlderChatMounted"
           @updated="isOldestChatMounted = true"
           :messagesChunk="olderChat"
-          :participantsList="participantsList"
+          :allParticipants="room.allParticipants"
         />
         <LazyMessagesChunk
+          v-if="room"
           :isMounted="isOldChatMounted"
           @updated="isOlderChatMounted = true"
           :messagesChunk="oldChat"
-          :participantsList="participantsList"
+          :allParticipants="room.allParticipants"
         />
-        <Message
-          v-for="(message, index) in latestChat"
-          :key="index"
-          :message="message"
-          :participantsList="participantsList"
-        />
+        <div v-if="room">
+          <Message
+            v-for="(message, index) in latestChat"
+            :key="index"
+            :message="message"
+            :allParticipants="room.allParticipants"
+          />
+        </div>
       </div>
     </div>
     <div class="bottom-row">
@@ -68,28 +73,30 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, PropType, watch } from "vue";
+import { computed, ref, toRef, watch } from "vue";
 import { useDisplay } from "vuetify";
 
-import { lineThickness } from "@/plugins/vuetify";
+import { defaultCircularProgressSize, lineThickness } from "@/plugins/vuetify";
 import { ButtonIcon, ButtonScrollToBottom, Textarea } from "@/components";
 import Message from "./Message.vue";
 import LazyMessagesChunk from "./LazyMessagesChunk.vue";
 import useSendMessage from "@/composables/useSendMessage";
 import subscribeChat from "@/composables/subscribeChat";
 import { messageValidation } from "@/utils/validation";
-import { RoomDetailsData } from "@/types";
+import { useRoomStore } from "@/store/roomStore";
 
 const props = defineProps({
-  room: {
-    type: Object as PropType<RoomDetailsData>,
+  roomId: {
+    type: String,
     required: true,
   },
 });
 
+const room = toRef(useRoomStore(), "room");
+
 const { smAndDown } = useDisplay();
 const { sendMessage, error: errorSendMessage } = useSendMessage();
-const { chat: wholeChat, error: errorChat } = subscribeChat(props.room.id);
+const { chat: wholeChat, error: errorChat } = subscribeChat(props.roomId);
 
 const form = ref(false);
 const message = ref("");
@@ -102,9 +109,6 @@ const isOldChatMounted = ref(false);
 const isOlderChatMounted = ref(false);
 const isOldestChatMounted = ref(false);
 const newMessages = ref(-1);
-const isFirefox = computed(() => {
-  return /firefox/i.test(navigator.userAgent);
-});
 
 const ChatChunk = 30;
 
@@ -143,20 +147,13 @@ const oldestChat = computed(() => {
   }
 });
 
-const nearBottomValue = computed(() => {
-  return isFirefox.value ? 850 : 600;
-});
-
-const participantsList = computed(() => {
-  return [...props.room.guests, ...props.room.pastGuests, props.room.owner];
-});
-
 const handleChatScroll = () => {
-  if (
-    chatWindow.value &&
-    chatWindow.value.scrollHeight - chatWindow.value.scrollTop >
-      nearBottomValue.value
-  ) {
+  const scrollHeight = chatWindow.value?.scrollHeight ?? 0;
+  const clientHeight = chatWindow.value?.clientHeight ?? 0;
+  const scrollTop = chatWindow.value?.scrollTop ?? 0;
+  const scrollBottom = scrollHeight - clientHeight - scrollTop;
+
+  if (chatWindow.value && scrollBottom > 120) {
     if (!showScrollBottomBtn.value || !scrollSmooth.value) {
       showScrollBottomBtn.value = true;
       scrollSmooth.value = true;
@@ -205,7 +202,7 @@ const scrollToBottom = () => {
 
 const submitMessage = () => {
   if (!form.value || !message.value.trim()) return;
-  sendMessage(props.room.id, message.value);
+  sendMessage(props.roomId, message.value);
   message.value = "";
 };
 </script>

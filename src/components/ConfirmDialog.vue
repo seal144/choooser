@@ -12,15 +12,24 @@
       {{ text }}
     </template>
     <template v-slot:action>
-      <slot name="confirmButton"></slot>
+      <Button
+        v-if="confirmLabel"
+        @click="confirmAction"
+        :loading="loading"
+        :danger="danger"
+        ><v-icon :icon="confirmIcon" size="large" v-if="smAndUp" />{{
+          confirmLabel
+        }}</Button
+      >
     </template>
   </Dialog>
 </template>
 
 <script lang="ts" setup>
 import { PropType } from "vue";
+import { useDisplay } from "vuetify";
 
-import { Dialog } from "@/components";
+import { Button, Dialog } from "@/components";
 import { Dialogs } from "@/types";
 
 defineProps({
@@ -40,7 +49,29 @@ defineProps({
     type: String as PropType<Dialogs>,
     required: true,
   },
+  confirmLabel: {
+    type: String,
+    required: false,
+  },
+  confirmIcon: {
+    type: String,
+    required: false,
+  },
+  confirmAction: {
+    type: Function as PropType<() => void>,
+    required: false,
+  },
+  loading: {
+    type: Boolean,
+    default: false,
+  },
+  danger: {
+    type: Boolean,
+    default: false,
+  },
 });
+
+const { smAndUp } = useDisplay();
 </script>
 
 <style lang="scss" scoped></style>

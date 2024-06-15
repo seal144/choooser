@@ -7,7 +7,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { auth, db } from "@/firebase/config";
-import { CommonErrors, Room, RoomField, Collection, UserField } from "@/types";
+import { CommonErrors, Room, RoomField, Collection } from "@/types";
 
 const loading = ref(false);
 const error = ref<string | null>(null);
@@ -29,29 +29,37 @@ const abandonRoom = async (roomId: string, userId?: string) => {
       throw new Error(CommonErrors.TheDocumentNotFound);
     }
 
+    const userAbandoningId = userId ? userId : auth.currentUser?.uid;
     const currentGuests: Room[RoomField.Guests] = snapshot.get(
       RoomField.Guests
     );
-
-    const userAbandoningId = userId ? userId : auth.currentUser?.uid;
-    const userAbandoningDisplayName = currentGuests.find(
-      (guest) => guest.id === userAbandoningId
-    )?.displayName;
-
-    const newGuests = currentGuests.filter(
-      (guest) => guest.id !== userAbandoningId
+    const abandoningUser = currentGuests.find(
+      (user) => user.id === userAbandoningId
     );
 
-    await updateDoc(docRef, {
-      [RoomField.GuestsIds]: arrayRemove(userAbandoningId),
-      [RoomField.Guests]: [...newGuests],
-      [RoomField.PastGuests]: arrayUnion({
-        [UserField.Id]: userAbandoningId,
-        [UserField.DisplayName]: userAbandoningDisplayName
-          ? userAbandoningDisplayName
-          : "Unknown User",
-      }),
-    });
+    if (!abandoningUser) {
+      throw new Error(CommonErrors.TheUserNotFound);
+    }
+
+    const choices: Room[RoomField.Choices] = snapshot.get(RoomField.Choices);
+    const abandoningUserChoice = choices.find(
+      (choice) => choice.userId === userAbandoningId
+    );
+
+    if (abandoningUserChoice) {
+      await updateDoc(docRef, {
+        [RoomField.GuestsIds]: arrayRemove(userAbandoningId),
+        [RoomField.Guests]: arrayRemove(abandoningUser),
+        [RoomField.PastGuests]: arrayUnion(abandoningUser),
+        [RoomField.Choices]: arrayRemove(abandoningUserChoice),
+      });
+    } else {
+      await updateDoc(docRef, {
+        [RoomField.GuestsIds]: arrayRemove(userAbandoningId),
+        [RoomField.Guests]: arrayRemove(abandoningUser),
+        [RoomField.PastGuests]: arrayUnion(abandoningUser),
+      });
+    }
 
     loading.value = false;
   } catch (err) {

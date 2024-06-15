@@ -1,41 +1,46 @@
 <template>
-  <SideDrawer :room="room" v-model="drawer" @close="drawer = false" />
+  <SideDrawer v-model="drawer" @close="drawer = false" />
   <div class="content-container">
     <ButtonIcon
       icon="mdi-menu-open"
       class="open-menu-button"
-      :class="{ hide: drawer }"
+      :class="{ hide: drawer, lgAndUp }"
       @click="drawer = true"
       rotate
     />
     <div class="content" :class="{ mdAndDown }">
       <HeaderCard class="content-title" :class="{ xs }">{{
-        room.name
+        room ? room.name : ""
       }}</HeaderCard>
-      <div class="chat-container" :class="{ xs }">
-        <Chat :room="room" />
+      <div
+        v-if="route.name === RoutesNames.RoomChat"
+        class="chat-container"
+        :class="{ xs }"
+      >
+        <Chat v-if="room" :roomId="room.id" />
+      </div>
+      <div v-else class="choosing-container">
+        <PhaseView />
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { PropType, ref } from "vue";
+import { ref, toRef } from "vue";
 import { useDisplay } from "vuetify";
+import { useRoute } from "vue-router";
 
+import { useRoomStore } from "@/store/roomStore";
 import SideDrawer from "./SideDrawer.vue";
 import Chat from "./Chat.vue";
+import PhaseView from "./PhaseView.vue";
 import { ButtonIcon, HeaderCard } from "@/components";
-import { RoomDetailsData } from "@/types";
+import { RoutesNames } from "@/router";
 
-const props = defineProps({
-  room: {
-    type: Object as PropType<RoomDetailsData>,
-    required: true,
-  },
-});
-
-const { xs, mdAndDown } = useDisplay();
+const room = toRef(useRoomStore(), "room");
+const route = useRoute();
+const { xs, mdAndDown, lgAndUp } = useDisplay();
 
 const drawer = ref(false);
 </script>
@@ -68,9 +73,13 @@ const drawer = ref(false);
 }
 
 .open-menu-button {
-  position: sticky;
-  top: 5.2rem;
   z-index: 100;
+
+  &.lgAndUp {
+    position: sticky;
+    top: 5.2rem;
+  }
+
   &.hide {
     transform: translateX(-600px);
   }
@@ -83,5 +92,10 @@ const drawer = ref(false);
   &.xs {
     height: calc(100vh - 230px);
   }
+}
+
+.choosing-container {
+  max-width: 700px;
+  margin: 0 auto;
 }
 </style>

@@ -25,7 +25,7 @@
           :rules="[...displayNameValidation]"
           :readonly="loading"
           :error-messages="
-            error && error !== ErrorJoinRoom.InvalidPassword ? error : []
+            error && error !== CommonErrors.InvalidPassword ? error : []
           "
         />
         <TextField
@@ -36,7 +36,7 @@
           :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
           @click:append-inner="showPassword = !showPassword"
           :type="showPassword ? 'text' : 'password'"
-          :error-messages="error === ErrorJoinRoom.InvalidPassword ? error : []"
+          :error-messages="error === CommonErrors.InvalidPassword ? error : []"
         />
       </v-form>
     </template>
@@ -56,12 +56,11 @@ import { useDialogsStore } from "@/store/dialogs";
 import { Button, Dialog, TextField } from "@/components";
 import useCreateRoom from "@/composables/useCreateRoom";
 import useJoinRoom from "@/composables/useJoinRoom";
-import { ErrorJoinRoom } from "@/composables/useJoinRoom";
 import {
   displayNameValidation,
   roomPasswordValidation,
 } from "@/utils/validation";
-import { Dialogs } from "@/types";
+import { Dialogs, CommonErrors } from "@/types";
 
 const props = defineProps({
   variant: {

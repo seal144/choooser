@@ -1,7 +1,7 @@
 <template>
   <v-expansion-panels>
     <v-expansion-panel>
-      <v-expansion-panel-title class="title" :class="{ xs }">
+      <v-expansion-panel-title class="title" :class="{ xs, small }">
         {{ title }}
       </v-expansion-panel-title>
       <v-expansion-panel-text>
@@ -21,6 +21,10 @@ defineProps({
     type: String,
     required: true,
   },
+  small: {
+    type: Boolean,
+    default: false,
+  },
 });
 </script>
 
@@ -30,12 +34,16 @@ defineProps({
   padding: 0.5rem 1rem;
   min-height: unset;
 
+  &.small {
+    font-size: 16px;
+  }
+
   &.xs {
     padding: 0.5rem;
   }
 }
 
 .v-expansion-panel--active > .v-expansion-panel-title {
-  min-height: 2.75rem;
+  min-height: 2.5rem;
 }
 </style>

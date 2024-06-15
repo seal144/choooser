@@ -14,12 +14,17 @@ export enum Dialogs {
   RoomInfoIsFull = "RoomInfoIsFull",
   JoinRoomFromURL = "joinRoomFromURL",
   AppInfo = "appInfo",
+  ConfirmPrevPhase = "confirmPrevPhase",
+  ConfirmProceedToResult = "confirmProceedToResult",
+  ResultDetails = "resultDetails",
+  ConfirmDeleteUser = "ConfirmDeleteUser",
 }
 
 export enum Collection {
   Rooms = "rooms",
   Users = "users",
   Chats = "chats",
+  AdminPassword = "adminPassword",
 }
 
 export enum UserField {
@@ -61,6 +66,36 @@ export type ChatDataDB = Omit<Chat, ChatField.Id>;
 
 export type ChatDataDBPartial = Partial<ChatDataDB>;
 
+export enum Phase {
+  SettingOptions,
+  Choosing,
+  Result,
+}
+
+export enum ChoiceField {
+  UserId = "userId",
+  Confirmed = "confirmed",
+  Ranking = "ranking",
+}
+
+export interface Choice {
+  [ChoiceField.UserId]: string;
+  [ChoiceField.Confirmed]: boolean;
+  [ChoiceField.Ranking]: string[];
+}
+
+export type ResultChoice = Omit<Choice, ChoiceField.Confirmed>;
+
+export interface ResultOption {
+  option: string;
+  points: number;
+}
+
+export interface Result {
+  ranking: ResultOption[];
+  confirmedChoices: ResultChoice[];
+}
+
 export enum RoomField {
   Id = "id",
   CreateTime = "createTime",
@@ -71,7 +106,17 @@ export enum RoomField {
   Owner = "owner",
   Guests = "guests",
   PastGuests = "pastGuests",
+  Phase = "phase",
+  Options = "options",
+  Choices = "choices",
+  Result = "result",
+  CurrentParticipants = "currentParticipants",
+  AllParticipants = "allParticipants",
+  ParticipantsIdsStillChoosing = "participantsIdsStillChoosing",
+  EnhancementFirst = "enhancementFirst",
+  WeakeningLast = "weakeningLast",
 }
+
 export interface Room {
   [RoomField.Id]: string;
   [RoomField.CreateTime]: Timestamp;
@@ -82,25 +127,32 @@ export interface Room {
   [RoomField.Owner]: User;
   [RoomField.Guests]: User[];
   [RoomField.PastGuests]: User[];
+  [RoomField.Phase]: Phase;
+  [RoomField.Options]: string[];
+  [RoomField.Choices]: Choice[];
+  [RoomField.Result]: Result | null;
+  [RoomField.CurrentParticipants]: User[];
+  [RoomField.AllParticipants]: User[];
+  [RoomField.ParticipantsIdsStillChoosing]: string[];
+  //NOTE this two fields are not used right now there are for future development
+  [RoomField.EnhancementFirst]: boolean;
+  [RoomField.WeakeningLast]: boolean;
 }
 
-export type RoomDataDB = Omit<Room, RoomField.Id | RoomField.ParsedGroupId>;
+export type RoomDataDB = Omit<
+  Room,
+  | RoomField.Id
+  | RoomField.ParsedGroupId
+  | RoomField.CurrentParticipants
+  | RoomField.AllParticipants
+  | RoomField.ParticipantsIdsStillChoosing
+>;
 
 export type RoomDataDBPartial = Partial<RoomDataDB>;
 
 export type RoomBasicData = Pick<Room, RoomField.Id | RoomField.Name>;
 
-export type RoomDetailsData = Pick<
-  Room,
-  | RoomField.Id
-  | RoomField.CreateTime
-  | RoomField.ParsedGroupId
-  | RoomField.Name
-  | RoomField.Owner
-  | RoomField.GuestsIds
-  | RoomField.Guests
-  | RoomField.PastGuests
->;
+export type RoomDetailsData = Omit<Room, RoomField.GroupId>;
 
 export enum RoomRole {
   Owner,
@@ -113,6 +165,9 @@ export enum CommonErrors {
   LoginAsAValidUser = "Login as a valid user.",
   CouldNotLogin = "Could not login.",
   TheDocumentNotFound = "The document not found.",
+  TheUserNotFound = "The user not found.",
   TheRoomIsFull = "The room is full.",
   DisplayNameInUse = "Display name already in use.",
+  DefaultSuffix = "failed. Please, try again later.",
+  InvalidPassword = "Invalid Password",
 }

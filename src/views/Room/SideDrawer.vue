@@ -6,8 +6,8 @@
     :width="drawerWidth"
   >
     <div class="drawer-content">
-      <div class="drawer-info">
-        <div className="drawer-header">
+      <div v-if="room" class="drawer-info">
+        <div class="drawer-header">
           <HeaderCard class="drawer-header-text">{{ room.name }}</HeaderCard>
           <ButtonIcon icon="mdi-menu-open" @click="emit('close')" />
         </div>
@@ -16,8 +16,16 @@
           <HeaderCard>{{ formattedTime }}</HeaderCard>
         </div>
         <div class="prop-container">
+          <p>Status:</p>
+          <HeaderCard>{{ phaseDescription }}</HeaderCard>
+        </div>
+        <div class="prop-container">
           <p>Host:</p>
-          <PersonCard :name="room.owner.displayName" />
+          <PersonCard
+            :name="room.owner.displayName"
+            :isPending="isOwnerPending"
+            :check="room.phase === Phase.Choosing && !isOwnerPending"
+          />
         </div>
         <p v-if="room.guests.length">Guests:</p>
         <div class="prop-container guests-container">
@@ -26,6 +34,14 @@
             :key="guest.id"
             :name="guest.displayName"
             :kickButton="isOwner"
+            :isPending="
+              room.phase === Phase.Choosing &&
+              room.participantsIdsStillChoosing.includes(guest.id)
+            "
+            :check="
+              room.phase === Phase.Choosing &&
+              !room.participantsIdsStillChoosing.includes(guest.id)
+            "
             :kickCallback="
               () => {
                 openKickUserDialog(guest);
@@ -36,14 +52,25 @@
       </div>
       <div class="drawer-actions">
         <Button
+          v-if="isOwner && room?.phase !== Phase.SettingOptions"
+          @click="openDialog(Dialogs.ConfirmPrevPhase)"
+          class="drawer-button"
+        >
+          <v-icon icon="mdi-restore" size="large" />
+          Go to previous phase
+        </Button>
+        <Button
           v-if="isOwner"
-          @click="openConfirmDeleteDialog"
+          @click="openDialog(Dialogs.ConfirmDeleteRoomInside)"
           class="drawer-button"
           danger
           ><v-icon icon="mdi-trash-can-outline" size="large" />Delete
           room</Button
         >
-        <Button v-else @click="openConfirmAbandonDialog" class="drawer-button"
+        <Button
+          v-else
+          @click="openDialog(Dialogs.ConfirmAbandonRoomInside)"
+          class="drawer-button"
           ><v-icon icon="mdi-exit-run" size="large" />Abandon room</Button
         >
       </div>
@@ -73,29 +100,42 @@
     :loading="loadingAbandonRoom"
     @close="onCloseKickDialog"
   />
+  <ConfirmDialog
+    :dialogIdentification="Dialogs.ConfirmPrevPhase"
+    title="Are you sure?"
+    text="Do you want to go back to the previous phase? The current state will be lost."
+    confirmLabel="Go back"
+    confirmIcon="mdi-restore"
+    :confirmAction="handleGoToPrevPhase"
+    :loading="loadingPrevPhase"
+  />
   <Snackbar
     v-model="snackbarDeleteError"
-    title="Something went wrong"
-    text="Deleting room failed. Please, try again later."
+    :text="`Deleting room ${CommonErrors.DefaultSuffix}`"
   />
   <Snackbar
     v-model="snackbarAbandonError"
-    title="Something went wrong"
-    text="Abandoning room failed. Please, try again later."
+    :text="`Abandoning room ${CommonErrors.DefaultSuffix}`"
+  />
+  <Snackbar
+    v-model="snackbarPrevPhaseError"
+    :text="`Changing phase ${CommonErrors.DefaultSuffix}`"
   />
 </template>
 
 <script setup lang="ts">
-import { computed, PropType, ref } from "vue";
+import { computed, ref, toRef } from "vue";
 import { useRouter } from "vue-router";
 import { useDisplay } from "vuetify";
 import { format } from "date-fns";
 
+import { useRoomStore } from "@/store/roomStore";
 import { useDialogsStore } from "@/store/dialogs";
 import {
   Button,
   ButtonIcon,
   ConfirmDeleteAbandonRoom,
+  ConfirmDialog,
   HeaderCard,
   PersonCard,
   Snackbar,
@@ -103,17 +143,13 @@ import {
 import useDeleteRoom from "@/composables/useDeleteRoom";
 import useAbandonRoom from "@/composables/useAbandonRoom";
 import getUser from "@/composables/getUser";
+import useGoToPrevPhase from "@/composables/useGoToPrevPhase";
 import { RoutesNames } from "@/router";
-import { Dialogs, RoomDetailsData, User } from "@/types";
+import { CommonErrors, Dialogs, Phase, User } from "@/types";
 
-const props = defineProps({
-  room: {
-    type: Object as PropType<RoomDetailsData>,
-    required: true,
-  },
-});
 const emit = defineEmits(["close"]);
 
+const room = toRef(useRoomStore(), "room");
 const { user } = getUser();
 const router = useRouter();
 const { xs, xxl } = useDisplay();
@@ -128,9 +164,15 @@ const {
   loading: loadingAbandonRoom,
   error: errorAbandonRoom,
 } = useAbandonRoom();
+const {
+  goToPrevPhase,
+  loading: loadingPrevPhase,
+  error: errorPrevPhase,
+} = useGoToPrevPhase();
 
 const snackbarDeleteError = ref(false);
 const snackbarAbandonError = ref(false);
+const snackbarPrevPhaseError = ref(false);
 const selectedUserForAction = ref<User | null>(null);
 
 const drawerWidth = computed(() => {
@@ -138,17 +180,37 @@ const drawerWidth = computed(() => {
   return "280";
 });
 
-const isOwner = computed(() => {
-  if (props.room.owner.id === user.value?.uid) {
+const isOwner = room.value?.owner.id === user.value?.uid ? true : false;
+
+const phaseDescription = computed(() => {
+  switch (room.value?.phase) {
+    case Phase.SettingOptions:
+      return "Phase 1 - setting the options";
+    case Phase.Choosing:
+      return "Phase 2 - ranking the options";
+    case Phase.Result:
+      return "Phase 3 - result";
+    default:
+      return "Phase unset";
+  }
+});
+
+const isOwnerPending = computed(() => {
+  if (room.value?.phase === Phase.SettingOptions) {
+    return true;
+  }
+  if (
+    room.value?.phase === Phase.Choosing &&
+    room.value.participantsIdsStillChoosing.includes(room.value.owner.id)
+  ) {
     return true;
   }
   return false;
 });
 
-const formattedTime = format(
-  props.room.createTime.toDate(),
-  "dd.MM.yyy | HH:mm"
-);
+const formattedTime = room.value
+  ? format(room.value.createTime.toDate(), "dd.MM.yyy | HH:mm")
+  : "";
 
 const openKickUserDialog = (guest: User) => {
   selectedUserForAction.value = guest;
@@ -159,17 +221,24 @@ const onCloseKickDialog = () => {
   selectedUserForAction.value = null;
 };
 
-const openConfirmDeleteDialog = () => {
-  dialogs.isOpen[Dialogs.ConfirmDeleteRoomInside] = true;
+const openDialog = (dialog: Dialogs) => {
+  dialogs.isOpen[dialog] = true;
 };
 
-const openConfirmAbandonDialog = () => {
-  dialogs.isOpen[Dialogs.ConfirmAbandonRoomInside] = true;
+const handleGoToPrevPhase = async () => {
+  await goToPrevPhase();
+
+  if (errorPrevPhase.value) {
+    snackbarPrevPhaseError.value = true;
+  } else {
+    dialogs.isOpen[Dialogs.ConfirmPrevPhase] = false;
+    emit("close");
+  }
 };
 
 const handleKickUser = async () => {
-  if (selectedUserForAction.value) {
-    await abandonRoom(props.room.id, selectedUserForAction.value.id);
+  if (selectedUserForAction.value && room.value) {
+    await abandonRoom(room.value.id, selectedUserForAction.value.id);
     if (errorAbandonRoom.value) {
       snackbarAbandonError.value = true;
     } else {
@@ -178,7 +247,9 @@ const handleKickUser = async () => {
   }
 };
 const handleDeleteRoom = async () => {
-  await deleteRoom(props.room.id);
+  if (room.value) {
+    await deleteRoom(room.value.id);
+  }
   if (errorDeleteRoom.value) {
     snackbarDeleteError.value = true;
   } else {
@@ -187,7 +258,9 @@ const handleDeleteRoom = async () => {
   }
 };
 const handleAbandonRoom = async () => {
-  await abandonRoom(props.room.id);
+  if (room.value) {
+    await abandonRoom(room.value.id);
+  }
   if (errorAbandonRoom.value) {
     snackbarAbandonError.value = true;
   } else {

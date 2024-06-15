@@ -3,22 +3,18 @@
     :dialogIdentification="identification"
     title="Are you sure?"
     :text="text ? text : DialogData.defaultText"
-  >
-    <template v-slot:confirmButton>
-      <Button :danger="variant === 'delete'" @click="confirm" :loading="loading"
-        ><v-icon :icon="DialogData.ButtonIcon" size="large" v-if="smAndUp" />{{
-          DialogData.ButtonLabel
-        }}</Button
-      >
-    </template>
-  </ConfirmDialog>
+    :confirmLabel="DialogData.ButtonLabel"
+    :confirmIcon="DialogData.ButtonIcon"
+    :confirmAction="confirm"
+    :loading="loading"
+    :danger="variant === 'delete'"
+  />
 </template>
 
 <script setup lang="ts">
 import { computed, PropType } from "vue";
-import { useDisplay } from "vuetify";
 
-import { Button, ConfirmDialog } from "@/components";
+import { ConfirmDialog } from "@/components";
 import { Dialogs } from "@/types";
 
 const props = defineProps({
@@ -43,8 +39,6 @@ const props = defineProps({
     required: false,
   },
 });
-
-const { smAndUp } = useDisplay();
 
 const DialogData = computed(() => {
   switch (props.variant) {

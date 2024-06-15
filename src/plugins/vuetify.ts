@@ -33,6 +33,8 @@ const DarkPalette = {
 
 export const lineThickness = "3";
 
+export const defaultCircularProgressSize = "44";
+
 const borderStyle = `border: ${lineThickness}px solid rgb(var(--v-theme-primary));`;
 
 enum Breakpoints {

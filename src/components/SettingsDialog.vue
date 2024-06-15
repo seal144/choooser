@@ -32,25 +32,22 @@
             :dialogIdentification="Dialogs.ConfirmDeleteAccount"
             title="Are you sure?"
             text="Do you want to delete your account? This action is irreversible."
+            confirmLabel="delete"
+            confirmIcon="mdi-exclamation-thick"
+            :confirmAction="deleteAccount"
+            :loading="loadingDeleteUser"
+            danger
           >
             <template v-slot:activatorButton>
               <Button size="small" danger
                 ><v-icon icon="mdi-exclamation-thick" />delete account</Button
               >
             </template>
-            <template v-slot:confirmButton>
-              <Button danger @click="deleteAccount" :loading="loadingDeleteUser"
-                ><v-icon
-                  icon="mdi-exclamation-thick"
-                  size="large"
-                  v-if="smAndUp"
-                />delete</Button
-              >
-            </template>
           </ConfirmDialog>
           <div>Danger zone</div>
         </div>
       </v-form>
+      <AdminPanel v-if="isAdmin" />
       <FormError
         extends-layout
         align-right
@@ -76,6 +73,7 @@ import { useDisplay, useTheme } from "vuetify";
 import { useDialogsStore } from "@/store/dialogs";
 import { useUserStore } from "@/store/userStore";
 import {
+  AdminPanel,
   Button,
   ConfirmDialog,
   Dialog,
@@ -83,7 +81,9 @@ import {
   TextField,
 } from "@/components";
 import useUser from "@/composables/useUser";
+import getUser from "@/composables/getUser";
 import useDefaultTheme from "@/composables/useDefaultTheme";
+import useAdmin from "@/composables/useAdmin";
 import { displayNameValidation } from "@/utils/validation";
 import { CommonErrors, Dialogs } from "@/types";
 
@@ -95,11 +95,15 @@ const {
   updateDisplayName,
   deleteUser,
   error,
-  resetError,
+  resetError: userResetError,
   loadingUpdateDisplayName,
   loadingDeleteUser,
 } = useUser();
+const { user } = getUser();
 const theme = useTheme();
+const { resetError: adminPanelResetError } = useAdmin();
+
+const isAdmin = user.value?.uid === import.meta.env.VITE_ADMIN_UID;
 
 const formError = computed(() => {
   if (error.value && error.value !== CommonErrors.DisplayNameInUse) {
@@ -142,7 +146,8 @@ const resetValues = () => {
 
 const onClose = () => {
   resetValues();
-  resetError();
+  userResetError();
+  adminPanelResetError();
 };
 
 const deleteAccount = async () => {
