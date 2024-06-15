@@ -10,41 +10,47 @@
       <div class="app-info-content">
         <ExtensionPanelSingle title="INTRO">
           <p class="description" :class="{ xs }">
-            The COMMUNICATOR is a web app for chatting with other people in
-            groups (rooms). This app is a development phase of a bigger
-            application where the possibility to chat is a side feature. The
-            target application is called CHOOSER and its main goal is to provide
-            a system for choosing the best choice from multiple options in a
-            group of people.
+            CHOOOSER is a web application designed to help groups make the best
+            choice from multiple options. Users rank the available options based
+            on their personal preferences, and the app calculates the scores to
+            determine the winning option.
           </p>
         </ExtensionPanelSingle>
         <ExtensionPanelSingle title="HOW TO USE">
           <ul class="description list" :class="{ xs }">
             <li>
               To use the app, you can either create a room or join an existing
-              one
+              one.
             </li>
             <li>
-              To invite others to a room, share its name and password (if
-              exists), or simply the room URL.
+              To invite others to a room, share its name and password (if it has
+              one), or simply share the room URL.
             </li>
             <li>
-              In rooms, there are two roles: host and guest. The host is a
-              person who created the room, can delete a room, and throw out
-              other users, also he is considered a participant. The guest is
-              just a participant.
+              In rooms, there are two roles: host and guest. The host, who
+              created the room, can delete the room, remove other users, and
+              manage the choosing flow. The guest is just a participant.
+            </li>
+            <li>
+              The choosing process in a room is divided into three phases:
+              <ol class="sublist">
+                <li>Setting the options - by the host</li>
+                <li>Ranking the options - by all participants</li>
+                <li>Viewing the result</li>
+              </ol>
             </li>
           </ul>
         </ExtensionPanelSingle>
         <ExtensionPanelSingle title="NOTES">
           <ul class="description list" :class="{ xs }">
+            <li>Apart from choosing, rooms also have a chat feature.</li>
             <li>
               Rooms are temporary and will be automatically deleted after 14
               days.
             </li>
             <li>
               {{
-                `The rooms have a limit of participants of ${
+                `Each room has a participant limit of ${
                   maxGuestsInRoom + 1
                 } users.`
               }}
@@ -52,12 +58,12 @@
             <li>
               You can use a guest account, but it is tied to the specific
               browser where it was created. Therefore, it cannot be accessed
-              from another browser. It is not possible to logout from a guest
-              account, you have to delete it in settings, to be able to create a
-              regular user account (there are plans to create a process of
-              transitioning guest accounts into regular user accounts). For a
-              better user experience, it is recommended to use other forms of
-              authentication than a guest account.
+              from another browser. It is not possible to log out from a guest
+              account; you have to delete it in settings to create a regular
+              user account. (Plans are in place to create a process for
+              transitioning guest accounts into regular accounts.) For a better
+              user experience, we recommend using other forms of authentication
+              instead of a guest account.
             </li>
           </ul>
         </ExtensionPanelSingle>
@@ -100,6 +106,14 @@ const { xs } = useDisplay();
 
     &.xs {
       margin-left: -0.25rem;
+
+      & .sublist {
+        margin-left: 1rem;
+      }
+    }
+
+    & .sublist {
+      margin-left: 1.5rem;
     }
   }
 }

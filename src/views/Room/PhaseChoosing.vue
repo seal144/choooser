@@ -21,7 +21,7 @@
         :loading="loadingConfirmChoice"
         class="mt-4"
       >
-        <v-icon icon="mdi-pencil" size="large" />Correct choice
+        <v-icon icon="mdi-pencil" size="large" />Edit choice
       </Button>
     </div>
     <div v-if="room && isChoiceConfirmed">

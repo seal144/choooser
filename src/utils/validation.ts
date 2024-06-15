@@ -9,7 +9,7 @@ const minChars = (minChars: number) => (value: string) =>
 export const maxChars = (maxChars: number) => (value: string) =>
   Number(value.length) <= maxChars || `max ${maxChars} characters`;
 
-export const maxGuestsInRoom = 9;
+export const maxGuestsInRoom = 19;
 export const maxOptionsInRoom = 20;
 export const maxOptionLength = 50;
 export const maxDisplayNameLength = 18;

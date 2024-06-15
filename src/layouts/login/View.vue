@@ -8,19 +8,15 @@
             :class="{ mdAndDown: mdAndDown, smAndDown: smAndDown }"
           >
             <v-card class="text-center">
-              <!-- <h2 class="mb-3">&#128525; Hello traveler in the CHOOSER</h2> -->
-              <!-- <p>
-                App is for choosing from a variety of options in a group of
-                people the best choice for all. Host a room and invite your
-                friends for some choosing. For best user experience create an
-                account.
-              </p> -->
-              <h3 class="mb-3">&#128525; Hello traveler in the COMMUNICATOR</h3>
+              <h3 class="mb-3">
+                &#128525; Hello Traveler. Welcome to CHOOOSER!
+              </h3>
               <p>
-                This web app is for group chatting with other people. Host a
-                room and invite your friends for some nice chatting. You can use
-                the app with a guest account, but for the best experience, it is
-                recommended to create a user account.
+                This App is for choosing from a variety of options for a group
+                of people the best choice for all. Host a room and invite your
+                friends for some choosing. You can use the app with a guest
+                account, but for the best experience, it is recommended to
+                create a user account.
               </p>
             </v-card>
           </div>
