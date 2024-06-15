@@ -9,14 +9,13 @@
           >
             <v-card class="text-center">
               <h3 class="mb-3">
-                &#128525; Hello Traveler. Welcome to CHOOOSER!
+                &#128525; Hello Traveler! Welcome to CHOOOSER!
               </h3>
               <p>
-                This App is for choosing from a variety of options for a group
-                of people the best choice for all. Host a room and invite your
-                friends for some choosing. You can use the app with a guest
-                account, but for the best experience, it is recommended to
-                create a user account.
+                CHOOOSER helps groups find the best choice among variety of
+                options. Host a room and invite your friends for some choosing.
+                You can use the app with a guest account, but for the best
+                experience, we recommend creating a user account.
               </p>
             </v-card>
           </div>
