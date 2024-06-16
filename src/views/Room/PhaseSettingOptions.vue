@@ -37,7 +37,7 @@
 </template>
 
 <script setup lang="ts">
-import { onUnmounted, ref, toRef } from "vue";
+import { onBeforeUnmount, ref, toRef } from "vue";
 
 import { defaultCircularProgressSize, lineThickness } from "@/plugins/vuetify";
 import { useRoomStore } from "@/store/roomStore";
@@ -60,7 +60,7 @@ const { saveOptions, confirmOptions, loading, error } = useConfirmOptions();
 const options = ref<string[]>(room.value ? room.value.options : []);
 const snackbarSubmitError = ref(false);
 
-onUnmounted(() => {
+onBeforeUnmount(() => {
   if (
     room.value?.phase === Phase.Choosing ||
     room.value?.phase === Phase.Result

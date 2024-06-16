@@ -76,7 +76,7 @@
 </template>
 
 <script setup lang="ts">
-import { onUnmounted, ref, PropType, toRef } from "vue";
+import { onBeforeUnmount, ref, PropType, toRef } from "vue";
 
 import { useRoomStore } from "@/store/roomStore";
 import { useDialogsStore } from "@/store/dialogs";
@@ -165,12 +165,14 @@ const handleProceedToResult = async () => {
   }
 };
 
-onUnmounted(() => {
+onBeforeUnmount(() => {
   if (
     room.value?.phase === Phase.SettingOptions ||
     room.value?.phase === Phase.Result ||
     props.isChoiceConfirmed ||
-    !room.value?.guestsIds.includes(user.value?.uid ? user.value?.uid : "")
+    !room.value?.currentParticipants.some(
+      (participant) => participant.id === user.value?.uid
+    )
   ) {
     return;
   }

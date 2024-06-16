@@ -40,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, watchEffect, ref, toRef } from "vue";
+import { computed, onUnmounted, watchEffect, ref, toRef } from "vue";
 import { useRouter, useRoute } from "vue-router";
 
 import { defaultCircularProgressSize, lineThickness } from "@/plugins/vuetify";
@@ -80,7 +80,8 @@ watchEffect(() => {
   }
 });
 
-onBeforeUnmount(() => {
+//has to be onUnmounted because in child components there are onBeforeUnmount which are using room store data
+onUnmounted(() => {
   clearTimeout(delayedKick);
   unsubscribeRoom();
 });
