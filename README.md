@@ -6,14 +6,15 @@ https://choooser.vercel.app/
 
 ## Description
 
-This project is called CHOOSER, a web application designed to streamline group decision-making processes. CHOOSER aims to provide a system for selecting the best choice from multiple options in a group setting. The app is still in development phase, but some of the key features are already introduced:
+This project is called CHOOOSER, a web application designed to streamline group decision-making processes. CHOOOSER aims to provide a system for selecting the best choice from multiple options in a group setting. Key features include:
 
-- Authentication with three methods: email + password, Google, and anonymous sign-up.
-- App settings allowing users to change the color theme, display name, or delete their account.
-- Creating and joining groups (rooms) for collaboration with other users.
-- Room view with integrated chat functionality for real-time communication among group members.
+- Multiple authentication methods: email and password, Google, and anonymous sign-up.
+- App settings to change the color theme, display name, or delete an account.
+- Creating and joining rooms for collaborative decision-making with other users.
+- A three-phase choosing process: setting options, ranking options, and presenting results.
+- Chat functionality integrated in the room for real-time communication among participants.
 
-The current development phase is published as the "[Communicator](https://choooser.vercel.app/)" web app, a fully functional application for group chatting.
+Check out the app: [CHOOOSER](https://choooser.vercel.app/).
 
 ## tech stack
 
