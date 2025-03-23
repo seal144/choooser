@@ -17,9 +17,11 @@
         @click="confirmAction"
         :loading="loading"
         :danger="danger"
-        ><v-icon :icon="confirmIcon" size="large" v-if="smAndUp" />{{
-          confirmLabel
-        }}</Button
+        ><v-icon
+          :icon="confirmIcon"
+          size="large"
+          v-if="smAndUp && confirmIcon"
+        />{{ confirmLabel }}</Button
       >
     </template>
   </Dialog>

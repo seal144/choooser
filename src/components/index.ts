@@ -20,6 +20,7 @@ import OptionsResult from "./OptionsResult.vue";
 import PersonCard from "./PersonCard.vue";
 import ResultDetailsDialog from "./ResultDetailsDialog.vue";
 import RoomButtonSubMenu from "./RoomButtonSubMenu.vue";
+import SetDisplayNameDialog from "./SetDisplayNameDialog.vue";
 import SettingsDialog from "./SettingsDialog.vue";
 import Snackbar from "./Snackbar.vue";
 import Textarea from "./Textarea.vue";
@@ -48,6 +49,7 @@ export {
   PersonCard,
   ResultDetailsDialog,
   RoomButtonSubMenu,
+  SetDisplayNameDialog,
   SettingsDialog,
   Snackbar,
   Textarea,

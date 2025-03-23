@@ -37,6 +37,7 @@ export const defaultCircularProgressSize = "44";
 
 const borderStyle = `border: ${lineThickness}px solid rgb(var(--v-theme-primary));`;
 
+// assumed minimum width of viewport: 340px
 enum Breakpoints {
   xs = 0,
   sm = 480,

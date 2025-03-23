@@ -101,6 +101,12 @@ watchEffect(() => {
 $vertical-actions-padding: 1rem;
 $vertical-actions-padding-xs: 0.5rem;
 
+// overwrites default Dialog width to be wider on small screens
+.v-dialog > div.v-overlay__content {
+  margin: 0.5rem;
+  max-width: calc(100% - 1rem);
+}
+
 .default-dialog {
   .activator-container {
     width: fit-content;
