@@ -21,7 +21,7 @@
       closeLabel="log in"
       :confirmAction="openSetDisplayNameDialog"
     />
-    <SetDisplayNameDialog />
+    <SetDisplayNameDialog :submit-callback="onAnonymousLogin" />
     <InfoDialog
       @close="redirectHomeDialog"
       :dialogIdentification="Dialogs.RoomInfoIsFull"
@@ -99,7 +99,10 @@ watchEffect(() => {
   if (!user.value) {
     dialogs.isOpen[Dialogs.RoomInfoLogin] = true;
   } else {
-    subscribeRoom();
+    // do not subscribe if SetDisplayName is open because it has to happen after setting display name on logging (onAnonymousLogin)
+    if (!dialogs.isOpen[Dialogs.SetDisplayName]) {
+      subscribeRoom();
+    }
   }
 });
 
@@ -125,6 +128,12 @@ const loading = computed(() => {
   }
   return false;
 });
+
+const onAnonymousLogin = () => {
+  dialogs.isOpen[Dialogs.RoomInfoLogin] = false;
+
+  subscribeRoom();
+};
 
 const goHome = () => {
   router.push({ name: RoutesNames.Home });
