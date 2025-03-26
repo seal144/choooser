@@ -5,6 +5,7 @@
     transition="dialog-top-transition"
     class="default-dialog"
     :class="{ small: size === 'small' }"
+    :persistent="preventClose"
   >
     <template v-slot:activator>
       <div @click="openDialog" class="activator-container">
@@ -63,6 +64,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  preventClose: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const emit = defineEmits(["close"]);
@@ -85,6 +90,9 @@ const openDialog = () => {
 };
 
 const closeDialog = () => {
+  if (props.preventClose) {
+    return;
+  }
   dialogs.isOpen[props.identification] = false;
 };
 
@@ -100,6 +108,12 @@ watchEffect(() => {
 
 $vertical-actions-padding: 1rem;
 $vertical-actions-padding-xs: 0.5rem;
+
+// overwrites default Dialog width to be wider on small screens
+.v-dialog > div.v-overlay__content {
+  margin: 0.5rem;
+  max-width: calc(100% - 1rem);
+}
 
 .default-dialog {
   .activator-container {

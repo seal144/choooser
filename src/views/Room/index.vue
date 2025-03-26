@@ -12,13 +12,16 @@
     <template v-else>
       <RoomView v-if="room" />
     </template>
-    <InfoDialog
+    <ConfirmDialog
       @close="redirectLoginDialog"
       :dialogIdentification="Dialogs.RoomInfoLogin"
       title="Please log in"
-      text="To participate in a room you have to log in."
+      text="To participate in the room you have to log in or continue with guest account."
+      confirmLabel="guest account"
       closeLabel="log in"
+      :confirmAction="openSetDisplayNameDialog"
     />
+    <SetDisplayNameDialog :submit-callback="onAnonymousLogin" />
     <InfoDialog
       @close="redirectHomeDialog"
       :dialogIdentification="Dialogs.RoomInfoIsFull"
@@ -47,7 +50,13 @@ import { defaultCircularProgressSize, lineThickness } from "@/plugins/vuetify";
 import { RoutesNames } from "@/router";
 import { useRoomStore } from "@/store/roomStore";
 import { useDialogsStore } from "@/store/dialogs";
-import { InfoDialog, JoinCreateRoomDialog, Snackbar } from "@/components";
+import {
+  ConfirmDialog,
+  InfoDialog,
+  JoinCreateRoomDialog,
+  Snackbar,
+  SetDisplayNameDialog,
+} from "@/components";
 import RoomView from "./RoomView.vue";
 import getUser from "@/composables/getUser";
 import useSubscribeRoom from "@/composables/useSubscribeRoom";
@@ -90,7 +99,10 @@ watchEffect(() => {
   if (!user.value) {
     dialogs.isOpen[Dialogs.RoomInfoLogin] = true;
   } else {
-    subscribeRoom();
+    // do not subscribe if SetDisplayName is open because it has to happen after setting display name on logging (onAnonymousLogin)
+    if (!dialogs.isOpen[Dialogs.SetDisplayName]) {
+      subscribeRoom();
+    }
   }
 });
 
@@ -117,13 +129,27 @@ const loading = computed(() => {
   return false;
 });
 
+const onAnonymousLogin = () => {
+  dialogs.isOpen[Dialogs.RoomInfoLogin] = false;
+
+  subscribeRoom();
+};
+
 const goHome = () => {
   router.push({ name: RoutesNames.Home });
 };
 
+const openSetDisplayNameDialog = () => {
+  dialogs.isOpen[Dialogs.SetDisplayName] = true;
+};
+
 const redirectLoginDialog = () => {
   if (!user.value) {
-    router.push({ name: RoutesNames.Login });
+    // TODO - use the redirect param to join the room right away
+    router.push({
+      name: RoutesNames.Login,
+      query: { redirect: router.currentRoute.value.params.id },
+    });
   }
 };
 
