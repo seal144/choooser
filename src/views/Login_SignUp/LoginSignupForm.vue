@@ -3,13 +3,19 @@
     <HeaderCard class="header">
       <template v-if="props.variant === 'login'">
         <b>Log in</b> or
-        <router-link :to="{ name: 'Signup' }"><b>Sign&nbsp;up</b></router-link>
+        <router-link
+          :to="{ name: 'Signup', query: { redirect: route.query.redirect } }"
+          ><b>Sign&nbsp;up</b></router-link
+        >
         if you are new
       </template>
       <template v-else>
         <b>Sign up</b> or
-        <router-link :to="{ name: 'Login' }"><b>Log&nbsp;in</b></router-link> if
-        you have an account
+        <router-link
+          :to="{ name: 'Login', query: { redirect: route.query.redirect } }"
+          ><b>Log&nbsp;in</b></router-link
+        >
+        if you have an account
       </template>
     </HeaderCard>
     <TextField
@@ -73,7 +79,7 @@
 
 <script setup lang="ts">
 import { computed, ref, PropType } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { useDisplay } from "vuetify";
 
 import { Button, FormError, HeaderCard, TextField } from "@/components";
@@ -86,6 +92,7 @@ import {
   displayNameValidation,
   authPasswordValidation,
 } from "@/utils/validation";
+import { RoutesNames } from "@/router";
 
 const props = defineProps({
   variant: {
@@ -109,6 +116,7 @@ const {
   loading: loadingGoogle,
 } = useLoginGoogle();
 const router = useRouter();
+const route = useRoute();
 
 const form = ref(false);
 const email = ref("");
@@ -129,9 +137,9 @@ const onSubmit = computed(() => {
 const resetErrors = () => {
   errorSignup.value = null;
   errorLogin.value = null;
-  errorAnonymous. value = null;
+  errorAnonymous.value = null;
   errorGoogle.value = null;
-}
+};
 
 const submitLogin = async () => {
   if (!form.value) return;
@@ -139,7 +147,14 @@ const submitLogin = async () => {
   await login(email.value, password.value);
 
   if (!errorLogin.value) {
-    router.push({ name: "Home" });
+    if (route.query.redirect) {
+      router.push({
+        name: RoutesNames.Room,
+        params: { id: route.query.redirect as string },
+      });
+    } else {
+      router.push({ name: RoutesNames.Home });
+    }
     resetErrors();
   }
 };
@@ -150,7 +165,14 @@ const submitSignup = async () => {
   await signup(email.value, password.value, name.value);
 
   if (!errorSignup.value) {
-    router.push({ name: "Home" });
+    if (route.query.redirect) {
+      router.push({
+        name: RoutesNames.Room,
+        params: { id: route.query.redirect as string },
+      });
+    } else {
+      router.push({ name: RoutesNames.Home });
+    }
     resetErrors();
   }
 };
@@ -159,7 +181,14 @@ const handleContinueAsGuest = async () => {
   await loginAnonymous();
 
   if (!errorAnonymous.value) {
-    router.push({ name: "Home" });
+    if (route.query.redirect) {
+      router.push({
+        name: RoutesNames.Room,
+        params: { id: route.query.redirect as string },
+      });
+    } else {
+      router.push({ name: RoutesNames.Home });
+    }
     resetErrors();
   }
 };
@@ -168,7 +197,14 @@ const handleUseGoogle = async () => {
   await loginGoogle();
 
   if (!errorGoogle.value) {
-    router.push({ name: "Home" });
+    if (route.query.redirect) {
+      router.push({
+        name: RoutesNames.Room,
+        params: { id: route.query.redirect as string },
+      });
+    } else {
+      router.push({ name: RoutesNames.Home });
+    }
     resetErrors();
   }
 };
