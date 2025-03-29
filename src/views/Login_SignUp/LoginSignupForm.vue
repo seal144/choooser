@@ -54,12 +54,7 @@
     >
       <v-icon icon="mdi-google" class="mr-1" />use Google
     </Button>
-    <Button
-      @click="handleContinueAsGuest"
-      :loading="loadingAnonymous"
-      size="small"
-      secondary
-    >
+    <Button @click="handleContinueAsGuest" size="small" secondary>
       Continue as guest
     </Button>
   </div>
@@ -73,8 +68,11 @@
       :error-message="errorSignup"
     />
     <FormError v-else-if="errorGoogle" :error-message="errorGoogle" />
-    <FormError v-else-if="errorAnonymous" :error-message="errorAnonymous" />
   </div>
+  <SetDisplayNameDialog
+    :identification="Dialogs.SetNameAnonymousLogin"
+    :submit-callback="onAnonymousLogin"
+  />
 </template>
 
 <script setup lang="ts">
@@ -82,17 +80,24 @@ import { computed, ref, PropType } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useDisplay } from "vuetify";
 
-import { Button, FormError, HeaderCard, TextField } from "@/components";
+import {
+  Button,
+  FormError,
+  HeaderCard,
+  TextField,
+  SetDisplayNameDialog,
+} from "@/components";
 import useSignup from "@/composables/useSignup";
 import useLogin from "@/composables/useLogin";
-import useAnonymousAuth from "@/composables/useAnonymousAuth";
 import useLoginGoogle from "@/composables/useloginGoogle";
+import { useDialogsStore } from "@/store/dialogs";
 import {
   emailValidation,
   displayNameValidation,
   authPasswordValidation,
 } from "@/utils/validation";
 import { RoutesNames } from "@/router";
+import { Dialogs } from "@/types";
 
 const props = defineProps({
   variant: {
@@ -106,17 +111,13 @@ const { md, xs } = useDisplay();
 const { signup, error: errorSignup, loading: loadingSignup } = useSignup();
 const { login, error: errorLogin, loading: loadingLogin } = useLogin();
 const {
-  login: loginAnonymous,
-  error: errorAnonymous,
-  loading: loadingAnonymous,
-} = useAnonymousAuth();
-const {
   login: loginGoogle,
   error: errorGoogle,
   loading: loadingGoogle,
 } = useLoginGoogle();
 const router = useRouter();
 const route = useRoute();
+const dialogs = useDialogsStore();
 
 const form = ref(false);
 const email = ref("");
@@ -137,7 +138,6 @@ const onSubmit = computed(() => {
 const resetErrors = () => {
   errorSignup.value = null;
   errorLogin.value = null;
-  errorAnonymous.value = null;
   errorGoogle.value = null;
 };
 
@@ -178,18 +178,17 @@ const submitSignup = async () => {
 };
 
 const handleContinueAsGuest = async () => {
-  await loginAnonymous();
+  dialogs.isOpen[Dialogs.SetNameAnonymousLogin] = true;
+};
 
-  if (!errorAnonymous.value) {
-    if (route.query.redirect) {
-      router.push({
-        name: RoutesNames.Room,
-        params: { id: route.query.redirect as string },
-      });
-    } else {
-      router.push({ name: RoutesNames.Home });
-    }
-    resetErrors();
+const onAnonymousLogin = () => {
+  if (route.query.redirect) {
+    router.push({
+      name: RoutesNames.Room,
+      params: { id: route.query.redirect as string },
+    });
+  } else {
+    router.push({ name: RoutesNames.Home });
   }
 };
 

@@ -18,7 +18,8 @@ export enum Dialogs {
   ConfirmProceedToResult = "confirmProceedToResult",
   ResultDetails = "resultDetails",
   ConfirmDeleteUser = "ConfirmDeleteUser",
-  SetDisplayName = "SetDisplayName",
+  SetNameJoinRoom = "SetNameJoinRoom",
+  SetNameAnonymousLogin = "SetNameAnonymousLogin",
 }
 
 export enum Collection {
