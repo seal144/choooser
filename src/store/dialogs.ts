@@ -21,7 +21,8 @@ export const useDialogsStore = defineStore("dialogs", {
       [Dialogs.ConfirmProceedToResult]: false,
       [Dialogs.ResultDetails]: false,
       [Dialogs.ConfirmDeleteUser]: false,
-      [Dialogs.SetDisplayName]: false,
+      [Dialogs.SetNameJoinRoom]: false,
+      [Dialogs.SetNameAnonymousLogin]: false,
     },
   }),
 });
