@@ -8,6 +8,7 @@ import { Collection } from "@/types";
 const initDisplayName = async (displayName?: string) => {
   if (auth.currentUser) {
     const userStore = useUserStore();
+    // the display name can be undefined, on example for google login, than it is generated randomly
     displayName = displayName ? displayName : generateRandomName();
 
     await updateProfile(auth.currentUser, { displayName });

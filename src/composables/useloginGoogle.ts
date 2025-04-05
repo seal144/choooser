@@ -5,6 +5,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "@/firebase/config";
 import initDisplayName from "@/firebase/initDisplayName";
 import { Collection, CommonErrors } from "@/types";
+import { maxDisplayNameLength } from "@/utils/validation";
 
 const parseErrorMessage = (message: string) => {
   if (message.includes("popup-closed-by-user")) {
@@ -33,7 +34,11 @@ const login = async () => {
       const snapshot = await getDoc(userRef);
 
       if (!snapshot.exists()) {
-        await initDisplayName();
+        const displayName = response.user.providerData[0].displayName?.slice(
+          0,
+          maxDisplayNameLength
+        );
+        await initDisplayName(displayName);
       }
     }
 
