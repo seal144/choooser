@@ -16,7 +16,7 @@
           :rules="[...displayNameValidation]"
           :readonly="loading"
           :error-messages="error ?? []"
-          @change="resetError"
+          @update:model-value="resetError"
         />
       </v-form>
     </template>
