@@ -21,7 +21,10 @@
       closeLabel="log in"
       :confirmAction="openSetDisplayNameDialog"
     />
-    <SetDisplayNameDialog :submit-callback="onAnonymousLogin" />
+    <SetDisplayNameDialog
+      :identification="Dialogs.SetNameJoinRoom"
+      :submit-callback="onAnonymousLogin"
+    />
     <InfoDialog
       @close="redirectHomeDialog"
       :dialogIdentification="Dialogs.RoomInfoIsFull"
@@ -100,7 +103,7 @@ watchEffect(() => {
     dialogs.isOpen[Dialogs.RoomInfoLogin] = true;
   } else {
     // do not subscribe if SetDisplayName is open because it has to happen after setting display name on logging (onAnonymousLogin)
-    if (!dialogs.isOpen[Dialogs.SetDisplayName]) {
+    if (!dialogs.isOpen[Dialogs.SetNameJoinRoom]) {
       subscribeRoom();
     }
   }
@@ -140,12 +143,11 @@ const goHome = () => {
 };
 
 const openSetDisplayNameDialog = () => {
-  dialogs.isOpen[Dialogs.SetDisplayName] = true;
+  dialogs.isOpen[Dialogs.SetNameJoinRoom] = true;
 };
 
 const redirectLoginDialog = () => {
   if (!user.value) {
-    // TODO - use the redirect param to join the room right away
     router.push({
       name: RoutesNames.Login,
       query: { redirect: router.currentRoute.value.params.id },

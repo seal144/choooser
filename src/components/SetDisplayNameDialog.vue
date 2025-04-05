@@ -1,6 +1,6 @@
 <template>
   <Dialog
-    :identification="Dialogs.SetDisplayName"
+    :identification="identification"
     title="Set your display name"
     close-label="cancel"
     class="room-dialog"
@@ -35,6 +35,10 @@ import { Dialogs } from "@/types";
 import { displayNameValidation } from "@/utils/validation";
 
 const props = defineProps({
+  identification: {
+    type: String as PropType<Dialogs>,
+    required: true,
+  },
   submitCallback: {
     type: Function as PropType<() => void>,
     required: false,
@@ -63,7 +67,7 @@ const onSubmit = async () => {
   await login(displayName.value);
 
   if (!error.value) {
-    dialogs.isOpen[Dialogs.SetDisplayName] = false;
+    dialogs.isOpen[props.identification] = false;
 
     props.submitCallback?.();
   }
