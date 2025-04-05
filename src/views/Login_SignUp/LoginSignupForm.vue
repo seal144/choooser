@@ -71,7 +71,7 @@
   </div>
   <SetDisplayNameDialog
     :identification="Dialogs.SetNameAnonymousLogin"
-    :submit-callback="onAnonymousLogin"
+    :submit-callback="redirectAfterLogin"
   />
 </template>
 
@@ -141,47 +141,7 @@ const resetErrors = () => {
   errorGoogle.value = null;
 };
 
-const submitLogin = async () => {
-  if (!form.value) return;
-
-  await login(email.value, password.value);
-
-  if (!errorLogin.value) {
-    if (route.query.redirect) {
-      router.push({
-        name: RoutesNames.Room,
-        params: { id: route.query.redirect as string },
-      });
-    } else {
-      router.push({ name: RoutesNames.Home });
-    }
-    resetErrors();
-  }
-};
-
-const submitSignup = async () => {
-  if (!form.value) return;
-
-  await signup(email.value, password.value, name.value);
-
-  if (!errorSignup.value) {
-    if (route.query.redirect) {
-      router.push({
-        name: RoutesNames.Room,
-        params: { id: route.query.redirect as string },
-      });
-    } else {
-      router.push({ name: RoutesNames.Home });
-    }
-    resetErrors();
-  }
-};
-
-const handleContinueAsGuest = async () => {
-  dialogs.isOpen[Dialogs.SetNameAnonymousLogin] = true;
-};
-
-const onAnonymousLogin = () => {
+const redirectAfterLogin = () => {
   if (route.query.redirect) {
     router.push({
       name: RoutesNames.Room,
@@ -192,18 +152,37 @@ const onAnonymousLogin = () => {
   }
 };
 
+const submitLogin = async () => {
+  if (!form.value) return;
+
+  await login(email.value, password.value);
+
+  if (!errorLogin.value) {
+    redirectAfterLogin();
+    resetErrors();
+  }
+};
+
+const submitSignup = async () => {
+  if (!form.value) return;
+
+  await signup(email.value, password.value, name.value);
+
+  if (!errorSignup.value) {
+    redirectAfterLogin();
+    resetErrors();
+  }
+};
+
+const handleContinueAsGuest = async () => {
+  dialogs.isOpen[Dialogs.SetNameAnonymousLogin] = true;
+};
+
 const handleUseGoogle = async () => {
   await loginGoogle();
 
   if (!errorGoogle.value) {
-    if (route.query.redirect) {
-      router.push({
-        name: RoutesNames.Room,
-        params: { id: route.query.redirect as string },
-      });
-    } else {
-      router.push({ name: RoutesNames.Home });
-    }
+    redirectAfterLogin();
     resetErrors();
   }
 };
