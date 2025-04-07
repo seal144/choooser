@@ -7,24 +7,25 @@
           <ActionButtonsRoom />
         </div>
         <div v-else class="action-container">
-          <Button @click="openAppInfoDialog" icon
-            ><v-icon icon="mdi-information" size="large"
-          /></Button>
+          <Button @click="openAppInfoDialog" icon>
+            <v-icon icon="mdi-information" size="large" />
+          </Button>
           <SettingsDialog />
           <Button
             @click="handleLogout"
             :icon="!smAndUp"
             v-if="!user?.isAnonymous"
-            ><v-icon icon="mdi-logout" size="large" /><span v-if="smAndUp"
-              >Logout</span
-            ></Button
           >
-          <AppInfoDialog />
+            <v-icon icon="mdi-logout" size="large" /><span v-if="smAndUp">
+              Logout
+            </span>
+          </Button>
         </div>
       </div>
     </v-container>
-    <CookieBanner />
   </v-app-bar>
+  <AppInfoDialog />
+  <CookieBanner />
 </template>
 
 <script lang="ts" setup>
