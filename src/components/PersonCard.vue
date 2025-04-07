@@ -1,7 +1,17 @@
 <template>
   <HeaderCard left class="person-card">
     <div class="card-content">
-      <div><v-icon icon="mdi-account" size="20" />{{ name }}</div>
+      <div
+        :class="isCurrentUser && 'editable-name'"
+        @click="handleNameClick"
+        @mouseover="isNameHovered = true"
+        @mouseleave="isNameHovered = false"
+      >
+        <v-icon
+          :icon="isNameHovered && isCurrentUser ? 'mdi-pencil' : 'mdi-account'"
+          size="20"
+        />{{ name }}
+      </div>
       <div class="actions">
         <v-icon v-if="check" icon="mdi-check-bold" size="20" />
         <v-progress-circular
@@ -19,14 +29,23 @@
       </div>
     </div>
   </HeaderCard>
+  <SetDisplayNameDialog :identification="Dialogs.EditNameRoom" />
 </template>
 
 <script lang="ts" setup>
 import { ButtonIcon, HeaderCard } from "@/components";
-import { PropType } from "vue";
+import { PropType, ref } from "vue";
+import getUser from "@/composables/getUser";
+import { useDialogsStore } from "@/store/dialogs";
+import { Dialogs } from "@/types";
+import SetDisplayNameDialog from "./SetDisplayNameDialog.vue";
 
-defineProps({
+const props = defineProps({
   name: {
+    type: String,
+    required: true,
+  },
+  userId: {
     type: String,
     required: true,
   },
@@ -47,6 +66,17 @@ defineProps({
     default: false,
   },
 });
+
+const { user } = getUser();
+const isNameHovered = ref(false);
+const isCurrentUser = user.value?.uid === props.userId;
+const dialogs = useDialogsStore();
+
+const handleNameClick = () => {
+  if (isCurrentUser) {
+    dialogs.isOpen[Dialogs.EditNameRoom] = true;
+  }
+};
 </script>
 
 <style scoped lang="scss">
@@ -56,6 +86,14 @@ defineProps({
   .card-content {
     display: flex;
     justify-content: space-between;
+
+    .editable-name {
+      cursor: pointer;
+
+      &:hover {
+        opacity: 0.8;
+      }
+    }
 
     .actions {
       display: flex;

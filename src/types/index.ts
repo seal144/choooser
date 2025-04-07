@@ -20,6 +20,7 @@ export enum Dialogs {
   ConfirmDeleteUser = "ConfirmDeleteUser",
   SetNameJoinRoom = "SetNameJoinRoom",
   SetNameAnonymousLogin = "SetNameAnonymousLogin",
+  EditNameRoom = "EditNameRoom",
 }
 
 export enum Collection {

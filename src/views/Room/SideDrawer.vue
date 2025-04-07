@@ -23,6 +23,7 @@
           <p>Host:</p>
           <PersonCard
             :name="room.owner.displayName"
+            :user-id="room.owner.id"
             :isPending="isOwnerPending"
             :check="room.phase === Phase.Choosing && !isOwnerPending"
           />
@@ -33,6 +34,7 @@
             v-for="guest in room.guests"
             :key="guest.id"
             :name="guest.displayName"
+            :user-id="guest.id"
             :kickButton="isOwner"
             :isPending="
               room.phase === Phase.Choosing &&

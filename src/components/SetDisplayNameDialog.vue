@@ -1,7 +1,7 @@
 <template>
   <Dialog
     :identification="identification"
-    title="Set your display name"
+    :title="isEditNameDialog ? 'Edit display name' : 'Set your display name'"
     close-label="cancel"
     class="room-dialog"
     @close="resetForm"
@@ -27,9 +27,11 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, PropType } from "vue";
+import { ref, PropType, computed } from "vue";
 import { useDialogsStore } from "@/store/dialogs";
 import useAnonymousAuth from "@/composables/useAnonymousAuth";
+import useUser from "@/composables/useUser";
+import getUser from "@/composables/getUser";
 import { Button, Dialog, TextField } from "@/components";
 import { Dialogs } from "@/types";
 import { displayNameValidation } from "@/utils/validation";
@@ -45,12 +47,39 @@ const props = defineProps({
   },
 });
 
+const { user } = getUser();
 const form = ref(false);
 const submitButton = ref<HTMLButtonElement | null>(null);
-const displayName = ref("");
-
-const { login, error, loading, resetError } = useAnonymousAuth();
+const isEditNameDialog = props.identification === Dialogs.EditNameRoom;
+const defaultDisplayName = isEditNameDialog
+  ? user.value?.displayName ?? ""
+  : "";
+const displayName = ref(defaultDisplayName);
 const dialogs = useDialogsStore();
+
+const {
+  login,
+  error: errorLogin,
+  loading: loadingLogin,
+  resetError: resetErrorLogin,
+} = useAnonymousAuth();
+const {
+  updateDisplayName,
+  error: errorUpdateDisplayName,
+  loadingUpdateDisplayName,
+  resetError: resetErrorUpdateDisplayName,
+} = useUser();
+
+const submitAction = isEditNameDialog ? updateDisplayName : login;
+const error = computed(() =>
+  isEditNameDialog ? errorUpdateDisplayName.value : errorLogin.value
+);
+const loading = computed(() =>
+  isEditNameDialog ? loadingUpdateDisplayName.value : loadingLogin.value
+);
+const resetError = isEditNameDialog
+  ? resetErrorUpdateDisplayName
+  : resetErrorLogin;
 
 const actionButtonClick = () => {
   submitButton.value?.click();
@@ -58,17 +87,15 @@ const actionButtonClick = () => {
 
 const resetForm = () => {
   form.value = false;
-  displayName.value = "";
+  displayName.value = user.value?.displayName ?? "";
   resetError();
 };
 
 const onSubmit = async () => {
   if (!form.value) return;
-  await login(displayName.value);
-
+  await submitAction(displayName.value);
   if (!error.value) {
     dialogs.isOpen[props.identification] = false;
-
     props.submitCallback?.();
   }
 };
