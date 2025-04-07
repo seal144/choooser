@@ -163,6 +163,7 @@ export enum RoomRole {
 }
 
 export enum CommonErrors {
+  Default = "Something went wrong!",
   OperationFailed = "Operation Failed. Something went wrong.",
   CouldNotFetch = "Something went wrong! Could not fetch the data.",
   LoginAsAValidUser = "Login as a valid user.",

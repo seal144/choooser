@@ -24,7 +24,7 @@ const login = async (displayName?: string) => {
     const response = await signInAnonymously(auth);
 
     if (!response) {
-      throw new Error("Something went wrong");
+      throw new Error(CommonErrors.OperationFailed);
     }
 
     await initDisplayName(displayName ?? undefined);
