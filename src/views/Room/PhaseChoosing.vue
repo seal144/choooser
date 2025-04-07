@@ -44,6 +44,7 @@
         )"
         :key="participant.id"
         :name="participant.displayName"
+        :user-id="participant.id"
         :isPending="true"
         class="mb-4"
       />
