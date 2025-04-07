@@ -10,6 +10,7 @@
 </template>
 <script lang="ts" setup>
 import { PropType } from "vue";
+import { CommonErrors } from "@/types";
 
 const props = defineProps({
   title: {
@@ -26,8 +27,7 @@ const props = defineProps({
   },
 });
 
-const defaultTitle =
-  props.type === "error" ? "Something went wrong" : "Success";
+const defaultTitle = props.type === "error" ? CommonErrors.Default : "Success";
 </script>
 
 <style lang="scss">

@@ -1,7 +1,8 @@
 <template>
   <div class="container">
     <HeaderCard
-      >&#128550; Something went wrong! Such a room doesn't exist.</HeaderCard
+      >&#128550; {{ CommonErrors.Default }} Such a room doesn't
+      exist.</HeaderCard
     >
     <Button @click="goHome">
       <v-icon icon="mdi-exit-run" size="large" />
@@ -11,10 +12,10 @@
 </template>
 
 <script setup lang="ts">
-import { Button, HeaderCard } from "@/components";
 import { useRouter } from "vue-router";
-
 import { RoutesNames } from "@/router";
+import { Button, HeaderCard } from "@/components";
+import { CommonErrors } from "@/types";
 
 const router = useRouter();
 
