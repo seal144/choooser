@@ -29,7 +29,10 @@
       </div>
     </div>
   </HeaderCard>
-  <SetDisplayNameDialog :identification="Dialogs.EditNameRoom" />
+  <SetDisplayNameDialog
+    v-if="isCurrentUser"
+    :identification="Dialogs.EditNameRoom"
+  />
 </template>
 
 <script lang="ts" setup>
