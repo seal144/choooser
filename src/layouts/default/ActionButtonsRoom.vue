@@ -33,9 +33,6 @@
       </span>
     </Button>
   </router-link>
-  <ResultDetailsDialog
-    v-if="route.name === RoutesNames.Room && room?.phase === Phase.Result"
-  />
 </template>
 
 <script lang="ts" setup>
@@ -44,7 +41,7 @@ import { useRoute } from "vue-router";
 import { useDisplay } from "vuetify";
 
 import { RoutesNames } from "@/router";
-import { Button, ResultDetailsDialog } from "@/components";
+import { Button } from "@/components";
 import { useRoomStore } from "@/store/roomStore";
 import { useDialogsStore } from "@/store/dialogs";
 import { Dialogs, Phase } from "@/types";
