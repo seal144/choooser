@@ -25,16 +25,20 @@
     </v-container>
   </v-app-bar>
   <AppInfoDialog />
+  <ResultDetailsDialog
+    v-if="route.name === RoutesNames.Room && room?.phase === Phase.Result"
+  />
   <CookieBanner />
 </template>
 
 <script lang="ts" setup>
-import { computed, watchEffect } from "vue";
+import { computed, watchEffect, toRef } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useDisplay } from "vuetify";
 import { signOut } from "firebase/auth";
 
 import { useDialogsStore } from "@/store/dialogs";
+import { useRoomStore } from "@/store/roomStore";
 import { auth } from "@/firebase/config";
 import {
   AppInfoDialog,
@@ -42,13 +46,15 @@ import {
   CookieBanner,
   Logo,
   SettingsDialog,
+  ResultDetailsDialog,
 } from "@/components";
 import ActionButtonsRoom from "./ActionButtonsRoom.vue";
 import getUser from "@/composables/getUser";
 import { RoutesNames } from "@/router";
-import { Dialogs } from "@/types";
+import { Dialogs, Phase } from "@/types";
 
 const route = useRoute();
+const room = toRef(useRoomStore(), "room");
 
 const isRoom = computed(() => {
   if (route.name === RoutesNames.Room || route.name === RoutesNames.RoomChat)
